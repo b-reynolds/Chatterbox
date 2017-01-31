@@ -36,3 +36,9 @@ bool Client::isValid() const
 {
 	return socket != INVALID_SOCKET;
 }
+
+void Client::reset()
+{
+	this->id = ID_UNSET;
+	this->socket = INVALID_SOCKET;
+}

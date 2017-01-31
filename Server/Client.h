@@ -6,6 +6,8 @@ class Client
 
 public:
 
+	static const int ID_UNSET = -1;
+	
 	Client();
 	Client(const int &id, SOCKET socket);
 
@@ -15,7 +17,11 @@ public:
 	void setSocket(SOCKET socket);
 	SOCKET getSocket() const;
 
+	SOCKET* getSocketPointer() { return &socket; }
+
 	bool isValid() const;
+
+	void reset();
 
 private:
 

@@ -7,78 +7,8 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT 47861
-#define DEFAULT_BUFFLEN 512
+#define DEFAULT_BUFFLEN 1024
 #define MAX_CLIENTS 5
-#define ID_UNSET -1
-
-bool sendData(const SOCKET &clientSock, const std::string &data)
-{
-	char dataBuffer[DEFAULT_BUFFLEN];
-	strcpy_s(dataBuffer, data.c_str()); // TODO: Handle data being too large for dataBuffer
-	int iSendResult = send(clientSock, dataBuffer, data.length(), 0);
-	if (iSendResult == SOCKET_ERROR) {
-		printf("Error: failed to send data to client (%d)\n", WSAGetLastError());
-		closesocket(clientSock);
-		WSACleanup();
-		return false;
-	}
-	return true;
-}
-
-int processClient(Client &client, std::vector<Client> &client_array, std::thread &thread)
-{
-	std::string message = "";
-
-	char recvBuffer[DEFAULT_BUFFLEN];
-
-	while(true)
-	{
-		memset(recvBuffer, 0, DEFAULT_BUFFLEN);
-		int result = recv(client.getSocket(), recvBuffer, DEFAULT_BUFFLEN, 0);
-
-		if(result != SOCKET_ERROR)
-		{
-			if (strcmp("", recvBuffer) && recvBuffer[0] != '\r' && recvBuffer[0] != '\n')
-			{
-				for(int i = 0; i < MAX_CLIENTS; i++)
-				{
-					if(client_array[i].isValid())
-					{
-						if((client.getID() != i))
-						{
-							message = "Client #" + std::to_string(client_array[i].getID()) + ": " + std::string(recvBuffer);
-							std::cout << message << std::endl;
-							result = send(client_array[i].getSocket(), message.c_str(), strlen(message.c_str()), 0);
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			message = "Client #" + std::to_string(client.getID()) + " disconnected";
-			std::cout << message << std::endl;
-
-			closesocket((client.getSocket()));
-			closesocket(client_array[client.getID()].getSocket());
-			client_array[client.getID()].setSocket(INVALID_SOCKET);
-
-			for(int i = 0; i < MAX_CLIENTS; i++)
-			{
-				if(client_array[i].isValid())
-				{
-					if(client.getID() != i)
-					{
-						result = send(client_array[i].getSocket(), message.c_str(), strlen(message.c_str()), 0);
-					}
-				}
-			}
-			
-			thread.detach();
-			return 0;
-		}
-	}
-}
 
 void printWSAError(const std::string &message)
 {
@@ -89,6 +19,95 @@ void printInfo(const std::string &message)
 {
 	printf("[*] %s\n", message.c_str());
 }
+
+bool isValidMessage(const char* message)
+{
+	if(message[0] == '\r')
+	{
+		return false;
+	}
+	if(message[0] == '\n')
+	{
+		return false;
+	}
+	if(strcmp("", message) == false)
+	{
+		return false;
+	}
+	return true;
+}
+
+void disconnectClient(Client &client, std::vector<Client> &clients, std::thread &thread)
+{
+	std::string message = "Client #" + std::to_string(client.getID()) + " disconnected";
+	printInfo(message);
+
+	closesocket(client.getSocket());
+	clients[client.getID()].reset();
+
+
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if (clients[i].isValid() && client.getID() != i)
+		{
+			send(clients[i].getSocket(), message.c_str(), strlen(message.c_str()), 0);
+		}
+	}
+
+	thread.detach();
+}
+
+std::string sanitize(const std::string &input)
+{
+	std::string output = input;
+	if(output[output.size() - 1] == '\n')
+	{
+		output.erase(output.size() - 1);
+	}
+	if(output[output.size() - 1] == '\r')
+	{
+		output.erase(output.size() - 1);
+	}
+	return output;
+}
+
+int processClient(Client &client, std::vector<Client> &clients, std::thread &thread)
+{
+	std::string message = "";
+	char recvBuffer[DEFAULT_BUFFLEN];
+
+	while (true)
+	{
+		printf("Thread #%d ACTIVE!\n", client.getID());
+
+		memset(recvBuffer, 0, DEFAULT_BUFFLEN);
+		int result = recv(client.getSocket(), recvBuffer, DEFAULT_BUFFLEN, 0);
+
+		if (result == NULL || result == INVALID_SOCKET && WSAGetLastError() != WSAEWOULDBLOCK)
+		{
+			disconnectClient(client, clients, thread);
+			return 0;
+		}
+
+		if (isValidMessage(recvBuffer))
+		{
+			std::string username = "Client #" + std::to_string(client.getID()) + ": ";
+			message = username + sanitize(std::string(recvBuffer));
+
+			for (int i = 0; i < MAX_CLIENTS; i++)
+			{
+				if (clients[i].isValid() && client.getID() != i)
+				{
+					send(clients[i].getSocket(), message.c_str(), strlen(message.c_str()), 0);
+				}
+			}
+		}
+
+		Sleep(100);
+	}
+}
+
+
 
 int main()
 {
@@ -117,6 +136,9 @@ int main()
 		WSACleanup();
 		return 0;
 	}
+
+	unsigned long mode = 1;
+	ioctlsocket(sock, FIONBIO, &mode);
 
 	struct sockaddr_in socketAddress, client;
 	socketAddress.sin_family = AF_INET;
@@ -151,7 +173,7 @@ int main()
 
 	std::thread threads[MAX_CLIENTS];
 
-	int temp_id = ID_UNSET;
+	int temp_id = Client::ID_UNSET;
 
 	int size = sizeof(client);
 	std::string message;
@@ -161,25 +183,25 @@ int main()
 		SOCKET clientSock = accept(sock, reinterpret_cast<sockaddr*>(&client), &size);
 		if (clientSock == INVALID_SOCKET) continue;
 
-		temp_id = ID_UNSET;
+		temp_id = Client::ID_UNSET;
 
 		for(int i = 0; i < MAX_CLIENTS; ++i)
 		{
-			if(clients[i].getSocket() == INVALID_SOCKET && temp_id == ID_UNSET)
+			if(clients[i].getSocket() == INVALID_SOCKET)
 			{
 				clients[i].setSocket(clientSock);
 				clients[i].setID(i);
 				temp_id = i;
+				break;
 			}
 		}
 
-		if(temp_id != ID_UNSET)
+		if(temp_id != Client::ID_UNSET)
 		{
 			printInfo(std::string("Client #") + std::to_string(clients[temp_id].getID()) + " connected.");
-
 			message = "Connected. You are Client #" + std::to_string(clients[temp_id].getID());
-			send(clients[temp_id].getSocket(), message.c_str(), strlen(message.c_str()), 0);
 
+			send(clients[temp_id].getSocket(), message.c_str(), strlen(message.c_str()), 0);
 			threads[temp_id] = std::thread(processClient, std::ref(clients[temp_id]), std::ref(clients), std::ref(threads[temp_id]));
 		}
 		else
