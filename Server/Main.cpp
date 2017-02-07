@@ -4,6 +4,7 @@
 #include <string>
 #include <WinSock2.h>
 #include "Client.h"
+#include "Timer.h"
 #pragma comment(lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT 47861
@@ -37,22 +38,21 @@ bool isValidMessage(const char* message)
 	return true;
 }
 
-void disconnectClient(Client &client, std::vector<Client> &clients, std::thread &thread)
+void disconnectClient(Client &client, std::vector<Client> &clients, std::thread &thread, const std::string &message)
 {
-	std::string message = "Client #" + std::to_string(client.getID()) + " disconnected";
-	printInfo(message);
-
-	closesocket(client.getSocket());
-	clients[client.getID()].reset();
-
+	std::string msg = "Client #" + std::to_string(client.getID()) + " " + message;
+	printInfo(msg);
 
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
 		if (clients[i].isValid() && client.getID() != i)
 		{
-			send(clients[i].getSocket(), message.c_str(), strlen(message.c_str()), 0);
+			send(clients[i].getSocket(), msg.c_str(), strlen(msg.c_str()), 0);
 		}
 	}
+
+	closesocket(client.getSocket());
+	clients[client.getID()].reset();
 
 	thread.detach();
 }
@@ -75,17 +75,22 @@ int processClient(Client &client, std::vector<Client> &clients, std::thread &thr
 {
 	std::string message = "";
 	char recvBuffer[DEFAULT_BUFFLEN];
+	Timer timeOut(10);
 
 	while (true)
 	{
-		printf("Thread #%d ACTIVE!\n", client.getID());
-
 		memset(recvBuffer, 0, DEFAULT_BUFFLEN);
 		int result = recv(client.getSocket(), recvBuffer, DEFAULT_BUFFLEN, 0);
 
+		if(timeOut.hasExpired())
+		{
+			disconnectClient(client, clients, thread, "timed out");
+			return 0;
+		}
+
 		if (result == NULL || result == INVALID_SOCKET && WSAGetLastError() != WSAEWOULDBLOCK)
 		{
-			disconnectClient(client, clients, thread);
+			disconnectClient(client, clients, thread, "disconnected");
 			return 0;
 		}
 
@@ -101,9 +106,12 @@ int processClient(Client &client, std::vector<Client> &clients, std::thread &thr
 					send(clients[i].getSocket(), message.c_str(), strlen(message.c_str()), 0);
 				}
 			}
+			printf("%s\n", message.c_str());
+			timeOut.reset();
 		}
 
 		Sleep(100);
+
 	}
 }
 
@@ -202,6 +210,7 @@ int main()
 			message = "Connected. You are Client #" + std::to_string(clients[temp_id].getID());
 
 			send(clients[temp_id].getSocket(), message.c_str(), strlen(message.c_str()), 0);
+
 			threads[temp_id] = std::thread(processClient, std::ref(clients[temp_id]), std::ref(clients), std::ref(threads[temp_id]));
 		}
 		else
