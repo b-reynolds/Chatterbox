@@ -3,111 +3,132 @@
 #include <thread>
 #include <string>
 #include <WinSock2.h>
-#include "Client.h"
 #include "Timer.h"
+#include "User.h"
+#include <algorithm>
+#include <sstream>
+#include <numeric>
+#include "CmdMESSAGE.h"
+#include "CmdUNAME.h"
+#include "CmdPM.h"
+#include "Room.h"
+#include "CmdMKROOM.h"
+#include "CmdENTER.h"
 #pragma comment(lib, "Ws2_32.lib")
 
-#define DEFAULT_PORT 47861
-#define DEFAULT_BUFFLEN 1024
-#define MAX_CLIENTS 5
+const int PORT = 47861;
+const int CLIENTS_MAX = 25;
+const int BUFFLEN = 1024;
 
-void printWSAError(const std::string &message)
+const int TIMEOUT = 60;
+
+void disconnectClient(User &user, std::vector<User> &users, std::thread &thread, std::string message)
 {
-	printf("Error: %s (%d)\n", message.c_str(), WSAGetLastError());
-}
+	printf("[x] Client #%d (%s) disconnected (%s)\n", user.getID(), user.getUsername().c_str(), message.c_str());
+	message = user.getUsername() + " disconnected (" + message + ")";
 
-void printInfo(const std::string &message)
-{
-	printf("[*] %s\n", message.c_str());
-}
-
-bool isValidMessage(const char* message)
-{
-	if(message[0] == '\r')
+	for (int i = 0; i < CLIENTS_MAX; i++)
 	{
-		return false;
-	}
-	if(message[0] == '\n')
-	{
-		return false;
-	}
-	if(strcmp("", message) == false)
-	{
-		return false;
-	}
-	return true;
-}
-
-void disconnectClient(Client &client, std::vector<Client> &clients, std::thread &thread, const std::string &message)
-{
-	std::string msg = "Client #" + std::to_string(client.getID()) + " " + message;
-	printInfo(msg);
-
-	for (int i = 0; i < MAX_CLIENTS; i++)
-	{
-		if (clients[i].isValid() && client.getID() != i)
+		if (users[i].isConnected())
 		{
-			send(clients[i].getSocket(), msg.c_str(), strlen(msg.c_str()), 0);
+			send(users[i].getSocket(), message.c_str(), message.length(), 0);
 		}
 	}
 
-	closesocket(client.getSocket());
-	clients[client.getID()].reset();
-
+	closesocket(user.getSocket());
+	users[user.getID()].reset();
 	thread.detach();
 }
 
-std::string sanitize(const std::string &input)
+std::string sanitize(std::string string)
 {
-	std::string output = input;
-	if(output[output.size() - 1] == '\n')
-	{
-		output.erase(output.size() - 1);
-	}
-	if(output[output.size() - 1] == '\r')
-	{
-		output.erase(output.size() - 1);
-	}
-	return output;
+	string.erase(std::remove(string.begin(), string.end(), '\n'), string.end());
+	string.erase(std::remove(string.begin(), string.end(), '\r'), string.end());
+	return string;
 }
 
-int processClient(Client &client, std::vector<Client> &clients, std::thread &thread)
+void sendMessage(SOCKET socket, const std::string &message)
 {
-	std::string message = "";
-	char recvBuffer[DEFAULT_BUFFLEN];
-	Timer timeOut(10);
+	send(socket, message.c_str(), message.length(), 0);
+}
 
+void sendMessage(const User &user, const std::string &message)
+{
+	send(user.getSocket(), message.c_str(), message.size(), 0);
+}
+
+void sendMessage(const std::vector<User> &users, const std::string &message)
+{
+	for(int i = 0; i < users.size(); ++i)
+	{
+		if(users[i].isConnected() && users[i].hasUsername())
+		{
+			sendMessage(users[i], message);
+		}
+	}
+}
+
+std::vector<std::string> split(const std::string &string, char delimiter)
+{
+	std::vector<std::string> parts;
+	std::stringstream stringStream(string);
+	std::string current;
+
+	while (getline(stringStream, current, delimiter))
+	{
+		parts.push_back(current);
+	}
+
+	return parts;
+}
+
+int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<Command*> &commands, std::thread &thread)
+{
+	Timer timeOut(TIMEOUT);
 	while (true)
 	{
-		memset(recvBuffer, 0, DEFAULT_BUFFLEN);
-		int result = recv(client.getSocket(), recvBuffer, DEFAULT_BUFFLEN, 0);
+		char recvBuffer[BUFFLEN] = { 0 };
 
-		if(timeOut.hasExpired())
+		std::string input;
+		std::string output;
+
+		int error = 0;
+
+		int result = recv(user.getSocket(), recvBuffer, BUFFLEN, 0);
+
+		if (timeOut.hasExpired())
 		{
-			disconnectClient(client, clients, thread, "timed out");
+			disconnectClient(user, users, thread, "timed out");
 			return 0;
 		}
 
-		if (result == NULL || result == INVALID_SOCKET && WSAGetLastError() != WSAEWOULDBLOCK)
+		if(result == NULL || result == INVALID_SOCKET && (error = WSAGetLastError()) != WSAEWOULDBLOCK)
 		{
-			disconnectClient(client, clients, thread, "disconnected");
-			return 0;
+			disconnectClient(user, users, thread, "Error: " + std::to_string(error));
+			break;
 		}
 
-		if (isValidMessage(recvBuffer))
-		{
-			std::string username = "Client #" + std::to_string(client.getID()) + ": ";
-			message = username + sanitize(std::string(recvBuffer));
+		input = sanitize(std::string(recvBuffer));
 
-			for (int i = 0; i < MAX_CLIENTS; i++)
+		if(input.empty())
+		{
+			continue;
+		}
+
+		std::vector<std::string> parameters = split(input, ' ');
+
+
+		std::string command = parameters[0];
+		parameters.erase(parameters.begin());
+		transform(command.begin(), command.end(), command.begin(), toupper);
+
+		for(int i = 0; i < commands.size(); ++i)
+		{
+			if(stringToCommand(command) == commands[i]->getCommandType())
 			{
-				if (clients[i].isValid() && client.getID() != i)
-				{
-					send(clients[i].getSocket(), message.c_str(), strlen(message.c_str()), 0);
-				}
+				commands[i]->execute(user, users, rooms, parameters);
+				timeOut.reset();
 			}
-			printf("%s\n", message.c_str());
-			timeOut.reset();
 		}
 
 		Sleep(100);
@@ -120,7 +141,7 @@ int processClient(Client &client, std::vector<Client> &clients, std::thread &thr
 int main()
 {
 	system("cls");
-	system("color 17");
+	system("color 0E");
 	printf("============================================\n");
 	printf(" CHAT SERVER\n");
 	printf("============================================\n");
@@ -128,19 +149,19 @@ int main()
 	WORD wVersionRequested = MAKEWORD(2, 2);
 	WSADATA wsaData;
 
-	printInfo("Initializing Winsock");
+	printf("[*] Initializing Winsock...\n");
 	if(WSAStartup(wVersionRequested, &wsaData) != NULL)
 	{
-		printWSAError("Failed to initialize Winsock");
+		printf("Error: Failed to initialize Winsock (%d)\n", WSAGetLastError());
 		WSACleanup();
 		return 0;
 	}
 
-	printInfo("Creating Socket");
+	printf("[*] Creating socket...\n");
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(sock == INVALID_SOCKET)
 	{
-		printWSAError("Failed to create Socket");
+		printf("[x] Error: Failed to create socket (%d)\n", WSAGetLastError());
 		WSACleanup();
 		return 0;
 	}
@@ -151,79 +172,82 @@ int main()
 	struct sockaddr_in socketAddress, client;
 	socketAddress.sin_family = AF_INET;
 	socketAddress.sin_addr.s_addr = ADDR_ANY;
-	socketAddress.sin_port = htons(DEFAULT_PORT);
+	socketAddress.sin_port = htons(PORT);
 
-	printInfo("Binding socket");
+	printf("[*] Binding socket...\n");
 	if(bind(sock, reinterpret_cast<struct sockaddr*>(&socketAddress), sizeof(socketAddress)) == SOCKET_ERROR)
 	{
-		printWSAError("Failed to bind socket");
+		printf("[x] Error: Failed to bind socket (%d)\n", WSAGetLastError());
 		closesocket(sock);
 		WSACleanup();
 		return 0;
 	}
 
-	printInfo("Listening");
+	printf("[*] Listening... (%d)\n", PORT);
 	if(listen(sock, 256) == SOCKET_ERROR)
 	{
-		printWSAError("Failed to start listening");
+		printf("[x] Failed to start listening (%d)\n", WSAGetLastError());
 		closesocket(sock);
 		WSACleanup();
 		return 0;
 	}
-
+	
 	printf("============================================\n");
 
-	std::vector<Client> clients;
-	for(int i = 0; i < MAX_CLIENTS; ++i)
+	std::vector<User> users;
+	for(int i = 0; i < CLIENTS_MAX; ++i)
 	{
-		clients.push_back(Client(-1, INVALID_SOCKET));
+		users.push_back(User());
 	}
 
-	std::thread threads[MAX_CLIENTS];
-
-	int temp_id = Client::ID_UNSET;
+	std::thread threads[CLIENTS_MAX];
 
 	int size = sizeof(client);
 	std::string message;
 
+	std::vector<Command*> commands{ new CmdMESSAGE(), new CmdUNAME(), new CmdPM(), new CmdMKROOM(), new CmdENTER() };
+	std::vector<Room> rooms;
+
 	while(true)
 	{
 		SOCKET clientSock = accept(sock, reinterpret_cast<sockaddr*>(&client), &size);
-		if (clientSock == INVALID_SOCKET) continue;
 
-		temp_id = Client::ID_UNSET;
-
-		for(int i = 0; i < MAX_CLIENTS; ++i)
+		if (clientSock == INVALID_SOCKET)
 		{
-			if(clients[i].getSocket() == INVALID_SOCKET)
+			continue;
+		}
+
+		int temp_id = User::ID_NONE;
+
+		for(int i = 0; i < CLIENTS_MAX; ++i)
+		{
+			if(!users[i].isConnected())
 			{
-				clients[i].setSocket(clientSock);
-				clients[i].setID(i);
+				users[i] = User(i, clientSock);
 				temp_id = i;
 				break;
 			}
 		}
 
-		if(temp_id != Client::ID_UNSET)
+		if(temp_id != User::ID_NONE)
 		{
-			printInfo(std::string("Client #") + std::to_string(clients[temp_id].getID()) + " connected.");
-			message = "Connected. You are Client #" + std::to_string(clients[temp_id].getID());
-
-			send(clients[temp_id].getSocket(), message.c_str(), strlen(message.c_str()), 0);
-
-			threads[temp_id] = std::thread(processClient, std::ref(clients[temp_id]), std::ref(clients), std::ref(threads[temp_id]));
+			printf("[*] Client #%d has connected\n", users[temp_id].getID());
+			message = "Connected. You are Client #" + std::to_string(users[temp_id].getID());
+			send(users[temp_id].getSocket(), message.c_str(), strlen(message.c_str()), 0);
+			threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 		}
 		else
 		{
 			message = "Server Full";
 			send(clientSock, message.c_str(), strlen(message.c_str()), 0);
+			closesocket(clientSock);
 		}
 	}
 
-	for(int i = 0; i < MAX_CLIENTS; ++i)
+	for(int i = 0; i < CLIENTS_MAX; ++i)
 	{
 		threads[i].detach();
-		closesocket(clients[i].getSocket());
+		closesocket(users[i].getSocket());
 	}
 
 	WSACleanup();
