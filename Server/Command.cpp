@@ -52,7 +52,6 @@ std::string Command::cmdStatusToString(const CmdStatus& cmdStatus)
 	}
 }
 
-
 /**
  * \brief Returns the Command's CmdType
  */
@@ -99,3 +98,4 @@ std::string Command::buildString(const std::vector<std::string>& strings, const 
 	}
 	return string;
 }
+
