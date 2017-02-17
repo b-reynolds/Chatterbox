@@ -132,7 +132,6 @@
     <ClInclude Include="CmdPM.h" />
     <ClInclude Include="CmdUNAME.h" />
     <ClInclude Include="Command.h" />
-    <ClInclude Include="Error.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="User.h" />

@@ -4,7 +4,7 @@ void CmdEXIT::execute(User& user, const std::vector<User>& users, std::vector<Ro
 {
 	if(user.getRoom() == nullptr)
 	{
-		sendMessage(user, statusToString(CmdStatus::ERR_INVALID));
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
 		return;
 	}
 
@@ -21,5 +21,5 @@ void CmdEXIT::execute(User& user, const std::vector<User>& users, std::vector<Ro
 
 	user.setRoom(nullptr);
 
-	sendMessage(user, statusToString(CmdStatus::SUCCESS));
+	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 }

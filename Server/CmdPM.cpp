@@ -5,7 +5,7 @@ void CmdPM::execute(User& user, const std::vector<User>& users, std::vector<Room
 {
 	if(parameters.size() < 2)
 	{
-		sendMessage(user, statusToString(CmdStatus::ERR_INVALID));
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
 		return;
 	}
 
@@ -23,12 +23,12 @@ void CmdPM::execute(User& user, const std::vector<User>& users, std::vector<Room
 			if(toLower(users[i].getUsername()) == toLower(recipient))
 			{
 				user.sendMessage(users[i], "(PM) " + user.getUsername() + ": " + message);
-				sendMessage(user, statusToString(CmdStatus::SUCCESS));
+				sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 				printf("\t#%d %s > (%d) %s : %s\n", user.getID(), user.getUsername().c_str(), users[i].getID(), users[i].getUsername().c_str(), message.c_str());
 				return;
 			}
 		}
 	}
 
-	sendMessage(user, statusToString(CmdStatus::ERR_NOUSR));
+	sendMessage(user, cmdStatusToString(CmdStatus::ERR_NOUSR));
 }

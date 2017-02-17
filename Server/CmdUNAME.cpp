@@ -13,7 +13,7 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if(parameters.size() == 0)
 	{
-		sendMessage(user, statusToString(CmdStatus::ERR_INVALID));
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
 		return;
 	}
 
@@ -24,13 +24,13 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if (unameLen < USERNAME_LENGTH_MIN)
 	{
-		sendMessage(user, statusToString(CmdStatus::ERR_SHORT));
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_SHORT));
 		return;
 	}
 
 	if (unameLen > USERNAME_LENGTH_MAX)
 	{
-		sendMessage(user, statusToString(CmdStatus::ERR_LONG));
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_LONG));
 		return;
 	}
 
@@ -40,7 +40,7 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 	{
 		if (!isalnum(uname[i]))
 		{
-			sendMessage(user, statusToString(CmdStatus::ERR_ILLEGAL));
+			sendMessage(user, cmdStatusToString(CmdStatus::ERR_ILLEGAL));
 			return;
 		}
 	}
@@ -52,7 +52,7 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 	{
 		if(otherUser.isConnected() && unameL == toLower(otherUser.getUsername()))
 		{
-			sendMessage(user, statusToString(CmdStatus::ERR_EXISTS));
+			sendMessage(user, cmdStatusToString(CmdStatus::ERR_EXISTS));
 			return;
 		}
 	}
@@ -97,6 +97,6 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 	}
 
 	user.setUsername(uname);
-	sendMessage(user, statusToString(SUCCESS));
+	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 }
 

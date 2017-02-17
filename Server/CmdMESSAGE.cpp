@@ -17,13 +17,13 @@ void CmdMESSAGE::execute(User& user, const std::vector<User>& users, std::vector
 	
 	if(msgLen < MESSAGE_LENGTH_MIN)
 	{
-		sendMessage(user, statusToString(CmdStatus::ERR_SHORT));
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_SHORT));
 		return;
 	}
 
 	if(msgLen > MESSAGE_LENGTH_MAX)
 	{
-		sendMessage(user, statusToString(CmdStatus::ERR_LONG));
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_LONG));
 		return;
 	}
 
@@ -37,7 +37,7 @@ void CmdMESSAGE::execute(User& user, const std::vector<User>& users, std::vector
 			user.sendMessage(*otherUser, user.getUsername() + ": " + msg);
 		}
 		printf("\t#%d %s > %s : %s\n", user.getID(), user.getUsername().c_str(), usrRoom->getName().c_str(), msg.c_str());
-		sendMessage(user, statusToString(CmdStatus::SUCCESS));
+		sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 		return;
 	}
 
@@ -51,5 +51,5 @@ void CmdMESSAGE::execute(User& user, const std::vector<User>& users, std::vector
 	}
 
 	printf("\t#%d %s : %s\n", user.getID(), user.getUsername().c_str(), msg.c_str());
-	sendMessage(user, statusToString(CmdStatus::SUCCESS));
+	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 }

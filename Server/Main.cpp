@@ -122,7 +122,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 		parameters.erase(parameters.begin());
 		transform(command.begin(), command.end(), command.begin(), toupper);
 
-		CmdType cmd = stringToCommand(command);
+		CmdType cmd = Command::stringToCmdType(command);
 		for(int i = 0; i < commands.size(); ++i)
 		{
 			if(cmd == commands[i]->getCommandType())
@@ -233,7 +233,7 @@ int main()
 		if(temp_id != User::ID_NONE)
 		{
 			printf("[*] User #%d has connected\n", users[temp_id].getID());
-			sendMessage(clientSock, statusToString(CmdStatus::SUCCESS));
+			sendMessage(clientSock, Command::cmdStatusToString(CmdStatus::SUCCESS));
 			threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 		}
 		else

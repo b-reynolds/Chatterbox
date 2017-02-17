@@ -65,9 +65,6 @@
     <ClInclude Include="User.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CmdUNAME.h">
       <Filter>Commands</Filter>
     </ClInclude>
