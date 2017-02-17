@@ -38,7 +38,7 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	for (int i = 0; i < unameLen; ++i) // TODO: Check $% chars
 	{
-		if (!isalnum(uname[i]))
+		if (!isalnum(static_cast<unsigned char>(uname[i])))
 		{
 			sendMessage(user, cmdStatusToString(CmdStatus::ERR_ILLEGAL));
 			return;
