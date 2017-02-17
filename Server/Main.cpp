@@ -14,6 +14,7 @@
 #include "Room.h"
 #include "CmdMKROOM.h"
 #include "CmdENTER.h"
+#include "CmdEXIT.h"
 #pragma comment(lib, "Ws2_32.lib")
 
 const int PORT = 47861;
@@ -96,7 +97,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 
 		int result = recv(user.getSocket(), recvBuffer, BUFFLEN, 0);
 
-		if (timeOut.hasExpired())
+		if (timeOut.hasExpired()) // TODO: Cleanup room stuff 
 		{
 			disconnectClient(user, users, thread, "timed out");
 			return 0;
@@ -117,14 +118,14 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 
 		std::vector<std::string> parameters = split(input, ' ');
 
-
 		std::string command = parameters[0];
 		parameters.erase(parameters.begin());
 		transform(command.begin(), command.end(), command.begin(), toupper);
 
+		CommandType cmd = stringToCommand(command);
 		for(int i = 0; i < commands.size(); ++i)
 		{
-			if(stringToCommand(command) == commands[i]->getCommandType())
+			if(cmd == commands[i]->getCommandType())
 			{
 				commands[i]->execute(user, users, rooms, parameters);
 				timeOut.reset();
@@ -141,7 +142,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 int main()
 {
 	system("cls");
-	system("color 0E");
+	system("color 08");
 	printf("============================================\n");
 	printf(" CHAT SERVER\n");
 	printf("============================================\n");
@@ -205,7 +206,7 @@ int main()
 	int size = sizeof(client);
 	std::string message;
 
-	std::vector<Command*> commands{ new CmdMESSAGE(), new CmdUNAME(), new CmdPM(), new CmdMKROOM(), new CmdENTER() };
+	std::vector<Command*> commands{ new CmdMESSAGE(), new CmdUNAME(), new CmdPM(), new CmdMKROOM(), new CmdENTER(), new CmdEXIT() };
 	std::vector<Room> rooms;
 
 	while(true)
@@ -231,9 +232,8 @@ int main()
 
 		if(temp_id != User::ID_NONE)
 		{
-			printf("[*] Client #%d has connected\n", users[temp_id].getID());
-			message = "Connected. You are Client #" + std::to_string(users[temp_id].getID());
-			send(users[temp_id].getSocket(), message.c_str(), strlen(message.c_str()), 0);
+			printf("[*] User #%d has connected\n", users[temp_id].getID());
+			sendMessage(clientSock, statusToString(SUCCESS));
 			threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 		}
 		else

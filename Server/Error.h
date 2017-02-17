@@ -14,7 +14,7 @@ enum Status
 	ERR_NOUSR
 };
 
-enum CommandType { NONE, UNAME, MESSAGE, PM, MKROOM, ENTER };
+enum CommandType { NONE, UNAME, MESSAGE, PM, MKROOM, ENTER, EXIT };
 
 
 inline CommandType stringToCommand(const std::string &string)
@@ -38,6 +38,10 @@ inline CommandType stringToCommand(const std::string &string)
 	if(string == "ENTER")
 	{
 		return ENTER;
+	}
+	if(string == "EXIT")
+	{
+		return EXIT;
 	}
 	return NONE;
 }

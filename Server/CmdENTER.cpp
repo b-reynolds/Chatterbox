@@ -13,7 +13,7 @@ void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<R
 	Room* room = nullptr;
 	for(int i = 0; i < rooms.size(); ++i)
 	{
-		if (convertToLower(rooms[i].getName()) == convertToLower(roomName))
+		if (toLower(rooms[i].getName()) == toLower(roomName))
 		{
 			room = &rooms[i];
 		}

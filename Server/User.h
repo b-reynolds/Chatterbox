@@ -22,8 +22,8 @@ public:
 	void setID(const int &id);
 	int getID() const;
 
-	int sendMessage(const User &user, const std::string &message) const;
-	int sendMessage(const std::vector<User> &users, const std::string &message) const;
+	void sendMessage(const User &user, const std::string &message) const;
+	void sendMessage(const std::vector<User> &users, const std::string &message) const;
 
 	void setUsername(const std::string &username);
 	std::string getUsername() const;

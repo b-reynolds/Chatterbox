@@ -49,7 +49,10 @@
       <Filter>Commands</Filter>
     </ClCompile>
     <ClCompile Include="CmdENTER.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdEXIT.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,7 +87,10 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="CmdENTER.h">
-      <Filter>Header Files</Filter>
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdEXIT.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

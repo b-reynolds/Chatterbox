@@ -12,13 +12,13 @@ void CmdPM::execute(User& user, const std::vector<User>& users, std::vector<Room
 	std::string recipient = parameters[0];
 	parameters.erase(parameters.begin());
 
-	std::string message = getString(parameters);
+	std::string message = buildString(parameters, ' ');
 
 	for(int i = 0; i < users.size(); ++i)
 	{
 		if(user.getID() != users[i].getID())
 		{
-			if(convertToLower(users[i].getUsername()) == convertToLower(recipient))
+			if(toLower(users[i].getUsername()) == toLower(recipient))
 			{
 				user.sendMessage(users[i], "(PM) " + user.getUsername() + ": " + message);
 				sendMessage(user, statusToString(SUCCESS));

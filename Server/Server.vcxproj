@@ -112,6 +112,7 @@
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CmdENTER.cpp" />
+    <ClCompile Include="CmdEXIT.cpp" />
     <ClCompile Include="CmdMESSAGE.cpp" />
     <ClCompile Include="CmdMKROOM.cpp" />
     <ClCompile Include="CmdPM.cpp" />
@@ -125,6 +126,7 @@
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="CmdENTER.h" />
+    <ClInclude Include="CmdEXIT.h" />
     <ClInclude Include="CmdMESSAGE.h" />
     <ClInclude Include="CmdMKROOM.h" />
     <ClInclude Include="CmdPM.h" />

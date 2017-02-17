@@ -46,14 +46,12 @@ void CmdMKROOM::execute(User& user, const std::vector<User>& users, std::vector<
 			sendMessage(user, statusToString(ERR_INVALID));
 			return;
 		}
-		if(convertToLower(rooms[i].getName()) == convertToLower(roomName))
+		if(toLower(rooms[i].getName()) == toLower(roomName))
 		{
 			sendMessage(user, statusToString(ERR_INVALID));
 			return;
 		}
 	}
-
-	// TODO: Check for rooms of the same name
 
 	rooms.push_back(Room(roomName, &user, ROOM_SIZE_DEFAULT));
 
