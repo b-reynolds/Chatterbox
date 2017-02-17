@@ -1,58 +1,102 @@
 #include "CmdUNAME.h"
-#include <algorithm>
 
+/*
+ * \brief Execute the command
+ * \param user calling user
+ * \param users connected users
+ * \param rooms server rooms
+ * \param parameters command parameters
+ */
 void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
-	std::string username = parameters[0];
+	// Check that all required parameters are set
 
-	int usernameLength = username.length();
+	if(parameters.size() == 0)
+	{
+		sendMessage(user, statusToString(ERR_INVALID));
+		return;
+	}
 
-	// Check the username is longer than the minimum length
-	if (usernameLength < USERNAME_LENGTH_MIN)
+	// Ensure username is within the character limit
+
+	std::string uname = parameters[0];
+	size_t unameLen = uname.length();
+
+	if (unameLen < USERNAME_LENGTH_MIN)
 	{
 		sendMessage(user, statusToString(ERR_SHORT));
 		return;
 	}
 
-	// Check if the username is shorter than the maximum length
-	if (usernameLength > USERNAME_LENGTH_MAX)
+	if (unameLen > USERNAME_LENGTH_MAX)
 	{
 		sendMessage(user, statusToString(ERR_LONG));
-
 		return;
 	}
 
-	// Check that the username consists of only alphanumeric characters
-	for (int i = 0; i < usernameLength; ++i)
+	// Ensure username consists of alphanumeric characters
+
+	for (int i = 0; i < unameLen; ++i)
 	{
-		if (!isalnum(username[i]))
+		if (!isalnum(uname[i]))
 		{
 			sendMessage(user, statusToString(ERR_ILLEGAL));
 			return;
 		}
 	}
 
-	// Perform case insensitive username comparisons with all connected users to ensure the username is unique
+	// Perform case insensitive comparisons with all connected users to ensure the username is unique
 
-	for (int i = 0; i < users.size(); ++i)
+	std::string unameL = toLower(uname);
+	for(auto & otherUser : users)
 	{
-		if (users[i].isConnected() && convertToLower(username) == convertToLower(users[i].getUsername()))
+		if(otherUser.isConnected() && unameL == toLower(otherUser.getUsername()))
 		{
 			sendMessage(user, statusToString(ERR_EXISTS));
 			return;
 		}
 	}
 
-	// If the user had a username previously then alert other users of the name change
+	// Alert other users of the name change / user joining
 
 	if(user.hasUsername())
 	{
-		std::string message = user.getUsername() + " changed their name to " + username + ".";
-		user.sendMessage(users, message);
+		std::string message = user.getUsername() + " changed their name to " + uname + ".";
+		if(user.getRoom() == nullptr)
+		{
+			for(auto & otherUser : users)
+			{
+				if(otherUser.getRoom() == nullptr)
+				{
+					user.sendMessage(otherUser, message);
+				}
+			}
+		}
+		else
+		{
+			Room* room = user.getRoom();
+			for(auto & otherUser : room->getUsers())
+			{
+				user.sendMessage(*otherUser, message);
+			}
+		}
+		printf("[*] User #%d changed their username from %s to %s\n", user.getID(), user.getUsername().c_str(), uname.c_str());
+	}
+	else
+	{
+		int userID = user.getID();
+		for(auto & otherUser : users)
+		{
+			if(otherUser.getRoom() == nullptr && otherUser.getID() != userID)
+			{
+				std::string message = uname + " has joined the server.";
+				sendMessage(otherUser, message);
+			}
+		}
+		printf("[*] User #%d set their username to %s\n", userID, uname.c_str());
 	}
 
-	user.setUsername(username);
-
+	user.setUsername(uname);
 	sendMessage(user, statusToString(SUCCESS));
 }
 
