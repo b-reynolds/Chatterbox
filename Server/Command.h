@@ -59,7 +59,7 @@ public:
 	/* Returns the Command's CmdType */
 	CmdType getCommandType() const;
 
-private:
+protected:
 
 	/* Command's CmdType */
 	CmdType commandType;

@@ -22,7 +22,6 @@ CmdType Command::stringToCmdType(const std::string& string)
 	return CmdType::NONE;
 }
 
-
 /**
  * \brief Converts a CmdStatus to its string equivalent
  * \param cmdStatus cmdStatus
