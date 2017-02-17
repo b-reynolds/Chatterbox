@@ -43,7 +43,7 @@ int User::getID() const
 
 void User::sendMessage(const User& user, const std::string& message) const
 {
-	if (user.isConnected() && user.hasUsername())
+	if (user.isConnected() && user.hasUsername() && user.getID() != id)
 	{
 		send(user.getSocket(), message.c_str(), message.length(), 0);
 	}

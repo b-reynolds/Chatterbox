@@ -10,6 +10,14 @@
 */
 void CmdMESSAGE::execute(User& user, const std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
+	// Ensure the user has a name
+
+	if(!user.hasUsername())
+	{
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
+		return;
+	}
+
 	// Ensure message is within the character limit
 
 	std::string msg = buildString(parameters, ' ');

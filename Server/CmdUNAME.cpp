@@ -84,16 +84,16 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 	}
 	else
 	{
+		std::string message = uname + " has joined the server.";
 		int userID = user.getID();
 		for(auto & otherUser : users)
 		{
 			if(otherUser.getRoom() == nullptr && otherUser.getID() != userID)
 			{
-				std::string message = uname + " has joined the server.";
 				sendMessage(otherUser, message);
 			}
 		}
-		printf("[*] User #%d set their username to %s\n", userID, uname.c_str());
+		printf("[*] User #%d set their username to %s\n", user.getID(), uname.c_str());
 	}
 
 	user.setUsername(uname);

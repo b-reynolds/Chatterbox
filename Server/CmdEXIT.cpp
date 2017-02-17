@@ -8,18 +8,8 @@ void CmdEXIT::execute(User& user, const std::vector<User>& users, std::vector<Ro
 		return;
 	}
 
-	Room* room = user.getRoom();
-	std::vector<User*> roomUsers = room->getUsers();
-
-	for(int i = 0; i < roomUsers.size(); ++i)
-	{
-		if(roomUsers[i]->getID() == user.getID())
-		{
-			roomUsers.erase(roomUsers.begin() + i);
-		}
-	}
-
+	user.getRoom()->removeUser(&user);
 	user.setRoom(nullptr);
-
+	
 	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 }

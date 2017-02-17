@@ -13,6 +13,17 @@ void Room::addUser(User* user)
 	users.push_back(user);
 }
 
+void Room::removeUser(User* user)
+{
+	for(int i = 0; i < users.size(); ++i)
+	{
+		if(users[i]->getID() == user->getID())
+		{
+			users.erase(users.begin() + i);
+		}
+	}
+}
+
 std::vector<User*>& Room::getUsers()
 {
 	return users;

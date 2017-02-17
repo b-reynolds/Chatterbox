@@ -25,8 +25,8 @@ void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<R
 		return;
 	}
 
-	user.setRoom(room);
 	room->addUser(&user);
+	user.setRoom(room);
 
 	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 }

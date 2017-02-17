@@ -9,6 +9,8 @@ public:
 	Room(const std::string &name, User* owner, const int &capacity);
  
 	void addUser(User* user);
+	void removeUser(User* user);
+
 	std::vector<User*>& getUsers();
 
 	std::string getName() const;

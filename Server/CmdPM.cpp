@@ -13,20 +13,34 @@ void CmdPM::execute(User& user, const std::vector<User>& users, std::vector<Room
 	parameters.erase(parameters.begin());
 
 	std::string message = buildString(parameters, ' ');
+	size_t msgLen = message.length();
 
-	// £%$%
-
-	for(int i = 0; i < users.size(); ++i)
+	if (msgLen < MESSAGE_LENGTH_MIN)
 	{
-		if(user.getID() != users[i].getID())
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_SHORT));
+		return;
+	}
+
+	if (msgLen > MESSAGE_LENGTH_MAX)
+	{
+		sendMessage(user, cmdStatusToString(CmdStatus::ERR_LONG));
+		return;
+	}
+	
+	std::string recipientL = toLower(recipient);
+	for(auto & otherUser : users)
+	{
+		if(otherUser.getID() == user.getID())
 		{
-			if(toLower(users[i].getUsername()) == toLower(recipient))
-			{
-				user.sendMessage(users[i], "(PM) " + user.getUsername() + ": " + message);
-				sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
-				printf("\t#%d %s > (%d) %s : %s\n", user.getID(), user.getUsername().c_str(), users[i].getID(), users[i].getUsername().c_str(), message.c_str());
-				return;
-			}
+			continue;
+		}
+
+		if(toLower(otherUser.getUsername()) == recipientL)
+		{
+			user.sendMessage(otherUser, "(PM) " + user.getUsername() + ": " + message);
+			sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
+			printf("\t#%d %s > #%d %s : %s\n", user.getID(), user.getUsername().c_str(), otherUser.getID(), otherUser.getUsername().c_str(), message.c_str());
+			return;
 		}
 	}
 
