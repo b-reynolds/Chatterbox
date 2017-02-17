@@ -13,7 +13,7 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if(parameters.size() == 0)
 	{
-		sendMessage(user, statusToString(ERR_INVALID));
+		sendMessage(user, statusToString(CmdStatus::ERR_INVALID));
 		return;
 	}
 
@@ -24,23 +24,23 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if (unameLen < USERNAME_LENGTH_MIN)
 	{
-		sendMessage(user, statusToString(ERR_SHORT));
+		sendMessage(user, statusToString(CmdStatus::ERR_SHORT));
 		return;
 	}
 
 	if (unameLen > USERNAME_LENGTH_MAX)
 	{
-		sendMessage(user, statusToString(ERR_LONG));
+		sendMessage(user, statusToString(CmdStatus::ERR_LONG));
 		return;
 	}
 
 	// Ensure username consists of alphanumeric characters
 
-	for (int i = 0; i < unameLen; ++i)
+	for (int i = 0; i < unameLen; ++i) // TODO: Check $% chars
 	{
 		if (!isalnum(uname[i]))
 		{
-			sendMessage(user, statusToString(ERR_ILLEGAL));
+			sendMessage(user, statusToString(CmdStatus::ERR_ILLEGAL));
 			return;
 		}
 	}
@@ -52,7 +52,7 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 	{
 		if(otherUser.isConnected() && unameL == toLower(otherUser.getUsername()))
 		{
-			sendMessage(user, statusToString(ERR_EXISTS));
+			sendMessage(user, statusToString(CmdStatus::ERR_EXISTS));
 			return;
 		}
 	}

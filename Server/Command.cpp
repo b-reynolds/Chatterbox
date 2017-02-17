@@ -36,7 +36,7 @@ std::string Command::buildString(const std::vector<std::string>& strings, const 
 	return string;
 }
 
-CommandType Command::getCommandType() const
+CmdType Command::getCommandType() const
 {
 	return commandType;
 }

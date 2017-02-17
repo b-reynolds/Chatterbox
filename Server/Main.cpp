@@ -18,10 +18,10 @@
 #pragma comment(lib, "Ws2_32.lib")
 
 const int PORT = 47861;
-const int CLIENTS_MAX = 25;
+const int CLIENTS_MAX = 2500;
 const int BUFFLEN = 1024;
 
-const int TIMEOUT = 60;
+const int TIMEOUT = 1800;
 
 void disconnectClient(User &user, std::vector<User> &users, std::thread &thread, std::string message)
 {
@@ -122,7 +122,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 		parameters.erase(parameters.begin());
 		transform(command.begin(), command.end(), command.begin(), toupper);
 
-		CommandType cmd = stringToCommand(command);
+		CmdType cmd = stringToCommand(command);
 		for(int i = 0; i < commands.size(); ++i)
 		{
 			if(cmd == commands[i]->getCommandType())
@@ -142,7 +142,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 int main()
 {
 	system("cls");
-	system("color 08");
+	system("color 0E");
 	printf("============================================\n");
 	printf(" CHAT SERVER\n");
 	printf("============================================\n");
@@ -233,7 +233,7 @@ int main()
 		if(temp_id != User::ID_NONE)
 		{
 			printf("[*] User #%d has connected\n", users[temp_id].getID());
-			sendMessage(clientSock, statusToString(SUCCESS));
+			sendMessage(clientSock, statusToString(CmdStatus::SUCCESS));
 			threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 		}
 		else

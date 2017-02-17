@@ -9,7 +9,7 @@ class Command
 
 public:
 
-	explicit Command(const CommandType &commandType) : commandType(commandType) {}
+	explicit Command(const CmdType &commandType) : commandType(commandType) {}
 	virtual ~Command() {}
 
 	virtual void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) = 0;
@@ -22,10 +22,10 @@ public:
 	/* Builds a string by concatenating a vector of strings. Each string is prefixed with a joint. */
 	std::string buildString(const std::vector<std::string> &strings, const char &joint) const;
 
-	CommandType getCommandType() const;
+	CmdType getCommandType() const;
 
 private:
 
-	CommandType commandType;
+	CmdType commandType;
 
 };

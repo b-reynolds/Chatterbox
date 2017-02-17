@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-enum Status
+enum class CmdStatus
 {
 	FAIL,
 	SUCCESS,
@@ -14,78 +14,86 @@ enum Status
 	ERR_NOUSR
 };
 
-enum CommandType { NONE, UNAME, MESSAGE, PM, MKROOM, ENTER, EXIT };
+enum class CmdType
+{
+	NONE,
+	UNAME,
+	MESSAGE,
+	PM,
+	MKROOM,
+	ENTER,
+	EXIT
+};
 
-
-inline CommandType stringToCommand(const std::string &string)
+inline CmdType stringToCommand(const std::string &string)
 {
 	if (string == "UNAME")
 	{
-		return UNAME;
+		return CmdType::UNAME;
 	}
 	if (string == "MESSAGE")
 	{
-		return MESSAGE;
+		return CmdType::MESSAGE;
 	}
 	if(string == "PM")
 	{
-		return PM;
+		return CmdType::PM;
 	}
 	if(string == "MKROOM")
 	{
-		return MKROOM;
+		return CmdType::MKROOM;
 	}
 	if(string == "ENTER")
 	{
-		return ENTER;
+		return CmdType::ENTER;
 	}
 	if(string == "EXIT")
 	{
-		return EXIT;
+		return CmdType::EXIT;
 	}
-	return NONE;
+	return CmdType::NONE;
 }
 
-inline std::string statusToString(const Status &status)
+inline std::string statusToString(const CmdStatus &status)
 {
 	switch(status)
 	{
-		case SUCCESS:
+		case CmdStatus::SUCCESS:
 			return "SUCCESS";
-		case ERR_INVALID:
+		case CmdStatus::ERR_INVALID:
 			return "ERR_INVALID";
-		case ERR_EXISTS:
+		case CmdStatus::ERR_EXISTS:
 			return "ERR_EXISTS";
-		case ERR_SHORT:
+		case CmdStatus::ERR_SHORT:
 			return "ERR_SHORT";
-		case ERR_LONG:
+		case CmdStatus::ERR_LONG:
 			return "ERR_LONG";
-		case ERR_ILLEGAL:
+		case CmdStatus::ERR_ILLEGAL:
 			return "ERR_ILLEGAL";
-		case ERR_RESTRICTED:
+		case CmdStatus::ERR_RESTRICTED:
 			return "ERR_RESTRICTED";
-		case ERR_NOUSR:
+		case CmdStatus::ERR_NOUSR:
 			return "ERR_NOUSR";
 		default:
 			return "FAIL";
 	}
 }
 
-inline std::string getError(const Status &status)
+inline std::string getError(const CmdStatus &status)
 {
 	switch (status)
 	{
-		case ERR_EXISTS:
+		case CmdStatus::ERR_EXISTS:
 			return "Username already in use";
-		case ERR_SHORT:
+		case CmdStatus::ERR_SHORT:
 			return "Username too short";
-		case ERR_LONG:
+		case CmdStatus::ERR_LONG:
 			return "Username too long";
-		case ERR_ILLEGAL:
+		case CmdStatus::ERR_ILLEGAL:
 			return "Username contains illegal characters";
-		case ERR_RESTRICTED:
+		case CmdStatus::ERR_RESTRICTED:
 			return "Username contains restricted word";
-		case ERR_NOUSR:
+		case CmdStatus::ERR_NOUSR:
 			return "Specified user does not exist";
 		default:
 			return "Unknown";

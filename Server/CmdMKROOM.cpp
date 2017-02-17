@@ -20,13 +20,13 @@ void CmdMKROOM::execute(User& user, const std::vector<User>& users, std::vector<
 
 	if (roomNameLength < ROOM_NAME_LENGTH_MIN)
 	{
-		sendMessage(user, statusToString(ERR_SHORT));
+		sendMessage(user, statusToString(CmdStatus::ERR_SHORT));
 		return;
 	}
 
 	if (roomNameLength > ROOM_NAME_LENGTH_MAX)
 	{
-		sendMessage(user, statusToString(ERR_LONG));
+		sendMessage(user, statusToString(CmdStatus::ERR_LONG));
 		return;
 	}
 
@@ -34,7 +34,7 @@ void CmdMKROOM::execute(User& user, const std::vector<User>& users, std::vector<
 	{
 		if(!isalpha(roomName[i]) && roomName[i] != '-')
 		{
-			sendMessage(user, statusToString(ERR_ILLEGAL));
+			sendMessage(user, statusToString(CmdStatus::ERR_ILLEGAL));
 			return;
 		}
 	}
@@ -43,18 +43,18 @@ void CmdMKROOM::execute(User& user, const std::vector<User>& users, std::vector<
 	{
 		if(rooms[i].getOwner()->getID() == user.getID())
 		{
-			sendMessage(user, statusToString(ERR_INVALID));
+			sendMessage(user, statusToString(CmdStatus::ERR_INVALID));
 			return;
 		}
 		if(toLower(rooms[i].getName()) == toLower(roomName))
 		{
-			sendMessage(user, statusToString(ERR_INVALID));
+			sendMessage(user, statusToString(CmdStatus::ERR_INVALID));
 			return;
 		}
 	}
 
 	rooms.push_back(Room(roomName, &user, ROOM_SIZE_DEFAULT));
 
-	sendMessage(user, statusToString(SUCCESS));
+	sendMessage(user, statusToString(CmdStatus::SUCCESS));
 	
 }

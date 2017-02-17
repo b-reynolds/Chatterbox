@@ -12,7 +12,7 @@ class CmdMESSAGE : public Command
 public:
 
 	/* Default Constructor */
-	CmdMESSAGE() : Command(MESSAGE) {};
+	CmdMESSAGE() : Command(CmdType::MESSAGE) {};
 	
 	/* Execute command */
 	void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;

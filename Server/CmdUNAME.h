@@ -12,7 +12,7 @@ class CmdUNAME : public Command
 public:
 
 	/* Default Constructor */
-	CmdUNAME() : Command(UNAME) {};
+	CmdUNAME() : Command(CmdType::UNAME) {};
 
 	/* Execute the command */
 	void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;

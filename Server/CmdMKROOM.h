@@ -6,7 +6,7 @@ class CmdMKROOM : public Command
 
 public:
 
-	CmdMKROOM() : Command(MKROOM) {};
+	CmdMKROOM() : Command(CmdType::MKROOM) {};
 
 	void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 

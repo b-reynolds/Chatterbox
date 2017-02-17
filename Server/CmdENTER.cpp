@@ -4,7 +4,7 @@ void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<R
 {
 	if(parameters.size() == 0)
 	{
-		sendMessage(user, statusToString(ERR_INVALID));
+		sendMessage(user, statusToString(CmdStatus::ERR_INVALID));
 		return;
 	}
 
@@ -21,14 +21,14 @@ void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if(room == nullptr)
 	{
-		sendMessage(user, statusToString(ERR_EXISTS));
+		sendMessage(user, statusToString(CmdStatus::ERR_EXISTS));
 		return;
 	}
 
 	user.setRoom(room);
 	room->addUser(&user);
 
-	sendMessage(user, statusToString(SUCCESS));
+	sendMessage(user, statusToString(CmdStatus::SUCCESS));
 }
 
 CmdENTER::~CmdENTER()
