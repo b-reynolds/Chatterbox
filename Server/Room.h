@@ -14,7 +14,17 @@ public:
 	std::vector<User*>& getUsers();
 
 	std::string getName() const;
-	User* getOwner();
+	User* getOwner() const;
+
+	void setCapacity(const int &capacity);
+
+	std::string getPassword() const;
+	void setPassword(const std::string &password);
+
+	void setLocked(const bool &state);
+
+	bool isFull() const;
+	bool isLocked() const;
 
 	~Room();
 
@@ -26,7 +36,7 @@ private:
 	bool locked;
 	std::string password;
 	std::string name;
-	int size;
+	int capacity;
 
 };
 

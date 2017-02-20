@@ -46,6 +46,10 @@ std::string Command::cmdStatusToString(const CmdStatus& cmdStatus)
 			return "ERR_RESTRICTED";
 		case CmdStatus::ERR_NOUSR:
 			return "ERR_NOUSR";
+		case CmdStatus::ERR_FULL:
+			return "ERR_FULL";
+		case CmdStatus::ERR_BADPASS:
+			return "ERR_BADPASS";
 		default:
 			return "FAIL";
 	}

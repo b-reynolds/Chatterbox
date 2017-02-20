@@ -1,5 +1,5 @@
 #include "User.h"
-#include <ctype.h>
+#include "Room.h"
 #include <algorithm>
 
 User::User()
@@ -20,9 +20,15 @@ User::User(const int& id, SOCKET socket)
 
 void User::reset()
 {
+	if (room != nullptr)
+	{
+		room->removeUser(this);
+	}
+
 	id = ID_NONE;
 	socket = INVALID_SOCKET;
 	username = USERNAME_NONE;
+
 	room = nullptr;
 }
 

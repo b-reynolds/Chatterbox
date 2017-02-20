@@ -17,6 +17,8 @@ private:
 	const int ROOM_SIZE_DEFAULT = 32;
 	const int ROOM_NAME_LENGTH_MIN = 3;
 	const int ROOM_NAME_LENGTH_MAX = 24;
+	const int ROOM_PASSWORD_LENGTH_MIN = 8;
+	const int ROOM_PASSWORD_LENGTH_MAX = 32;
 
 };
 

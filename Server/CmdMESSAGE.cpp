@@ -52,7 +52,7 @@ void CmdMESSAGE::execute(User& user, const std::vector<User>& users, std::vector
 	for(auto & otherUser : users)
 	{
 		// Send message to lobby
-		if(user.getRoom() == nullptr)
+		if(otherUser.getRoom() == nullptr)
 		{
 			user.sendMessage(otherUser, user.getUsername() + ": " + msg);
 		}

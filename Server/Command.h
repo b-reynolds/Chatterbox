@@ -16,7 +16,9 @@ enum class CmdStatus
 	ERR_LONG,
 	ERR_ILLEGAL,
 	ERR_RESTRICTED,
-	ERR_NOUSR
+	ERR_NOUSR,
+	ERR_FULL,
+	ERR_BADPASS
 };
 
 /**
