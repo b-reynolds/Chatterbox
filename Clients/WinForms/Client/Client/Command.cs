@@ -12,11 +12,12 @@ namespace Client
         public enum CmdType
         {
             MSG,
-            JOIN,
+            CONNECT,
             CHANGE,
             PM,
             NONE,
             USERS,
+            DISCONNECT
         };
 
         public static CmdType stringToCmdType(string input)
@@ -25,14 +26,16 @@ namespace Client
             {
                 case "MSG":
                     return CmdType.MSG;
-                case "JOIN":
-                    return CmdType.JOIN;
+                case "CONNECT":
+                    return CmdType.CONNECT;
                 case "CHANGE":
                     return CmdType.CHANGE;
                 case "PM":
                     return CmdType.PM;
                 case "USERS":
                     return CmdType.USERS;
+                case "DISCONNECT":
+                    return CmdType.DISCONNECT;
                 default:
                     return CmdType.NONE;
             }

@@ -20,11 +20,6 @@ namespace Client
             nudPort.Value = DEFAULT_PORT;
         }
 
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
         private void btnConnect_Click(object sender, EventArgs e)
         {
             Enabled = false;
@@ -40,8 +35,6 @@ namespace Client
                 Enabled = true;
                 return;
             }
-
-            MessageBox.Show(this, @"Connected!", @"Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             FrmMain frmMain = new FrmMain(ref client);
             frmMain.Show();

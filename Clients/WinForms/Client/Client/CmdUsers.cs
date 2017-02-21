@@ -7,14 +7,20 @@ namespace Client
     {
         public override string execute(string[] dataParts, RichTextBox rtxtFeed, ListBox lstUsers)
         {
-            if (dataParts.Length > 1)
+            if (dataParts.Length <= 1)
             {
-                lstUsers.BeginInvoke((Action)(() => lstUsers.Items.Clear()));
-                for (int i = 1; i < dataParts.Length - 1; i++)
-                {
-                    lstUsers.BeginInvoke((Action)(() => lstUsers.Items.Add(dataParts[i])));
-                }
+                return string.Empty;
             }
+
+            lstUsers.BeginInvoke((MethodInvoker) delegate ()
+            {
+                lstUsers.Items.Clear();
+                for (int i = 1; i < dataParts.Length; i++)
+                {
+                    lstUsers.Items.Add(dataParts[i]);
+                }
+            });
+
             return string.Empty;
         }
     }

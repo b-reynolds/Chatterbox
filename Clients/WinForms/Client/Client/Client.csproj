@@ -48,7 +48,8 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="CmdChange.cs" />
-    <Compile Include="CmdJoin.cs" />
+    <Compile Include="CmdDisconnect.cs" />
+    <Compile Include="CmdConnect.cs" />
     <Compile Include="CmdMessage.cs" />
     <Compile Include="CmdPM.cs" />
     <Compile Include="CmdUsers.cs" />

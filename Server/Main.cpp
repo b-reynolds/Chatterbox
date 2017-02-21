@@ -26,13 +26,14 @@ const int TIMEOUT = 1800;
 void disconnectClient(User &user, std::vector<User> &users, std::thread &thread, std::string message)
 {
 	printf("[x] Client #%d (%s) disconnected (%s)\n", user.getID(), user.getUsername().c_str(), message.c_str());
-	message = user.getUsername() + " disconnected (" + message + ")";
+	
+	std::string output = "$DISCONNECT:" + user.getUsername() + "$";
 
 	for (int i = 0; i < CLIENTS_MAX; i++)
 	{
 		if (users[i].isConnected())
 		{
-			send(users[i].getSocket(), message.c_str(), message.length(), 0);
+			send(users[i].getSocket(), output.c_str(), output.length(), 0);
 		}
 	}
 

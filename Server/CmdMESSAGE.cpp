@@ -1,5 +1,4 @@
 #include "CmdMESSAGE.h"
-#include <numeric>
 
 /*
 * \brief Execute the command

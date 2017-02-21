@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -26,7 +22,7 @@ namespace Client
 
         ~Client()
         {
-            if (tcpClient != null && isConnected())
+            if (isConnected())
             {
                 tcpClient.Close();
             }
@@ -34,12 +30,12 @@ namespace Client
 
         public bool isConnected()
         {
-            return tcpClient.Connected;
+            return tcpClient != null && tcpClient.Connected;
         }
 
         public bool connect()
         {
-            if (tcpClient != null && isConnected())
+            if (isConnected())
             {
                 tcpClient.Close();
             }

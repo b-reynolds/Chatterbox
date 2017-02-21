@@ -10,7 +10,7 @@ namespace Client
             {
                 return string.Empty;
             }
-            return RTF_START + @"\i \cf2 (PM)\i0  \b " + dataParts[1] + @"\b0 \cf1 : " + dataParts[2] + RTF_END;
+            return RTF_START + @"\i \cf2 (PM)\i0  [\b " + dataParts[1] + @"\b0 ] \cf1 : " + dataParts[2] + RTF_END;
         }
     }
 }

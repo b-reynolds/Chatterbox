@@ -31,25 +31,25 @@ std::string Command::cmdStatusToString(const CmdStatus& cmdStatus)
 	switch (cmdStatus)
 	{
 		case CmdStatus::SUCCESS:
-			return "SUCCESS";
+			return "$SUCCESS$";
 		case CmdStatus::ERR_INVALID:
-			return "ERR_INVALID";
+			return "$ERR_INVALID$";
 		case CmdStatus::ERR_EXISTS:
-			return "ERR_EXISTS";
+			return "$ERR_EXISTS$";
 		case CmdStatus::ERR_SHORT:
-			return "ERR_SHORT";
+			return "$ERR_SHORT$";
 		case CmdStatus::ERR_LONG:
-			return "ERR_LONG";
+			return "$ERR_LONG$";
 		case CmdStatus::ERR_ILLEGAL:
-			return "ERR_ILLEGAL";
+			return "$ERR_ILLEGAL$";
 		case CmdStatus::ERR_RESTRICTED:
-			return "ERR_RESTRICTED";
+			return "$ERR_RESTRICTED$";
 		case CmdStatus::ERR_NOUSR:
-			return "ERR_NOUSR";
+			return "$ERR_NOUSR$";
 		case CmdStatus::ERR_FULL:
-			return "ERR_FULL";
+			return "$ERR_FULL$";
 		case CmdStatus::ERR_BADPASS:
-			return "ERR_BADPASS";
+			return "$ERR_BADPASS$";
 		default:
 			return "FAIL";
 	}

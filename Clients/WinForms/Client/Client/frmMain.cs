@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Data;
-using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
-using System.Net.Sockets;
 using System.Threading;
 using static System.String;
 
@@ -11,12 +10,15 @@ namespace Client
     public partial class FrmMain : Form
     {
 
-        private delegate void UpdateFeedCallback(string message);
+        private readonly Queue<string> qCommands = new Queue<string>();
 
-        public delegate string UpdateUserListCallback(string[] dataParts, ref RichTextBox rtxtFeed, ref ListBox lstUsers);
-
-        private Client client;
+        private readonly Client client;
         private Thread thread;
+
+        private static IEnumerable<string> getCommands(string input)
+        {
+            return input.Split('$').Where(part => part != Empty).ToList();
+        }
 
         public FrmMain(ref Client client)
         {
@@ -35,12 +37,28 @@ namespace Client
             while (true)
             {
                 string data = client.getData();
+
+                if (data != Empty)
+                {
+                    IEnumerable<string> commands = getCommands(data);
+                    foreach (string s in commands)
+                    {
+                        qCommands.Enqueue(s);
+                    }
+                }
+
                 if (data == null)
                 {
                     exit();
                     thread.Abort();
                 }
-                updateFeed(processData(data));
+
+                if (qCommands.Count != 0)
+                {
+                    string command = qCommands.Dequeue();
+                    lstCommands.BeginInvoke((Action)(() => lstCommands.Items.Add(command)));
+                    updateFeed(processData(command));
+                }
             }
         }
 
@@ -57,8 +75,8 @@ namespace Client
                     case Command.CmdType.MSG:
                         command = new CmdMessage();
                         break;
-                    case Command.CmdType.JOIN:
-                        command = new CmdJoin();
+                    case Command.CmdType.CONNECT:
+                        command = new CmdConnect();
                         break;
                     case Command.CmdType.CHANGE:
                         command = new CmdChange();
@@ -69,53 +87,21 @@ namespace Client
                     case Command.CmdType.USERS:
                         command = new CmdUsers();
                         break;
+                    case Command.CmdType.DISCONNECT:
+                        command = new CmdDisconnect();
+                        break;  
                     default:
                         command = null;
                         break;
                 }
                 return command != null ? command.execute(dataParts, rtxtBody, lstUsers) : Empty;
             }
-
-            //switch (dataParts[0])
-            //{
-            //    case "MSG":
-            //        return dataParts[1] + ": " + dataParts[2] + Environment.NewLine;
-            //    case "JOIN":
-            //        return dataParts[1] + " joined the server." + Environment.NewLine;
-            //    case "CHANGE":
-            //        return dataParts[1] + " changed their name to " + dataParts[2] + Environment.NewLine;
-            //    case "PM":
-            //        return "(PM) " + dataParts[1] + ": " + dataParts[2] + Environment.NewLine;
-            //    case "NROOM":
-            //        if (lstRooms.InvokeRequired)
-            //        {
-            //            var updateRoomList = new UpdateRoomList(processData);
-            //            Invoke(updateRoomList, "NROOM:" + dataParts[1]);
-            //        }
-            //        else
-            //        {
-            //            if (!lstRooms.Items.Contains(dataParts[1]))
-            //            {
-            //                lstRooms.Items.Add(dataParts[1]);
-            //            }
-            //        }
-            //        break;
-            //}
-
             return Empty;
         }
 
         private void updateFeed(string message)
         {
-            if (rtxtBody.InvokeRequired)
-            {
-                var updateMessagesCallback = new UpdateFeedCallback(updateFeed);
-                Invoke(updateMessagesCallback, message);
-            }
-            else
-            {
-                rtxtBody.SelectedRtf = message;
-            }
+           rtxtBody.BeginInvoke((Action)(() => rtxtBody.SelectedRtf = message));
         }
 
         private void exit()
@@ -143,6 +129,13 @@ namespace Client
                 e.SuppressKeyPress = true;
             }
         }
+
+        private void rtxtBody_TextChanged(object sender, EventArgs e)
+        {
+            rtxtBody.SelectionStart = rtxtBody.Text.Length;
+            rtxtBody.ScrollToCaret();
+        }
+
     }
 
 }
