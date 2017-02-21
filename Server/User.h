@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <WinSock2.h>
 #include <vector>
 
@@ -8,42 +7,41 @@ class Room;
 class User
 {
 
-public:
+ public:
 
-	static const int ID_NONE = -1;
-
+	static const int kIdNone = -1;
+	
 	User();
-	User(const int &id, SOCKET socket);
+	User(const int& id, SOCKET socket);
 
-	void reset();
-	bool isConnected() const;
+	void set_id(const int& id);
+	int get_id() const;
 
-	void setID(const int &id);
-	int getID() const;
+	void set_socket(SOCKET socket);
+	SOCKET get_socket() const;
 
-	void sendMessage(const User &user, const std::string &message) const;
-	void sendMessage(const std::vector<User> &users, const std::string &message) const;
+	void set_name(const std::string& name);
+	std::string get_name() const;
 
-	void setUsername(const std::string &username);
-	std::string getUsername() const;
+	void set_room(Room* room);
+	Room* get_room() const;
 
-	void setRoom(Room* room);
-	Room* getRoom() const;
+	void SendData(const User& user, const std::string& message) const;
+	void SendData(const std::vector<User>& users, const std::string& message) const;
+	void SendData(Room* room, const std::string& message);
 
-	bool hasUsername() const;
+	void Reset();
+	bool Connected() const;
+	bool HasName() const;
 
-	void setSocket(SOCKET socket);
-	SOCKET getSocket() const;
+ private:
 
-private:
+	static constexpr char* kUsernameNone = "";
 
-	static constexpr char* USERNAME_NONE = "";
-
-	Room* room;
-	SOCKET socket;
-
-	int id;
-	std::string username;
+	int id_;
+	SOCKET socket_;
+	std::string name_;
+	Room* room_;
 
 };
 

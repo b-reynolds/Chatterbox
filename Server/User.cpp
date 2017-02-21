@@ -1,103 +1,107 @@
-#include "User.h"
+#include "user.h"
 #include "Room.h"
-#include <algorithm>
 
 User::User()
 {
-	id = ID_NONE;
-	socket = INVALID_SOCKET;
-	username = USERNAME_NONE;
-	room = nullptr;
+	id_ = kIdNone;
+	socket_ = INVALID_SOCKET;
+	name_ = kUsernameNone;
+	room_ = nullptr;
 }
 
 User::User(const int& id, SOCKET socket)
 {
-	this->id = id;
-	this->socket = socket;
-	username = USERNAME_NONE;
-	room = nullptr;
+	id_ = id;
+	socket_ = socket;
+	name_ = kUsernameNone;
+	room_ = nullptr;
 }
 
-void User::reset()
+void User::set_id(const int& id)
 {
-	if (room != nullptr)
+	id_ = id;
+}
+
+int User::get_id() const
+{
+	return id_;
+}
+
+void User::set_socket(SOCKET socket)
+{
+	socket_ = socket;
+}
+
+SOCKET User::get_socket() const
+{
+	return socket_;
+}
+
+void User::set_name(const std::string& username)
+{
+	name_ = username;
+}
+
+std::string User::get_name() const
+{
+	return name_;
+}
+
+void User::set_room(Room* room)
+{
+	room_ = room;
+}
+
+Room* User::get_room() const
+{
+	return room_;
+}
+
+void User::SendData(const User& user, const std::string& message) const
+{
+	if (user.Connected() && user.HasName())
 	{
-		room->removeUser(this);
+		send(user.get_socket(), message.c_str(), message.length(), 0);
+	}
+}
+
+void User::SendData(const std::vector<User>& users, const std::string& message) const
+{
+	for(auto & user : users)
+	{
+		SendData(users, message);
+	}
+}
+
+void User::SendData(Room* room, const std::string& message)
+{
+	for(auto & user : room->getUsers())
+	{
+		SendData(*user, message);
+	}
+}
+
+void User::Reset()
+{
+	if (room_ != nullptr)
+	{
+		room_->removeUser(this);
 	}
 
-	id = ID_NONE;
-	socket = INVALID_SOCKET;
-	username = USERNAME_NONE;
+	id_ = kIdNone;
+	socket_ = INVALID_SOCKET;
+	name_ = kUsernameNone;
 
-	room = nullptr;
+	room_ = nullptr;
 }
 
-bool User::isConnected() const
+bool User::Connected() const
 {
-	return id != ID_NONE && socket != INVALID_SOCKET;
+	return id_ != kIdNone && socket_ != INVALID_SOCKET;
 }
 
-void User::setID(const int& id)
+bool User::HasName() const
 {
-	this->id = id;
+	return name_ != kUsernameNone;
 }
 
-int User::getID() const
-{
-	return id;
-}
-
-void User::sendMessage(const User& user, const std::string& message) const
-{
-	if (user.isConnected() && user.hasUsername())
-	{
-		send(user.getSocket(), message.c_str(), message.length(), 0);
-	}
-}
-
-void User::sendMessage(const std::vector<User>& users, const std::string& message) const
-{
-	int result = 0;
-	for(int i = 0; i < users.size(); ++i)
-	{
-		if(i != id)
-		{
-			sendMessage(users[i], message);
-		}
-	}
-}
-
-void User::setUsername(const std::string& username)
-{
-	this->username = username;
-}
-
-std::string User::getUsername() const
-{
-	return username;
-}
-
-void User::setRoom(Room* room)
-{
-	this->room = room;
-}
-
-Room* User::getRoom() const
-{
-	return room;
-}
-
-bool User::hasUsername() const
-{
-	return username != USERNAME_NONE;
-}
-
-void User::setSocket(SOCKET socket)
-{
-	this->socket = socket;
-}
-
-SOCKET User::getSocket() const
-{
-	return socket;
-}
