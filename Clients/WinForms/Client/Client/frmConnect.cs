@@ -36,6 +36,8 @@ namespace Client
                 return;
             }
 
+            MessageBox.Show(@"Connected!", "Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             FrmMain frmMain = new FrmMain(ref client);
             frmMain.Show();
 
