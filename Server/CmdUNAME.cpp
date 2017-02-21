@@ -61,14 +61,14 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if(user.hasUsername())
 	{
-		std::string message = user.getUsername() + " changed their name to " + uname + ".";
+		std::string output = "CHANGE:" + user.getUsername() + ":" + uname;
 		if(user.getRoom() == nullptr)
 		{
 			for(auto & otherUser : users)
 			{
 				if(otherUser.getRoom() == nullptr)
 				{
-					user.sendMessage(otherUser, message);
+					user.sendMessage(otherUser, output);
 				}
 			}
 		}
@@ -77,22 +77,31 @@ void CmdUNAME::execute(User& user, const std::vector<User>& users, std::vector<R
 			Room* room = user.getRoom();
 			for(auto & otherUser : room->getUsers())
 			{
-				user.sendMessage(*otherUser, message);
+				user.sendMessage(*otherUser, output);
 			}
 		}
 		printf("[*] User #%d changed their username from %s to %s\n", user.getID(), user.getUsername().c_str(), uname.c_str());
 	}
 	else
 	{
-		std::string message = uname + " has joined the server.";
+		std::string output = "JOIN:" + uname;
+		std::string activeUsers = "USERS:" + uname;
 		int userID = user.getID();
-		for(auto & otherUser : users)
+		for(auto & usr : users)
 		{
-			if(otherUser.getRoom() == nullptr && otherUser.getID() != userID)
+			if(usr.isConnected())
 			{
-				sendMessage(otherUser, message);
+				if (usr.hasUsername())
+				{
+					activeUsers += usr.getUsername() + ":";
+				}
+				if (usr.getRoom() == nullptr)
+				{
+					sendMessage(usr, output);
+				}
 			}
 		}
+		sendMessage(user, activeUsers);
 		printf("[*] User #%d set their username to %s\n", user.getID(), uname.c_str());
 	}
 

@@ -37,7 +37,7 @@ void CmdPM::execute(User& user, const std::vector<User>& users, std::vector<Room
 
 		if(toLower(otherUser.getUsername()) == recipientL)
 		{
-			user.sendMessage(otherUser, "(PM) " + user.getUsername() + ": " + message);
+			user.sendMessage(otherUser, "PM:" + user.getUsername() + ":" + message);
 			sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 			printf("\t#%d %s > #%d %s : %s\n", user.getID(), user.getUsername().c_str(), otherUser.getID(), otherUser.getUsername().c_str(), message.c_str());
 			return;

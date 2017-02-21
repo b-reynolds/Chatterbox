@@ -116,6 +116,8 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 			continue;
 		}
 
+		printf("Raw: %s\n", recvBuffer);
+
 		std::vector<std::string> parameters = split(input, ' ');
 
 		std::string command = parameters[0];

@@ -36,13 +36,14 @@ void CmdMESSAGE::execute(User& user, const std::vector<User>& users, std::vector
 	}
 
 	Room* usrRoom = user.getRoom();
+	std::string output = "MSG:" + user.getUsername() + ":" + msg;
 
 	if(usrRoom != nullptr)
 	{
 		// Send message to room
 		for(auto & otherUser : usrRoom->getUsers())
 		{
-			user.sendMessage(*otherUser, user.getUsername() + ": " + msg);
+			user.sendMessage(*otherUser, output);
 		}
 		printf("\t#%d %s > %s : %s\n", user.getID(), user.getUsername().c_str(), usrRoom->getName().c_str(), msg.c_str());
 		sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
@@ -54,7 +55,7 @@ void CmdMESSAGE::execute(User& user, const std::vector<User>& users, std::vector
 		// Send message to lobby
 		if(otherUser.getRoom() == nullptr)
 		{
-			user.sendMessage(otherUser, user.getUsername() + ": " + msg);
+			user.sendMessage(otherUser, output);
 		}
 	}
 

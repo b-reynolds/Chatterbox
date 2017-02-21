@@ -53,7 +53,7 @@ void CmdMKROOM::execute(User& user, const std::vector<User>& users, std::vector<
 	for(int i = 0; i < rooms.size(); ++i)
 	{
 		// Ensure the user does not currently own a room
-		if(rooms[i].getOwner()->getID() == user.getID())
+		if(rooms[i].getOwner()->getID() == user.getID()) // TODO: ID isn't enough, as ppl can share ID
 		{
 			sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
 			return;
@@ -115,6 +115,11 @@ void CmdMKROOM::execute(User& user, const std::vector<User>& users, std::vector<
 	}
 
 	rooms.push_back(room);
+
+	for(auto & usr : users)
+	{
+		sendMessage(usr, "NROOM:" + room.getName());
+	}
 
 	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
 }
