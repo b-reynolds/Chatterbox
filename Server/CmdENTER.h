@@ -1,14 +1,14 @@
 #pragma once
-#include "Command.h"
+#include "command.h"
 
 class CmdENTER : public Command
 {
 
 public:
 
-	CmdENTER() : Command(CmdType::ENTER) {}
+	CmdENTER() : Command(Type::kEnter) {}
 
-	void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	void Execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 
 	~CmdENTER();
 

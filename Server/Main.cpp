@@ -4,17 +4,18 @@
 #include <string>
 #include <WinSock2.h>
 #include "Timer.h"
-#include "User.h"
+#include "user.h"
 #include <algorithm>
 #include <sstream>
 #include <numeric>
-#include "CmdMESSAGE.h"
-#include "CmdUNAME.h"
+#include "cmd_message.h"
+#include "cmd_uname.h"
 #include "CmdPM.h"
 #include "Room.h"
 #include "CmdMKROOM.h"
 #include "CmdENTER.h"
 #include "CmdEXIT.h"
+#include "command_packet.h"
 #pragma comment(lib, "Ws2_32.lib")
 
 const int PORT = 47861;
@@ -25,20 +26,20 @@ const int TIMEOUT = 1800;
 
 void disconnectClient(User &user, std::vector<User> &users, std::thread &thread, std::string message)
 {
-	printf("[x] Client #%d (%s) disconnected (%s)\n", user.getID(), user.getUsername().c_str(), message.c_str());
+	printf("[x] Client #%d (%s) disconnected (%s)\n", user.get_id(), user.get_name().c_str(), message.c_str());
 	
-	std::string output = "$DISCONNECT:" + user.getUsername() + "$";
+	std::string output = "$DISCONNECT:" + user.get_name() + "$";
 
 	for (int i = 0; i < CLIENTS_MAX; i++)
 	{
-		if (users[i].isConnected())
+		if (users[i].Connected())
 		{
-			send(users[i].getSocket(), output.c_str(), output.length(), 0);
+			send(users[i].get_socket(), output.c_str(), output.length(), 0);
 		}
 	}
 
-	closesocket(user.getSocket());
-	users[user.getID()].reset();
+	closesocket(user.get_socket());
+	users[user.get_id()].Reset();
 	thread.detach();
 }
 
@@ -56,14 +57,14 @@ void sendMessage(SOCKET socket, const std::string &message)
 
 void sendMessage(const User &user, const std::string &message)
 {
-	send(user.getSocket(), message.c_str(), message.size(), 0);
+	send(user.get_socket(), message.c_str(), message.size(), 0);
 }
 
 void sendMessage(const std::vector<User> &users, const std::string &message)
 {
 	for(int i = 0; i < users.size(); ++i)
 	{
-		if(users[i].isConnected() && users[i].hasUsername())
+		if(users[i].Connected() && users[i].HasName())
 		{
 			sendMessage(users[i], message);
 		}
@@ -87,6 +88,7 @@ std::vector<std::string> split(const std::string &string, char delimiter)
 int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<Command*> &commands, std::thread &thread)
 {
 	Timer timeOut(TIMEOUT);
+	CmdMESSAGE cmd_message;
 	while (true)
 	{
 		char recvBuffer[BUFFLEN] = { 0 };
@@ -96,7 +98,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 
 		int error = 0;
 
-		int result = recv(user.getSocket(), recvBuffer, BUFFLEN, 0);
+		int result = recv(user.get_socket(), recvBuffer, BUFFLEN, 0);
 
 		if (timeOut.hasExpired()) // TODO: Cleanup room stuff 
 		{
@@ -122,17 +124,26 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 		std::vector<std::string> parameters = split(input, ' ');
 
 		std::string command = parameters[0];
-		parameters.erase(parameters.begin());
 		transform(command.begin(), command.end(), command.begin(), toupper);
 
-		CmdType cmd = Command::stringToCmdType(command);
+		// TODO: Tidy/Refactor!
+
+		bool t = false;
+		Type cmd = Command::StringToType(command);
 		for(int i = 0; i < commands.size(); ++i)
 		{
-			if(cmd == commands[i]->getCommandType())
+			if(cmd == commands[i]->get_type())
 			{
-				commands[i]->execute(user, users, rooms, parameters);
+				parameters.erase(parameters.begin());
+				commands[i]->Execute(user, users, rooms, parameters);
 				timeOut.reset();
+				t = true;
 			}
+		}
+
+		if(!t)
+		{
+			cmd_message.Execute(user, users, rooms, parameters);
 		}
 
 		Sleep(100);
@@ -209,7 +220,7 @@ int main()
 	int size = sizeof(client);
 	std::string message;
 
-	std::vector<Command*> commands{ new CmdMESSAGE(), new CmdUNAME(), new CmdPM(), new CmdMKROOM(), new CmdENTER(), new CmdEXIT() };
+	std::vector<Command*> commands{ new CmdUNAME(), new CmdPM(), new CmdMKROOM(), new CmdENTER(), new CmdEXIT() };
 	std::vector<Room> rooms;
 
 	while(true)
@@ -221,11 +232,11 @@ int main()
 			continue;
 		}
 
-		int temp_id = User::ID_NONE;
+		int temp_id = User::kIdNone;
 
 		for(int i = 0; i < CLIENTS_MAX; ++i)
 		{
-			if(!users[i].isConnected())
+			if(!users[i].Connected())
 			{
 				users[i] = User(i, clientSock);
 				temp_id = i;
@@ -233,10 +244,10 @@ int main()
 			}
 		}
 
-		if(temp_id != User::ID_NONE)
+		if(temp_id != User::kIdNone)
 		{
-			printf("[*] User #%d has connected\n", users[temp_id].getID());
-			sendMessage(clientSock, Command::cmdStatusToString(CmdStatus::SUCCESS));
+			printf("[*] User #%d has connected\n", users[temp_id].get_id());
+			sendMessage(clientSock, Command::StatusToString(Status::kSuccess));
 			threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 		}
 		else
@@ -250,7 +261,7 @@ int main()
 	for(int i = 0; i < CLIENTS_MAX; ++i)
 	{
 		threads[i].detach();
-		closesocket(users[i].getSocket());
+		closesocket(users[i].get_socket());
 	}
 
 	WSACleanup();

@@ -27,18 +27,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="User.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdMESSAGE.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdUNAME.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
     <ClCompile Include="CmdPM.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
@@ -54,6 +42,21 @@
     <ClCompile Include="CmdEXIT.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="user.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="command.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="command_packet.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd_message.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd_uname.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -61,18 +64,6 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="User.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdUNAME.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="Command.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdMESSAGE.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="Room.h">
       <Filter>Header Files</Filter>
@@ -87,6 +78,21 @@
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="CmdEXIT.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="command_packet.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_uname.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_message.h">
       <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>

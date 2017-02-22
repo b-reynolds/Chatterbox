@@ -17,7 +17,7 @@ void Room::removeUser(User* user)
 {
 	for(int i = 0; i < users.size(); ++i)
 	{
-		if(users[i]->getID() == user->getID())
+		if(users[i]->get_id() == user->get_id())
 		{
 			users.erase(users.begin() + i);
 		}

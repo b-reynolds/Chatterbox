@@ -1,10 +1,10 @@
 #include "CmdENTER.h"
 
-void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdENTER::Execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
-	if(!user.hasUsername())
+	if(!user.HasName())
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
+		SendData(user, StatusToString(Status::kInvalid));
 		return;
 	}
 
@@ -12,16 +12,16 @@ void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if(paramSize == 0)
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
+		SendData(user, StatusToString(Status::kInvalid));
 		return;
 	}
 
-	std::string roomNameL = toLower(parameters[0]);
+	std::string roomNameL = ToLower(parameters[0]);
 
 	Room* room = nullptr;
 	for(int i = 0; i < rooms.size(); ++i)
 	{
-		if (toLower(rooms[i].getName()) == roomNameL)
+		if (ToLower(rooms[i].getName()) == roomNameL)
 		{
 			room = &rooms[i];
 		}
@@ -29,7 +29,7 @@ void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<R
 
 	if(room == nullptr)
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_EXISTS));
+		SendData(user, StatusToString(Status::kExists));
 		return;
 	}
 
@@ -37,21 +37,21 @@ void CmdENTER::execute(User& user, const std::vector<User>& users, std::vector<R
 	{
 		if(paramSize < 2 || parameters[1] != room->getPassword())
 		{
-			sendMessage(user, cmdStatusToString(CmdStatus::ERR_BADPASS));
+			SendData(user, StatusToString(Status::kBadPass));
 			return;
 		}
 	}
 
 	if(room->isFull())
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_FULL));
+		SendData(user, StatusToString(Status::kFull));
 		return;
 	}
 
 	room->addUser(&user);
-	user.setRoom(room);
+	user.set_room(room);
 
-	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
+	SendData(user, StatusToString(Status::kSuccess));
 }
 
 CmdENTER::~CmdENTER()

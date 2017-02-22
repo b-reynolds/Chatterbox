@@ -1,38 +1,33 @@
 #pragma once
 #include <vector>
-#include "User.h"
+#include "user.h"
 #include "Room.h"
+#include "command_packet.h"
 
-/*
- * \brief Enumeration of Command Statuses
- */
-enum class CmdStatus
+enum class Status
 {
-	FAIL,
-	SUCCESS,
-	ERR_INVALID,
-	ERR_EXISTS,
-	ERR_SHORT,
-	ERR_LONG,
-	ERR_ILLEGAL,
-	ERR_RESTRICTED,
-	ERR_NOUSR,
-	ERR_FULL,
-	ERR_BADPASS
+	kFail,
+	kSuccess,
+	kInvalid,
+	kExists,
+	kShort,
+	kLong,
+	kIllegal,
+	kRestricted,
+	kNoUsr,
+	kFull,
+	kBadPass
 };
 
-/**
- * \brief Enumeration of command types
- */
-enum class CmdType
+enum class Type
 {
-	NONE,
-	UNAME,
-	MESSAGE,
-	PM,
-	MKROOM,
-	ENTER,
-	EXIT
+	kNone,
+	kUName,
+	kMessage,
+	kPm,
+	kMkRoom,
+	kEnter,
+	kExit
 };
 
 /**
@@ -41,39 +36,37 @@ enum class CmdType
 class Command
 {
 
-public:
+ public:
 
-	/* Constructor initializes commandType */
-	explicit Command(const CmdType &commandType) : commandType(commandType) {}
+	explicit Command(const Type &commandType) : type_(commandType) {}
 
-	/* Virtual Destructor */
 	virtual ~Command() {}
 
-	/* Pure virtual execute method used by all Commands */
-	virtual void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) = 0;
+	/* Pure virtual execute method implemented by all Commands */
+	virtual void Execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) = 0;
 
 	/* Converts a string to its CmdType equivalent */
-	static CmdType stringToCmdType(const std::string &string);
+	static Type StringToType(const std::string &string);
 
 	/* Converts a CmdStatus to its string equivalent */
-	static std::string cmdStatusToString(const CmdStatus &cmdStatus);
+	static std::string StatusToString(const Status &status);
 
-	/* Returns the Command's CmdType */
-	CmdType getCommandType() const;
+	static CommandPacket StatusToPacket(const Status &status);
 
-protected:
+	Type get_type() const;
 
-	/* Command's CmdType */
-	CmdType commandType;
+ protected:
 
-	/* Send a message to a User */
-	static void sendMessage(const User &user, const std::string &message);
+	Type type_;
+
+	/* Send data to a User */
+	static void SendData(const User& user, const std::string& message);
 
 	/* Converts a string to lower case */
-	std::string toLower(std::string string) const;
+	std::string ToLower(std::string string) const;
 
 	/* Builds a string by concatenating a vector of strings. Each string is prefixed with a joint. */
-	static std::string buildString(const std::vector<std::string> &strings, const char &joint);
+	static std::string BuildString(const std::vector<std::string>& strings, const char &joint);
 
 };
 

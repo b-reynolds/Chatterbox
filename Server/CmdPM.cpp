@@ -1,48 +1,48 @@
 #include "CmdPM.h"
 #include <numeric>
 
-void CmdPM::execute(User& user, const std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+void CmdPM::Execute(User& user, const std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
 	if(parameters.size() < 2)
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
+		SendData(user, StatusToString(Status::kInvalid));
 		return;
 	}
 
 	std::string recipient = parameters[0];
 	parameters.erase(parameters.begin());
 
-	std::string message = buildString(parameters, ' ');
+	std::string message = BuildString(parameters, ' ');
 	size_t msgLen = message.length();
 
 	if (msgLen < MESSAGE_LENGTH_MIN)
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_SHORT));
+		SendData(user, StatusToString(Status::kShort));
 		return;
 	}
 
 	if (msgLen > MESSAGE_LENGTH_MAX)
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_LONG));
+		SendData(user, StatusToString(Status::kLong));
 		return;
 	}
 	
-	std::string recipientL = toLower(recipient);
+	std::string recipientL = ToLower(recipient);
 	for(auto & otherUser : users)
 	{
-		if(otherUser.getID() == user.getID())
+		if(otherUser.get_id() == user.get_id())
 		{
 			continue;
 		}
 
-		if(toLower(otherUser.getUsername()) == recipientL)
+		if(ToLower(otherUser.get_name()) == recipientL)
 		{
-			user.sendMessage(otherUser, "PM:" + user.getUsername() + ":" + message);
-			sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
-			printf("\t#%d %s > #%d %s : %s\n", user.getID(), user.getUsername().c_str(), otherUser.getID(), otherUser.getUsername().c_str(), message.c_str());
+			user.SendData(otherUser, "PM:" + user.get_name() + ":" + message);
+			SendData(user, StatusToString(Status::kSuccess));
+			printf("\t#%d %s > #%d %s : %s\n", user.get_id(), user.get_name().c_str(), otherUser.get_id(), otherUser.get_name().c_str(), message.c_str());
 			return;
 		}
 	}
 
-	sendMessage(user, cmdStatusToString(CmdStatus::ERR_NOUSR));
+	SendData(user, StatusToString(Status::kNoUsr));
 }

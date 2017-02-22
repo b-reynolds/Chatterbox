@@ -1,5 +1,5 @@
 #pragma once
-#include "Command.h"
+#include "command.h"
 
 /*
  * \brief Sets or change a User’s username (E.g. UNAME johnsmith).
@@ -11,17 +11,15 @@ class CmdUNAME : public Command
 
 public:
 
-	/* Default Constructor */
-	CmdUNAME() : Command(CmdType::UNAME) {};
+	CmdUNAME() : Command(Type::kUName) {};
 
-	/* Execute the command */
-	void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	void Execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 
 private:
 
 	/* Accepted username length range */
 
-	const int USERNAME_LENGTH_MIN = 3;
-	const int USERNAME_LENGTH_MAX = 12;
+	const int kNameLengthMin = 3;
+	const int kNameLengthMax = 12;
 
 };

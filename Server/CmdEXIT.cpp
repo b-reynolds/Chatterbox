@@ -1,15 +1,15 @@
 #include "CmdEXIT.h"
 
-void CmdEXIT::execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdEXIT::Execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
-	if(user.getRoom() == nullptr)
+	if(user.get_room() == nullptr)
 	{
-		sendMessage(user, cmdStatusToString(CmdStatus::ERR_INVALID));
+		SendData(user, StatusToString(Status::kInvalid));
 		return;
 	}
 
-	user.getRoom()->removeUser(&user);
-	user.setRoom(nullptr);
+	user.get_room()->removeUser(&user);
+	user.set_room(nullptr);
 	
-	sendMessage(user, cmdStatusToString(CmdStatus::SUCCESS));
+	SendData(user, StatusToString(Status::kSuccess));
 }

@@ -1,15 +1,20 @@
-#include "CommandPacket.h"
+#include "command_packet.h"
 
 CommandPacket::CommandPacket(const std::string command)
 {
 	command_ = command;
 }
 
+void CommandPacket::AddParameter(const std::string parameter)
+{
+	parameters_.push_back(parameter);
+}
+
 void CommandPacket::AddParameters(const std::vector<std::string> parameters)
 {
 	for(auto & parameter : parameters)
 	{
-		parameters_.push_back(parameter);
+		AddParameter(parameter);
 	}
 }
 
@@ -22,9 +27,4 @@ std::string CommandPacket::GeneratePacket()
 	}
 	packet += kCommandWrapper;
 	return packet;
-}
-
-void CommandPacket::AddParameter(const std::string parameter)
-{
-	parameters_.push_back(parameter);
 }

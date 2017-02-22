@@ -1,14 +1,14 @@
 #pragma once
-#include "Command.h"
+#include "command.h"
 
 class CmdMKROOM : public Command
 {
 
 public:
 
-	CmdMKROOM() : Command(CmdType::MKROOM) {};
+	CmdMKROOM() : Command(Type::kMkRoom) {};
 
-	void execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	void Execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 
 private:
 
