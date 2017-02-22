@@ -8,7 +8,7 @@ public:
 
 	CmdEXIT() : Command(Type::kExit) { ; }
 
-	void Execute(User &user, const std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	void Execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 
 };
 

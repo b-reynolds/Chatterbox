@@ -4,22 +4,22 @@
 class Timer
 {
 
-	typedef std::chrono::time_point<std::chrono::steady_clock> Time;
-	typedef std::chrono::high_resolution_clock Clock;
-
-public:
+ public:
 
 	explicit Timer(const int &interval);
 
-	bool hasExpired() const;
-	void reset();
+	bool has_expired() const;
+	void Reset();
 
-private:
+ private:
 
-	long long interval;
-	long long lastTick;
+	typedef std::chrono::time_point<std::chrono::steady_clock> Time;
+	typedef std::chrono::high_resolution_clock Clock;
 
-	long long getTime() const;
+	long long interval_;
+	long long last_tick_;
+
+	long long get_current_time() const;
 
 };
 

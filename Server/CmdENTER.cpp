@@ -1,6 +1,6 @@
 #include "CmdENTER.h"
 
-void CmdENTER::Execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	if(!user.HasName())
 	{

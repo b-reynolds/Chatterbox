@@ -1,4 +1,6 @@
 #include "cmd_message.h"
+#include <iostream>
+#include <string>
 
 /*
 * \brief Execute the command
@@ -7,7 +9,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdMESSAGE::Execute(User& user, const std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+void CmdMessage::Execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -20,7 +22,7 @@ void CmdMESSAGE::Execute(User& user, const std::vector<User>& users, std::vector
 	// Ensure message is within the character limit
 
 	std::string msg = BuildString(parameters, ' ');
-	size_t msgLen = msg.size();
+	unsigned int msgLen = msg.size();
 	
 	if(msgLen < kMsgLengthMin)
 	{
@@ -50,12 +52,12 @@ void CmdMESSAGE::Execute(User& user, const std::vector<User>& users, std::vector
 		{
 			user.SendData(u, packet_msg);
 		}
-		printf("\t#%d %s : %s\n", user.get_id(), user.get_name().c_str(), msg.c_str());
+		std::cout << "User #" << std::to_string(user.get_id()) << " (" << user.get_name() << ") : " << msg << std::endl;
 	}
 	else
 	{
 		user.SendData(user_room, packet_msg);
-		printf("\t#%d %s > %s : %s\n", user.get_id(), user.get_name().c_str(), user_room->getName().c_str(), msg.c_str());
+		std::cout << "User #" << std::to_string(user.get_id()) << " (" << user.get_name() << ") > " << user_room->getName() << " : " << msg << std::endl;
 	}
 
 	SendData(user, StatusToPacket(Status::kSuccess).GeneratePacket());

@@ -1,6 +1,6 @@
 #include "CmdEXIT.h"
 
-void CmdEXIT::Execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdEXIT::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	if(user.get_room() == nullptr)
 	{

@@ -36,7 +36,7 @@
             // 
             this.btnSend.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSend.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSend.Location = new System.Drawing.Point(536, 192);
+            this.btnSend.Location = new System.Drawing.Point(535, 192);
             this.btnSend.Margin = new System.Windows.Forms.Padding(2);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(196, 27);
@@ -52,7 +52,7 @@
             this.txtMessage.Location = new System.Drawing.Point(2, 194);
             this.txtMessage.Margin = new System.Windows.Forms.Padding(2);
             this.txtMessage.Name = "txtMessage";
-            this.txtMessage.Size = new System.Drawing.Size(530, 22);
+            this.txtMessage.Size = new System.Drawing.Size(529, 22);
             this.txtMessage.TabIndex = 1;
             this.txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtMessage_KeyDown);
             // 
@@ -63,7 +63,7 @@
             this.RTxtFeed.Location = new System.Drawing.Point(2, 2);
             this.RTxtFeed.Margin = new System.Windows.Forms.Padding(2);
             this.RTxtFeed.Name = "RTxtFeed";
-            this.RTxtFeed.Size = new System.Drawing.Size(530, 186);
+            this.RTxtFeed.Size = new System.Drawing.Size(529, 186);
             this.RTxtFeed.TabIndex = 3;
             this.RTxtFeed.Text = "";
             this.RTxtFeed.TextChanged += new System.EventHandler(this.RTxtFeed_TextChanged);
@@ -76,7 +76,7 @@
             this.LstUsers.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LstUsers.FormattingEnabled = true;
             this.LstUsers.ItemHeight = 14;
-            this.LstUsers.Location = new System.Drawing.Point(536, 2);
+            this.LstUsers.Location = new System.Drawing.Point(535, 2);
             this.LstUsers.Margin = new System.Windows.Forms.Padding(2);
             this.LstUsers.Name = "LstUsers";
             this.LstUsers.Size = new System.Drawing.Size(196, 186);
@@ -87,7 +87,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 72.70341F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 27.29659F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 211F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 212F));
             this.tableLayoutPanel1.Controls.Add(this.LstUsers, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.btnSend, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.txtMessage, 0, 1);
@@ -112,10 +112,10 @@
             this.LstCommands.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LstCommands.FormattingEnabled = true;
             this.LstCommands.ItemHeight = 14;
-            this.LstCommands.Location = new System.Drawing.Point(736, 2);
+            this.LstCommands.Location = new System.Drawing.Point(735, 2);
             this.LstCommands.Margin = new System.Windows.Forms.Padding(2);
             this.LstCommands.Name = "LstCommands";
-            this.LstCommands.Size = new System.Drawing.Size(208, 186);
+            this.LstCommands.Size = new System.Drawing.Size(209, 186);
             this.LstCommands.TabIndex = 5;
             // 
             // FrmMain
@@ -127,6 +127,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmMain";
             this.Text = "Chat Client";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMain_FormClosed);
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

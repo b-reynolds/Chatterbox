@@ -2,19 +2,19 @@
 #include "command.h"
 
 /*
- * \brief Send a message (E.g Hello World).
- * Message is sent to users within the same room.
- * Messages must be between 1 and 128 characters long.
- */
-class CmdMessage : public Command
+* \brief Send a private message (E.g PM John Hello World).
+* Message is sent to the specified recipient.
+* Messages must be between 1 and 128 characters long.
+*/
+class CmdPM : public Command
 {
 
  public:
 
-	CmdMessage() : Command(Type::kMessage) {};
-	
+	CmdPM() : Command(Type::kPm) {};
+
 	void Execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
-	
+
  private:
 
 	// Accepted message length range
@@ -23,4 +23,3 @@ class CmdMessage : public Command
 	const int kMsgLengthMax = 128;
 
 };
-

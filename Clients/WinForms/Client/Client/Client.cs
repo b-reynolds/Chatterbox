@@ -45,6 +45,12 @@ namespace Client
             network_stream_ = tcp_client_.GetStream();
             return true;
         }
+
+        public void Disconnect()
+        {
+            network_stream_.Close();
+            tcp_client_.Close();
+        }
  
         public bool Connected()
         {
@@ -53,19 +59,26 @@ namespace Client
 
         public void SendData(string data)
         {
-            if (data.Length > kBufferSize - 1)
+            if (Connected())
             {
-                data = data.Substring(0, kBufferSize - 1);
+                if (data.Length > kBufferSize - 1)
+                {
+                    data = data.Substring(0, kBufferSize - 1);
+                }
+                var bytes = Encoding.ASCII.GetBytes(data);
+                network_stream_.Write(bytes, 0, bytes.Length);
             }
-            var bytes = Encoding.ASCII.GetBytes(data);
-            network_stream_.Write(bytes, 0, bytes.Length);
         }
 
         public string GetData()
         {
-            var bytes = new byte[kBufferSize];
-            int bytesRead = network_stream_.Read(bytes, 0, bytes.Length);
-            return Encoding.ASCII.GetString(bytes, 0, bytesRead);
+            if (Connected())
+            {
+                var bytes = new byte[kBufferSize];
+                int bytesRead = network_stream_.Read(bytes, 0, bytes.Length);
+                return Encoding.ASCII.GetString(bytes, 0, bytesRead);
+            }
+            return string.Empty;
         }
     }
 }

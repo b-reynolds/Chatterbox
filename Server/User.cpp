@@ -88,11 +88,13 @@ void User::Reset()
 		room_->removeUser(this);
 	}
 
-	id_ = kIdNone;
-	socket_ = INVALID_SOCKET;
+	room_ = nullptr;
 	name_ = kUsernameNone;
 
-	room_ = nullptr;
+	id_ = kIdNone;
+
+	closesocket(socket_);
+	socket_ = INVALID_SOCKET;
 }
 
 bool User::Connected() const

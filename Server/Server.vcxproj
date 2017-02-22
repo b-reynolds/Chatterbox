@@ -110,32 +110,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp" />
     <ClCompile Include="CmdENTER.cpp" />
     <ClCompile Include="CmdEXIT.cpp" />
     <ClCompile Include="cmd_message.cpp" />
     <ClCompile Include="CmdMKROOM.cpp" />
-    <ClCompile Include="CmdPM.cpp" />
+    <ClCompile Include="cmd_pm.cpp" />
     <ClCompile Include="cmd_uname.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="command_packet.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Room.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="user.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h" />
     <ClInclude Include="CmdENTER.h" />
     <ClInclude Include="CmdEXIT.h" />
     <ClInclude Include="cmd_message.h" />
     <ClInclude Include="CmdMKROOM.h" />
-    <ClInclude Include="CmdPM.h" />
+    <ClInclude Include="cmd_pm.h" />
     <ClInclude Include="cmd_uname.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="command_packet.h" />
     <ClInclude Include="Room.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

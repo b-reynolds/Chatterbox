@@ -43,7 +43,7 @@ class Command
 	virtual ~Command() {}
 
 	/* Pure virtual execute method implemented by all Commands */
-	virtual void Execute(User& user, const std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) = 0;
+	virtual void Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) = 0;
 
 	/* Converts a string to its CmdType equivalent */
 	static Type StringToType(const std::string &string);

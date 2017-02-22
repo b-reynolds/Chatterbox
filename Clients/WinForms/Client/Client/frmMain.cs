@@ -15,15 +15,18 @@ namespace Client
         private readonly Client client_;
         private Thread thread_;
 
+        private FrmConnect frm_connect_;
+
         private static IEnumerable<string> GetCommands(string input)
         {
             return input.Split('$').Where(part => part != Empty).ToList();
         }
 
-        public FrmMain(ref Client client)
+        public FrmMain(ref Client client, FrmConnect frm_connect)
         {
             InitializeComponent();
-            this.client_ = client;
+            client_ = client;
+            frm_connect_ = frm_connect;
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
@@ -136,6 +139,12 @@ namespace Client
             RTxtFeed.ScrollToCaret();
         }
 
+        private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            client_.Disconnect();
+            thread_.Abort();
+            frm_connect_.Show();
+        }
     }
 
 }

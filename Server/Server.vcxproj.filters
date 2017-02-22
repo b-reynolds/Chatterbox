@@ -16,84 +16,90 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{67730fcf-187f-4b3a-9b37-6e984f952df8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands\Messaging">
+      <UniqueIdentifier>{d13e5dce-f5aa-46a8-abf4-ba061a0ecd27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands\General">
+      <UniqueIdentifier>{b9e376d8-219d-4c4c-aa75-76310bbab2e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands\Rooms">
+      <UniqueIdentifier>{50be2614-a2e2-40d3-8884-692d2e96c17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data Types">
+      <UniqueIdentifier>{780c320c-ff51-487c-bd6f-55151fc0fe34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="cmd_message.cpp">
+      <Filter>Commands\Messaging</Filter>
     </ClCompile>
-    <ClCompile Include="Client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdPM.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="Room.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="cmd_pm.cpp">
+      <Filter>Commands\Messaging</Filter>
     </ClCompile>
     <ClCompile Include="CmdMKROOM.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdENTER.cpp">
-      <Filter>Commands</Filter>
+      <Filter>Commands\Rooms</Filter>
     </ClCompile>
     <ClCompile Include="CmdEXIT.cpp">
-      <Filter>Commands</Filter>
+      <Filter>Commands\Rooms</Filter>
     </ClCompile>
-    <ClCompile Include="user.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="command.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="command_packet.cpp">
-      <Filter>Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="cmd_message.cpp">
-      <Filter>Commands</Filter>
+    <ClCompile Include="CmdENTER.cpp">
+      <Filter>Commands\Rooms</Filter>
     </ClCompile>
     <ClCompile Include="cmd_uname.cpp">
-      <Filter>Commands</Filter>
+      <Filter>Commands\General</Filter>
+    </ClCompile>
+    <ClCompile Include="command.cpp">
+      <Filter>Commands\General</Filter>
+    </ClCompile>
+    <ClCompile Include="command_packet.cpp">
+      <Filter>Commands\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>Data Types</Filter>
+    </ClCompile>
+    <ClCompile Include="user.cpp">
+      <Filter>Data Types</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Data Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="cmd_message.h">
+      <Filter>Commands\Messaging</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Room.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="cmd_pm.h">
+      <Filter>Commands\Messaging</Filter>
     </ClInclude>
     <ClInclude Include="CmdMKROOM.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdPM.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdENTER.h">
-      <Filter>Commands</Filter>
+      <Filter>Commands\Rooms</Filter>
     </ClInclude>
     <ClInclude Include="CmdEXIT.h">
-      <Filter>Commands</Filter>
+      <Filter>Commands\Rooms</Filter>
     </ClInclude>
-    <ClInclude Include="user.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="command.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="command_packet.h">
-      <Filter>Commands</Filter>
+    <ClInclude Include="CmdENTER.h">
+      <Filter>Commands\Rooms</Filter>
     </ClInclude>
     <ClInclude Include="cmd_uname.h">
-      <Filter>Commands</Filter>
+      <Filter>Commands\General</Filter>
     </ClInclude>
-    <ClInclude Include="cmd_message.h">
-      <Filter>Commands</Filter>
+    <ClInclude Include="command_packet.h">
+      <Filter>Commands\General</Filter>
+    </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>Commands\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>Data Types</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
+      <Filter>Data Types</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Data Types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

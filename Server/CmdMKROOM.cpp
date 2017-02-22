@@ -2,7 +2,7 @@
 #include "Room.h"
 #include <string>
 
-void CmdMKROOM::Execute(User& user, const std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 

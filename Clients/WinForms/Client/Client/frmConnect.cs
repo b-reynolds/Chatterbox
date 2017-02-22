@@ -37,10 +37,12 @@ namespace Client
 
             MessageBox.Show(@"Connected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            var frmMain = new FrmMain(ref client);
+            var frmMain = new FrmMain(ref client, this);
             frmMain.Show();
 
             Hide();
+            Enabled = true;
+
         }
 
     }

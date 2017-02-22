@@ -1,5 +1,7 @@
 #include "cmd_uname.h"
 #include "command_packet.h"
+#include <iostream>
+#include <string>
 
 /*
  * \brief Execute the command
@@ -8,9 +10,9 @@
  * \param rooms server rooms
  * \param parameters command parameters
  */
-void CmdUNAME::Execute(User& user, const std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
-	// Check that all required parameters are set
+	// Ensure required parameters were specified
 
 	if(parameters.size() == 0)
 	{
@@ -18,10 +20,10 @@ void CmdUNAME::Execute(User& user, const std::vector<User>& users, std::vector<R
 		return;
 	}
 
-	// Ensure name is within the character limit
+	// Ensure name is within character limit
 
 	std::string name = parameters[0];
-	size_t nameLen = name.length();
+	unsigned int nameLen = name.length();
 
 	if (nameLen < kNameLengthMin)
 	{
@@ -58,7 +60,7 @@ void CmdUNAME::Execute(User& user, const std::vector<User>& users, std::vector<R
 		}
 	}
 
-	// Alert other users of the name change / user joining
+	// Inform users of the name change / user joining
 
 	if(user.HasName())
 	{
@@ -82,7 +84,8 @@ void CmdUNAME::Execute(User& user, const std::vector<User>& users, std::vector<R
 		{
 			user.SendData(user_room, packet_change);
 		}
-		printf("[*] User #%d changed their username from %s to %s\n", user.get_id(), user.get_name().c_str(), name.c_str());
+
+		std::cout << "User #" << std::to_string(user.get_id()) << " changed their name from " << user.get_name() << " to " << name << std::endl;
 	}
 	else
 	{
@@ -109,7 +112,7 @@ void CmdUNAME::Execute(User& user, const std::vector<User>& users, std::vector<R
 			SendData(u, packet_users);
 		}
 
-		printf("[*] User #%d set their username to %s\n", user.get_id(), name.c_str());
+		std::cout << "User #" << std::to_string(user.get_id()) << " set their username to " << name << std::endl;
 	}
 
 	user.set_name(name);
