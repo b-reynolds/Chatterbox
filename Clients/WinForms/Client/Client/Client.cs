@@ -6,73 +6,66 @@ namespace Client
 {
     public class Client
     {
-        private TcpClient tcpClient;
-        private NetworkStream networkStream;
+        private const int kBufferSize = 1024;
 
-        private readonly string hostName;
-        private readonly int port;
-        private readonly int bufferSize;
+        private readonly string host_name_;
+        private readonly int port_;
 
-        public Client(string hostName, int port, int bufferSize)
+        private TcpClient tcp_client_;
+        private NetworkStream network_stream_;
+
+        public Client(string host_name, int port)
         {
-            this.hostName = hostName;
-            this.port = port;
-            this.bufferSize = bufferSize;
+            host_name_ = host_name;
+            port_ = port;
         }
 
         ~Client()
         {
-            if (isConnected())
+            if (Connected())
             {
-                tcpClient.Close();
+                tcp_client_.Close();
             }
         }
 
-        public bool isConnected()
+        public bool Connect()
         {
-            return tcpClient != null && tcpClient.Connected;
-        }
-
-        public bool connect()
-        {
-            if (isConnected())
+            if (Connected())
             {
-                tcpClient.Close();
+                tcp_client_.Close();
             }
             try
             {
-                tcpClient = new TcpClient(hostName, port);
+                tcp_client_ = new TcpClient(host_name_, port_);
             }
             catch (SocketException)
             {
                 return false;
             }
-            networkStream = tcpClient.GetStream();
+            network_stream_ = tcp_client_.GetStream();
             return true;
         }
-
-        public void sendData(string data)
+ 
+        public bool Connected()
         {
-            if (data.Length > bufferSize - 1)
-            {
-                data = data.Substring(0, bufferSize - 1);
-            }
-            byte[] bytes = Encoding.ASCII.GetBytes(data);
-            networkStream.Write(bytes, 0, bytes.Length);
+            return tcp_client_ != null && tcp_client_.Connected;
         }
 
-        public string getData()
+        public void SendData(string data)
         {
-            byte[] bytes = new byte[bufferSize];
-            try
+            if (data.Length > kBufferSize - 1)
             {
-                int bytesRead = networkStream.Read(bytes, 0, bytes.Length);
-                return (Encoding.ASCII.GetString(bytes, 0, bytesRead));
+                data = data.Substring(0, kBufferSize - 1);
             }
-            catch (IOException)
-            {
-                return null;
-            }
+            var bytes = Encoding.ASCII.GetBytes(data);
+            network_stream_.Write(bytes, 0, bytes.Length);
+        }
+
+        public string GetData()
+        {
+            var bytes = new byte[kBufferSize];
+            int bytesRead = network_stream_.Read(bytes, 0, bytes.Length);
+            return Encoding.ASCII.GetString(bytes, 0, bytesRead);
         }
     }
 }

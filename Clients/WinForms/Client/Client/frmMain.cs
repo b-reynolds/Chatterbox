@@ -10,12 +10,12 @@ namespace Client
     public partial class FrmMain : Form
     {
 
-        private readonly Queue<string> qCommands = new Queue<string>();
+        private readonly Queue<string> command_queue_ = new Queue<string>();
 
-        private readonly Client client;
-        private Thread thread;
+        private readonly Client client_;
+        private Thread thread_;
 
-        private static IEnumerable<string> getCommands(string input)
+        private static IEnumerable<string> GetCommands(string input)
         {
             return input.Split('$').Where(part => part != Empty).ToList();
         }
@@ -23,50 +23,50 @@ namespace Client
         public FrmMain(ref Client client)
         {
             InitializeComponent();
-            this.client = client;
+            this.client_ = client;
         }
 
-        private void frmMain_Load(object sender, EventArgs e)
+        private void FrmMain_Load(object sender, EventArgs e)
         {
-            thread = new Thread(getData);
-            thread.Start();
+            thread_ = new Thread(GetData);
+            thread_.Start();
         }
 
-        private void getData()
+        private void GetData()
         {
             while (true)
             {
-                string data = client.getData();
+                string data = client_.GetData();
 
                 if (data != Empty)
                 {
-                    IEnumerable<string> commands = getCommands(data);
+                    var commands = GetCommands(data);
                     foreach (string s in commands)
                     {
-                        qCommands.Enqueue(s);
+                        command_queue_.Enqueue(s);
                     }
                 }
 
                 if (data == null)
                 {
-                    exit();
-                    thread.Abort();
+                    Exit();
+                    thread_.Abort();
                 }
 
-                if (qCommands.Count != 0)
+                if (command_queue_.Count != 0)
                 {
-                    string command = qCommands.Dequeue();
-                    lstCommands.BeginInvoke((Action)(() => lstCommands.Items.Add(command)));
-                    updateFeed(processData(command));
+                    string command = command_queue_.Dequeue();
+                    LstCommands.BeginInvoke((Action)(() => LstCommands.Items.Add(command)));
+                    UpdateFeed(ProcessData(command));
                 }
             }
         }
 
-        private string processData(string data)
+        private string ProcessData(string data)
         {
             string[] dataParts = data.Split(':');
 
-            Command.CmdType cmdType = Command.stringToCmdType(dataParts[0]);
+            var cmdType = Command.stringToCmdType(dataParts[0]);
             if (cmdType != Command.CmdType.NONE)
             {
                 Command command;
@@ -94,46 +94,46 @@ namespace Client
                         command = null;
                         break;
                 }
-                return command != null ? command.execute(dataParts, rtxtBody, lstUsers) : Empty;
+                return command != null ? command.execute(dataParts, RTxtFeed, LstUsers) : Empty;
             }
             return Empty;
         }
 
-        private void updateFeed(string message)
+        private void UpdateFeed(string message)
         {
-           rtxtBody.BeginInvoke((Action)(() => rtxtBody.SelectedRtf = message));
+           RTxtFeed.BeginInvoke((Action)(() => RTxtFeed.SelectedRtf = message));
         }
 
-        private void exit()
+        private void Exit()
         {
             MessageBox.Show(@"Disconnected", @"Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Application.Exit();
         }
 
-        private void sendMessage()
+        private void SendMessage()
         {
-            client.sendData(txtMessage.Text);
+            client_.SendData(txtMessage.Text);
             txtMessage.Clear();
         }
 
-        private void btnSend_Click(object sender, EventArgs e)
+        private void BtnSend_Click(object sender, EventArgs e)
         {
-            sendMessage();
+            SendMessage();
         }
 
-        private void txtMessage_KeyDown(object sender, KeyEventArgs e)
+        private void TxtMessage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                btnSend_Click(this, new EventArgs());
+                BtnSend_Click(this, new EventArgs());
                 e.SuppressKeyPress = true;
             }
         }
 
-        private void rtxtBody_TextChanged(object sender, EventArgs e)
+        private void RTxtFeed_TextChanged(object sender, EventArgs e)
         {
-            rtxtBody.SelectionStart = rtxtBody.Text.Length;
-            rtxtBody.ScrollToCaret();
+            RTxtFeed.SelectionStart = RTxtFeed.Text.Length;
+            RTxtFeed.ScrollToCaret();
         }
 
     }
