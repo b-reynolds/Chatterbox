@@ -15,16 +15,16 @@ class User
 	User(const int& id, SOCKET socket);
 
 	void set_id(const int& id);
-	int get_id() const;
+	int id() const;
 
 	void set_socket(SOCKET socket);
-	SOCKET get_socket() const;
+	SOCKET socket() const;
 
 	void set_name(const std::string& name);
-	std::string get_name() const;
+	std::string name() const;
 
 	void set_room(Room* room);
-	Room* get_room() const;
+	Room* room() const;
 
 	void SendData(const User& user, const std::string& message) const;
 	void SendData(const std::vector<User>& users, const std::string& message) const;

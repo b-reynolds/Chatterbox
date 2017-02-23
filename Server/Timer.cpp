@@ -3,20 +3,20 @@
 Timer::Timer(const int& interval)
 {
 	interval_ = interval;
-	last_tick_ = get_current_time();
+	last_tick_ = current();
 }
 
-bool Timer::has_expired() const
+bool Timer::expired() const
 {
-	return get_current_time() - last_tick_ > interval_;
+	return current() - last_tick_ > interval_;
 }
 
 void Timer::Reset()
 {
-	last_tick_ = get_current_time();
+	last_tick_ = current();
 }
 
-long long Timer::get_current_time() const
+long long Timer::current() const
 {
 	return std::chrono::duration_cast<std::chrono::seconds>(Clock::now().time_since_epoch()).count();
 }

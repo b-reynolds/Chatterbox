@@ -53,7 +53,7 @@ class Command
 
 	static CommandPacket StatusToPacket(const Status &status);
 
-	Type get_type() const;
+	Type type() const;
 
  protected:
 

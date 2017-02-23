@@ -12,14 +12,14 @@
 #include "cmd_uname.h"
 #include "cmd_pm.h"
 #include "Room.h"
-#include "CmdMKROOM.h"
+#include "cmd_mkroom.h"
 #include "CmdENTER.h"
 #include "CmdEXIT.h"
 #include "command_packet.h"
 #pragma comment(lib, "Ws2_32.lib")
 
 const int kPort = 47861;
-const int kClientsMax = 1;
+const int kClientsMax = 25;
 const int kBufferLength = 1024;
 const int kTimeoutPeriod = 1800;
 
@@ -30,7 +30,7 @@ void SendData(SOCKET socket, const std::string& data)
 
 void SendData(User& user, const std::string& data)
 {
-	send(user.get_socket(), data.c_str(), data.length(), 0);
+	send(user.socket(), data.c_str(), data.length(), 0);
 }
 
 std::string ToUpper(std::string string)
@@ -62,18 +62,23 @@ std::vector<std::string> split(const std::string& string, char delimiter)
 
 void Disconnect(User &user, std::vector<User> &users, std::thread &thread)
 {
-	std::cout << "User #" + std::to_string(user.get_id()) + " (" + user.get_name() + ") disconnected." << std::endl;
+	std::cout << "User #" + std::to_string(user.id()) + " (" + user.name() + ") disconnected." << std::endl;
+
+	if(user.room() != nullptr)
+	{
+		user.room()->remove_user(&user);
+	}
 
 	auto cmd_disconnect = CommandPacket("DISCONNECT");
-	cmd_disconnect.AddParameter(user.get_name());
+	cmd_disconnect.add_param(user.name());
 
-	int user_id = user.get_id();
+	int user_id = user.id();
 
 	for (auto & u : users)
 	{
-		if (u.get_id() != user_id)
+		if (u.id() != user_id)
 		{
-			SendData(u, cmd_disconnect.GeneratePacket());
+			SendData(u, cmd_disconnect.Generate());
 		}
 	}
 
@@ -89,9 +94,9 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 	while (true)
 	{
 		char recv_buffer[kBufferLength] = { 0 };
-		int result = recv(user.get_socket(), recv_buffer, kBufferLength, 0);
+		int result = recv(user.socket(), recv_buffer, kBufferLength, 0);
 
-		if(timeout.has_expired() || result == NULL || result == INVALID_SOCKET && WSAGetLastError() != WSAEWOULDBLOCK)
+		if(timeout.expired() || result == NULL || result == INVALID_SOCKET && WSAGetLastError() != WSAEWOULDBLOCK)
 		{
 			Disconnect(user, users, thread);
 			break;
@@ -111,7 +116,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 		bool valid_command = false;
 		for(auto & c : commands)
 		{
-			if(command == c->get_type())
+			if(command == c->type())
 			{
 				parameters.erase(parameters.begin());
 				c->Execute(user, users, rooms, parameters);
@@ -146,6 +151,7 @@ int main()
 	{
 		std::cout << "Failed to initialize Winsock: " << WSAGetLastError() << std::endl;
 		WSACleanup();
+		getchar();
 		return 0;
 	}
 	std::cout << "OK." << std::endl;
@@ -156,6 +162,7 @@ int main()
 	{
 		std::cout << "Error: Failed to create socket: " << WSAGetLastError() << std::endl;
 		WSACleanup();
+		getchar();
 		return 0;
 	}
 	std::cout << "OK." << std::endl;
@@ -176,6 +183,7 @@ int main()
 		std::cout << "Failed to bind socket: " << WSAGetLastError() << std::endl;
 		closesocket(client_socket);
 		WSACleanup();
+		getchar();
 		return 0;
 	}
 	std::cout << "OK." << std::endl;
@@ -186,6 +194,7 @@ int main()
 		std::cout << "Failed to start listening: " << WSAGetLastError() << std::endl;
 		closesocket(client_socket);
 		WSACleanup();
+		getchar();
 		return 0;
 	}
 	std::cout << " OK (" + std::to_string(kPort) + ")." << std::endl;
@@ -228,14 +237,14 @@ int main()
 
 		if (temp_id == User::kIdNone)
 		{
-			SendData(client_socket, CommandPacket("FULL").GeneratePacket());
+			SendData(client_socket, CommandPacket("FULL").Generate());
 			closesocket(clientSock);
 			continue;
 		}
 
 		std::cout << "User #" << std::to_string(temp_id) << " connected." << std::endl;
 		
-		SendData(clientSock, Command::StatusToPacket(Status::kSuccess).GeneratePacket());
+		SendData(clientSock, Command::StatusToPacket(Status::kSuccess).Generate());
 
 		threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 	}

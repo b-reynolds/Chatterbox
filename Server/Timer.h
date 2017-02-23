@@ -8,7 +8,7 @@ class Timer
 
 	explicit Timer(const int &interval);
 
-	bool has_expired() const;
+	bool expired() const;
 	void Reset();
 
  private:
@@ -19,7 +19,7 @@ class Timer
 	long long interval_;
 	long long last_tick_;
 
-	long long get_current_time() const;
+	long long current() const;
 
 };
 

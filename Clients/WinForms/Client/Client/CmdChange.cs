@@ -1,29 +1,30 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Client
 {
     internal class CmdChange : Command
     {
-        public override string execute(string[] dataParts, RichTextBox rtxtFeed, ListBox lstUsers)
+        public override string execute(FrmMain form, string[] data_parts, RichTextBox rtxt_feed, ListBox lst_users, List<Room> rooms, ListBox lst_rooms)
         {
-            if (dataParts.Length != 3)
+            if (data_parts.Length != 3)
             {
                 return string.Empty;
             }
 
-            lstUsers.BeginInvoke((MethodInvoker) delegate()
+            lst_users.BeginInvoke((MethodInvoker) delegate()
             {
-                for (int i = lstUsers.Items.Count - 1; i >= 0; --i)
+                for (int i = lst_users.Items.Count - 1; i >= 0; --i)
                 {
-                    if (lstUsers.Items[i].ToString() == dataParts[1])
+                    if (lst_users.Items[i].ToString() == data_parts[1])
                     {
-                        lstUsers.Items.RemoveAt(i);
+                        lst_users.Items.RemoveAt(i);
                     }
                 }
-                lstUsers.Items.Add(dataParts[2]);
+                lst_users.Items.Add(data_parts[2]);
             });
 
-            return RTF_START + @"\i \b " + dataParts[1] + @"\b0  changed their name to \b " + dataParts[2] + @". \b0 \i0" + RTF_END;
+            return kRtfStart + @"\i \b " + data_parts[1] + @"\b0  changed their name to \b " + data_parts[2] + @". \b0 \i0" + kRtfEnd;
         }
     }
 }

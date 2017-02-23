@@ -17,6 +17,8 @@ namespace Client
 
         private FrmConnect frm_connect_;
 
+        private List<Room> rooms_ = new List<Room>();
+
         private static IEnumerable<string> GetCommands(string input)
         {
             return input.Split('$').Where(part => part != Empty).ToList();
@@ -35,10 +37,27 @@ namespace Client
             thread_.Start();
         }
 
+        public void UpdateRoomList()
+        {
+            lstRooms.Items.Clear();
+            foreach (var r in rooms_)
+            {   
+                lstRooms.Items.Add(r.name() + " (" + r.capacity() + ") " +
+                                   (r.locked() ? "[*]" : ""));
+            }
+        }
+
         private void GetData()
         {
             while (true)
             {
+                while(command_queue_.Count != 0)
+                {
+                    string command = command_queue_.Dequeue();
+                    LstCommands.BeginInvoke((Action)(() => LstCommands.Items.Add(command)));
+                    UpdateFeed(ProcessData(command));
+                }
+
                 string data = client_.GetData();
 
                 if (data != Empty)
@@ -55,13 +74,6 @@ namespace Client
                     Exit();
                     thread_.Abort();
                 }
-
-                if (command_queue_.Count != 0)
-                {
-                    string command = command_queue_.Dequeue();
-                    LstCommands.BeginInvoke((Action)(() => LstCommands.Items.Add(command)));
-                    UpdateFeed(ProcessData(command));
-                }
             }
         }
 
@@ -69,42 +81,45 @@ namespace Client
         {
             string[] dataParts = data.Split(':');
 
-            var cmdType = Command.stringToCmdType(dataParts[0]);
-            if (cmdType != Command.CmdType.NONE)
+            var cmdType = Command.StringToCmdType(dataParts[0]);
+            if (cmdType != Command.CmdType.kNone)
             {
                 Command command;
                 switch (cmdType)
                 {
-                    case Command.CmdType.MSG:
+                    case Command.CmdType.kMsg:
                         command = new CmdMessage();
                         break;
-                    case Command.CmdType.CONNECT:
+                    case Command.CmdType.kConnect:
                         command = new CmdConnect();
                         break;
-                    case Command.CmdType.CHANGE:
+                    case Command.CmdType.kChange:
                         command = new CmdChange();
                         break;
-                        case Command.CmdType.PM:
+                    case Command.CmdType.kPm:
                         command = new CmdPM();
                         break;
-                    case Command.CmdType.USERS:
+                    case Command.CmdType.kUsers:
                         command = new CmdUsers();
                         break;
-                    case Command.CmdType.DISCONNECT:
+                    case Command.CmdType.kDisconnect:
                         command = new CmdDisconnect();
-                        break;  
+                        break;
+                    case Command.CmdType.kRoom:
+                        command = new CmdRoom();
+                        break;
                     default:
                         command = null;
                         break;
                 }
-                return command != null ? command.execute(dataParts, RTxtFeed, LstUsers) : Empty;
+                return command != null ? command.execute(this, dataParts, RTxtFeed, LstUsers, rooms_, lstRooms) : Empty;
             }
             return Empty;
         }
 
         private void UpdateFeed(string message)
         {
-           RTxtFeed.BeginInvoke((Action)(() => RTxtFeed.SelectedRtf = message));
+            RTxtFeed.BeginInvoke((Action) (() => RTxtFeed.SelectedRtf = message));
         }
 
         private void Exit()
@@ -144,6 +159,11 @@ namespace Client
             client_.Disconnect();
             thread_.Abort();
             frm_connect_.Show();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

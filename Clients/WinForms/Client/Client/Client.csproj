@@ -52,6 +52,7 @@
     <Compile Include="CmdConnect.cs" />
     <Compile Include="CmdMessage.cs" />
     <Compile Include="CmdPM.cs" />
+    <Compile Include="CmdRoom.cs" />
     <Compile Include="CmdUsers.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="frmConnect.cs">
@@ -68,6 +69,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Room.cs" />
     <EmbeddedResource Include="frmConnect.resx">
       <DependentUpon>frmConnect.cs</DependentUpon>
     </EmbeddedResource>

@@ -8,35 +8,37 @@ public:
 
 	Room(const std::string &name, User* owner, const int &capacity);
  
-	void addUser(User* user);
-	void removeUser(User* user);
+	void add_user(User* user);
+	void remove_user(User* user);
 
-	std::vector<User*>& getUsers();
+	std::vector<User*>& users();
 
-	std::string getName() const;
-	User* getOwner() const;
+	std::string name() const;
 
-	void setCapacity(const int &capacity);
+	void set_owner(User* owner);
+	User* owner() const;
 
-	std::string getPassword() const;
-	void setPassword(const std::string &password);
+	void set_capacity(const int &capacity);
 
-	void setLocked(const bool &state);
+	std::string password() const;
+	void set_password(const std::string &password);
 
-	bool isFull() const;
-	bool isLocked() const;
+	unsigned int capacity() const;
 
-	~Room();
+	bool full() const;
+	bool locked() const;
 
 private:
 
-	User* owner;
-	std::vector<User*> users;
+	const std::string kPasswordNone = "";
 
-	bool locked;
-	std::string password;
-	std::string name;
-	int capacity;
+	User* owner_;
+	std::vector<User*> users_;
+
+	bool locked_;
+	std::string password_;
+	std::string name_;
+	unsigned int capacity_;
 
 };
 

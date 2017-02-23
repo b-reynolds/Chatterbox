@@ -4,16 +4,16 @@
 class CommandPacket
 {
 
-public:
+ public:
 
 	explicit CommandPacket(const std::string command);
 
-	void AddParameter(const std::string parameter);
-	void AddParameters(const std::vector<std::string> parameters);
+	void add_param(const std::string parameter);
+	void add_params(const std::vector<std::string> parameters);
 
-	std::string GeneratePacket();
+	std::string Generate();
 
-private:
+ private:
 
 	const char kCommandWrapper = '$';
 	const char kParameterWrapper = ':';

@@ -11,40 +11,43 @@ namespace Client
     {
         public enum CmdType
         {
-            MSG,
-            CONNECT,
-            CHANGE,
-            PM,
-            NONE,
-            USERS,
-            DISCONNECT
+            kMsg,
+            kConnect,
+            kChange,
+            kPm,
+            kNone,
+            kUsers,
+            kDisconnect,
+            kRoom
         };
 
-        public static CmdType stringToCmdType(string input)
+        public static CmdType StringToCmdType(string input)
         {
             switch (input)
             {
                 case "MSG":
-                    return CmdType.MSG;
+                    return CmdType.kMsg;
                 case "CONNECT":
-                    return CmdType.CONNECT;
+                    return CmdType.kConnect;
                 case "CHANGE":
-                    return CmdType.CHANGE;
+                    return CmdType.kChange;
                 case "PM":
-                    return CmdType.PM;
+                    return CmdType.kPm;
                 case "USERS":
-                    return CmdType.USERS;
+                    return CmdType.kUsers;
                 case "DISCONNECT":
-                    return CmdType.DISCONNECT;
+                    return CmdType.kDisconnect;
+                case "ROOM":
+                    return CmdType.kRoom;
                 default:
-                    return CmdType.NONE;
+                    return CmdType.kNone;
             }
         }
 
-        protected const string RTF_START = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033\uc1 {\colortbl;\red0\green0\blue0;\red255\green0\blue0;}";
-        protected const string RTF_END = @"\line}";
+        protected const string kRtfStart = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033\uc1 {\colortbl;\red0\green0\blue0;\red255\green0\blue0;}";
+        protected const string kRtfEnd = @"\line}";
 
-        public abstract string execute(string[] dataParts, RichTextBox rtxtFeed, ListBox lstUsers);
+        public abstract string execute(FrmMain form, string[] data_parts, RichTextBox rtxt_feed, ListBox lst_users, List<Room> rooms, ListBox lst_rooms);
         
     }
 }

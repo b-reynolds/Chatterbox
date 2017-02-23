@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Client
 {
     internal class CmdUsers : Command
     {
-        public override string execute(string[] dataParts, RichTextBox rtxtFeed, ListBox lstUsers)
+        public override string execute(FrmMain form, string[] data_parts, RichTextBox rtxt_feed, ListBox lst_users, List<Room> rooms, ListBox lst_rooms)
         {
-            if (dataParts.Length <= 1)
+            if (data_parts.Length <= 1)
             {
                 return string.Empty;
             }
 
-            lstUsers.BeginInvoke((MethodInvoker) delegate ()
+            lst_users.BeginInvoke((MethodInvoker) delegate ()
             {
-                lstUsers.Items.Clear();
-                for (int i = 1; i < dataParts.Length; i++)
+                lst_users.Items.Clear();
+                for (int i = 1; i < data_parts.Length; i++)
                 {
-                    lstUsers.Items.Add(dataParts[i]);
+                    lst_users.Items.Add(data_parts[i]);
                 }
             });
 

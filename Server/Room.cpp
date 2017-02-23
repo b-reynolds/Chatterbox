@@ -2,73 +2,76 @@
 
 Room::Room(const std::string& name, User* owner, const int& capacity)
 {
-	this->name = name;
-	this->owner = owner;
-	this->capacity = capacity;
-	locked = false;
+	name_ = name;
+	owner_ = owner;
+	capacity_ = capacity;
+	locked_ = false;
 }
 
-void Room::addUser(User* user)
+void Room::add_user(User* user)
 {
-	users.push_back(user);
+	users_.push_back(user);
 }
 
-void Room::removeUser(User* user)
+void Room::remove_user(User* user)
 {
-	for(int i = 0; i < users.size(); ++i)
+	for(unsigned int i = 0; i < users_.size(); ++i)
 	{
-		if(users[i]->get_id() == user->get_id())
+		if(users_[i]->id() == user->id())
 		{
-			users.erase(users.begin() + i);
+			users_.erase(users_.begin() + i);
+			break;
 		}
 	}
 }
 
-std::vector<User*>& Room::getUsers()
+std::vector<User*>& Room::users()
 {
-	return users;
+	return users_;
 }
 
-std::string Room::getName() const
+std::string Room::name() const
 {
-	return name;
+	return name_;
 }
 
-User* Room::getOwner() const
+void Room::set_owner(User* owner)
 {
-	return owner;
+	owner_ = owner;
 }
 
-void Room::setCapacity(const int& capacity)
+User* Room::owner() const
 {
-	this->capacity = capacity;
+	return owner_;
 }
 
-std::string Room::getPassword() const
+void Room::set_capacity(const int& capacity)
 {
-	return password;
+	capacity_ = capacity;
 }
 
-void Room::setPassword(const std::string& password)
+std::string Room::password() const
 {
-	this->password = password;
+	return password_;
 }
 
-void Room::setLocked(const bool& state)
+void Room::set_password(const std::string& password)
 {
-	locked = state;
+	password_ = password;
+	locked_ = password == kPasswordNone ? false : true;
 }
 
-bool Room::isFull() const
+unsigned Room::capacity() const
 {
-	return users.size() >= capacity;
+	return capacity_;
 }
 
-bool Room::isLocked() const
+bool Room::full() const
 {
-	return locked;
+	return users_.size() >= capacity_;
 }
 
-Room::~Room()
+bool Room::locked() const
 {
+	return locked_;
 }

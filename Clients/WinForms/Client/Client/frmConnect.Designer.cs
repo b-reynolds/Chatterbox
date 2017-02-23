@@ -75,13 +75,12 @@
             // 
             // btnConnect
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.btnConnect, 2);
             this.btnConnect.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnConnect.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnect.Location = new System.Drawing.Point(7, 65);
+            this.btnConnect.Location = new System.Drawing.Point(89, 65);
             this.btnConnect.Margin = new System.Windows.Forms.Padding(2);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(266, 25);
+            this.btnConnect.Size = new System.Drawing.Size(184, 25);
             this.btnConnect.TabIndex = 4;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -96,7 +95,7 @@
             this.tableLayoutPanel1.Controls.Add(this.lblHostname, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtHostname, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.nudPort, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btnConnect, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.btnConnect, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
@@ -137,7 +136,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmConnect";
-            this.Text = "bChat Client";
+            this.Text = "bChat";
             this.Load += new System.EventHandler(this.FrmConnect_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

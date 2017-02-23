@@ -36,9 +36,6 @@
     <ClCompile Include="cmd_pm.cpp">
       <Filter>Commands\Messaging</Filter>
     </ClCompile>
-    <ClCompile Include="CmdMKROOM.cpp">
-      <Filter>Commands\Rooms</Filter>
-    </ClCompile>
     <ClCompile Include="CmdEXIT.cpp">
       <Filter>Commands\Rooms</Filter>
     </ClCompile>
@@ -66,6 +63,9 @@
     <ClCompile Include="timer.cpp">
       <Filter>Data Types</Filter>
     </ClCompile>
+    <ClCompile Include="cmd_mkroom.cpp">
+      <Filter>Commands\Rooms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -73,9 +73,6 @@
     </ClInclude>
     <ClInclude Include="cmd_pm.h">
       <Filter>Commands\Messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdMKROOM.h">
-      <Filter>Commands\Rooms</Filter>
     </ClInclude>
     <ClInclude Include="CmdEXIT.h">
       <Filter>Commands\Rooms</Filter>
@@ -100,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>Data Types</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_mkroom.h">
+      <Filter>Commands\Rooms</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,20 +5,20 @@ CommandPacket::CommandPacket(const std::string command)
 	command_ = command;
 }
 
-void CommandPacket::AddParameter(const std::string parameter)
+void CommandPacket::add_param(const std::string parameter)
 {
 	parameters_.push_back(parameter);
 }
 
-void CommandPacket::AddParameters(const std::vector<std::string> parameters)
+void CommandPacket::add_params(const std::vector<std::string> parameters)
 {
 	for(auto & parameter : parameters)
 	{
-		AddParameter(parameter);
+		add_param(parameter);
 	}
 }
 
-std::string CommandPacket::GeneratePacket()
+std::string CommandPacket::Generate()
 {
 	std::string packet = kCommandWrapper + command_;
 	for(auto & parameter : parameters_)

@@ -16,7 +16,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 	if(parameters.size() == 0)
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).GeneratePacket());
+		SendData(user, StatusToPacket(Status::kInvalid).Generate());
 		return;
 	}
 
@@ -27,13 +27,13 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 	if (nameLen < kNameLengthMin)
 	{
-		SendData(user, StatusToPacket(Status::kShort).GeneratePacket());
+		SendData(user, StatusToPacket(Status::kShort).Generate());
 		return;
 	}
 
 	if (nameLen > kNameLengthMax)
 	{
-		SendData(user, StatusToPacket(Status::kLong).GeneratePacket());
+		SendData(user, StatusToPacket(Status::kLong).Generate());
 		return;
 	}
 
@@ -43,7 +43,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		if (!isalnum(static_cast<unsigned char>(name[i])))
 		{
-			SendData(user, StatusToPacket(Status::kIllegal).GeneratePacket());
+			SendData(user, StatusToPacket(Status::kIllegal).Generate());
 			return;
 		}
 	}
@@ -53,9 +53,9 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	std::string nameL = ToLower(name);
 	for(auto & usr : users)
 	{
-		if(usr.Connected() && ToLower(usr.get_name()) == nameL)
+		if(usr.Connected() && ToLower(usr.name()) == nameL)
 		{
-			SendData(user, StatusToPacket(Status::kExists).GeneratePacket());
+			SendData(user, StatusToPacket(Status::kExists).Generate());
 			return;
 		}
 	}
@@ -65,16 +65,16 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	if(user.HasName())
 	{
 		auto cmd_change = CommandPacket("CHANGE");
-		cmd_change.AddParameters(std::vector<std::string>({user.get_name(), name}));
-		std::string packet_change = cmd_change.GeneratePacket();
+		cmd_change.add_params(std::vector<std::string>({user.name(), name}));
+		std::string packet_change = cmd_change.Generate();
 
-		Room* user_room = user.get_room();
+		Room* user_room = user.room();
 
 		if(user_room == nullptr)
 		{
 			for(auto & u : users)
 			{
-				if(u.get_room() == nullptr)
+				if(u.room() == nullptr)
 				{
 					user.SendData(u, packet_change);
 				}
@@ -85,38 +85,56 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 			user.SendData(user_room, packet_change);
 		}
 
-		std::cout << "User #" << std::to_string(user.get_id()) << " changed their name from " << user.get_name() << " to " << name << std::endl;
+		std::cout << "User #" << std::to_string(user.id()) << " changed their name from " << user.name() << " to " << name << std::endl;
 	}
 	else
 	{
 		auto cmd_connect = CommandPacket("CONNECT");
-		cmd_connect.AddParameter(name);
-		std::string packet_connect = cmd_connect.GeneratePacket();
+		cmd_connect.add_param(name);
+		std::string packet_connect = cmd_connect.Generate();
 
 		auto cmd_users = CommandPacket("USERS");
-		cmd_users.AddParameter(name);
+		cmd_users.add_param(name);
 
 		for(auto & u : users)
 		{
 			if(u.HasName())
 			{
-				cmd_users.AddParameter(u.get_name());
+				cmd_users.add_param(u.name());
 			}
 			SendData(u, packet_connect);
 		}
 
-		std::string packet_users = cmd_users.GeneratePacket();
+		std::string packet_users = cmd_users.Generate();
+
+		std::vector<std::string> packet_rooms;
+		for (auto & r : rooms)
+		{
+			auto cmd_room = CommandPacket("ROOM");
+			cmd_room.add_param(r.name());
+			cmd_room.add_param(std::to_string(r.users().size()));
+			cmd_room.add_param(std::to_string(r.capacity()));
+			cmd_room.add_param(r.locked() ? "yes" : "no");
+			packet_rooms.push_back(cmd_room.Generate());
+		}
 
 		for(auto & u : users)
 		{
-			SendData(u, packet_users);
+			if (u.Connected() && u.HasName() || u.id() == user.id())
+			{
+				SendData(u, packet_users);
+				for (auto & p : packet_rooms)
+				{
+					SendData(u, p);
+				}
+			}	
 		}
 
-		std::cout << "User #" << std::to_string(user.get_id()) << " set their username to " << name << std::endl;
+		std::cout << "User #" << std::to_string(user.id()) << " set their username to " << name << std::endl;
 	}
 
 	user.set_name(name);
 
-	SendData(user, StatusToPacket(Status::kSuccess).GeneratePacket());
+	SendData(user, StatusToPacket(Status::kSuccess).Generate());
 }
 

@@ -22,7 +22,7 @@ void User::set_id(const int& id)
 	id_ = id;
 }
 
-int User::get_id() const
+int User::id() const
 {
 	return id_;
 }
@@ -32,7 +32,7 @@ void User::set_socket(SOCKET socket)
 	socket_ = socket;
 }
 
-SOCKET User::get_socket() const
+SOCKET User::socket() const
 {
 	return socket_;
 }
@@ -42,7 +42,7 @@ void User::set_name(const std::string& username)
 	name_ = username;
 }
 
-std::string User::get_name() const
+std::string User::name() const
 {
 	return name_;
 }
@@ -52,7 +52,7 @@ void User::set_room(Room* room)
 	room_ = room;
 }
 
-Room* User::get_room() const
+Room* User::room() const
 {
 	return room_;
 }
@@ -61,7 +61,7 @@ void User::SendData(const User& user, const std::string& message) const
 {
 	if (user.Connected() && user.HasName())
 	{
-		send(user.get_socket(), message.c_str(), message.length(), 0);
+		send(user.socket(), message.c_str(), message.length(), 0);
 	}
 }
 
@@ -75,7 +75,7 @@ void User::SendData(const std::vector<User>& users, const std::string& message) 
 
 void User::SendData(Room* room, const std::string& message)
 {
-	for(auto & user : room->getUsers())
+	for(auto & user : room->users())
 	{
 		SendData(*user, message);
 	}
@@ -85,7 +85,7 @@ void User::Reset()
 {
 	if (room_ != nullptr)
 	{
-		room_->removeUser(this);
+		room_->remove_user(this);
 	}
 
 	room_ = nullptr;

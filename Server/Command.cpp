@@ -88,7 +88,7 @@ CommandPacket Command::StatusToPacket(const Status& status)
 /**
  * \brief Returns the Command's CmdType
  */
-Type Command::get_type() const
+Type Command::type() const
 {
 	return type_;
 }
@@ -100,7 +100,7 @@ Type Command::get_type() const
 */
 void Command::SendData(const User& user, const std::string& message)
 {
-	send(user.get_socket(), message.c_str(), static_cast<int>(message.length()), 0);
+	send(user.socket(), message.c_str(), static_cast<int>(message.length()), 0);
 }
 
 /**

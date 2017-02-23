@@ -13,7 +13,7 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	if (!user.HasName())
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).GeneratePacket());
+		SendData(user, StatusToPacket(Status::kInvalid).Generate());
 		return;
 	}
 
@@ -21,7 +21,7 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	if(parameters.size() < 2)
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).GeneratePacket());
+		SendData(user, StatusToPacket(Status::kInvalid).Generate());
 		return;
 	}
 
@@ -35,8 +35,8 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 	User* recipient = nullptr;
 	for(auto & u : users)
 	{
-		std::string u_name_l = ToLower(u.get_name());
-		if(u_name_l == recipient_name_l && u_name_l != ToLower(user.get_name()))
+		std::string u_name_l = ToLower(u.name());
+		if(u_name_l == recipient_name_l && u_name_l != ToLower(user.name()))
 		{
 			recipient = &u;
 			break;
@@ -45,7 +45,7 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	if(recipient == nullptr)
 	{
-		SendData(user, StatusToPacket(Status::kNoUsr).GeneratePacket());
+		SendData(user, StatusToPacket(Status::kNoUsr).Generate());
 		return;
 	}
 
@@ -69,9 +69,9 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 	// Send the message
 
 	auto packet_pm = CommandPacket("PM");
-	packet_pm.AddParameters(std::vector<std::string>({ user.get_name(), message }));
+	packet_pm.add_params(std::vector<std::string>({ user.name(), message }));
 	
-	user.SendData(*recipient, packet_pm.GeneratePacket());
+	user.SendData(*recipient, packet_pm.Generate());
 
-	SendData(user, StatusToPacket(Status::kSuccess).GeneratePacket());
+	SendData(user, StatusToPacket(Status::kSuccess).Generate());
 }

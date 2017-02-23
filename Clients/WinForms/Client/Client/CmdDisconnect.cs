@@ -1,29 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Client
 {
     internal class CmdDisconnect : Command
     {
-        public override string execute(string[] dataParts, RichTextBox rtxtFeed, ListBox lstUsers)
+        public override string execute(FrmMain form, string[] data_parts, RichTextBox rtxt_feed, ListBox lst_users, List<Room> rooms, ListBox lst_rooms)
         {
-            if (dataParts.Length != 2)
+            if (data_parts.Length != 2)
             {
                 return string.Empty;
             }
 
-            lstUsers.BeginInvoke((MethodInvoker) delegate ()
+            lst_users.BeginInvoke((MethodInvoker) delegate ()
             {
-                for (int i = lstUsers.Items.Count - 1; i >= 0; --i)
+                for (int i = lst_users.Items.Count - 1; i >= 0; --i)
                 {
-                    if (lstUsers.Items[i].ToString() == dataParts[1])
+                    if (lst_users.Items[i].ToString() == data_parts[1])
                     {
-                        lstUsers.Items.RemoveAt(i);
+                        lst_users.Items.RemoveAt(i);
                     }
                 }
             });
 
-            return RTF_START + @"\i \b " + dataParts[1] + @"\b0  disconnected. \i0" + RTF_END;
+            return kRtfStart + @"\i \b " + data_parts[1] + @"\b0  disconnected. \i0" + kRtfEnd;
         }
     }
 }
