@@ -18,7 +18,11 @@ namespace Client
             kNone,
             kUsers,
             kDisconnect,
-            kRoom
+            kRoom,
+            kEnterRoom,
+            kExitRoom,
+            kError,
+            kInfo
         };
 
         public static CmdType StringToCmdType(string input)
@@ -39,6 +43,14 @@ namespace Client
                     return CmdType.kDisconnect;
                 case "ROOM":
                     return CmdType.kRoom;
+                case "ENTERROOM":
+                    return CmdType.kEnterRoom;
+                case "EXITROOM":
+                    return CmdType.kExitRoom;
+                case "ERROR":
+                    return CmdType.kError;
+                case "INFO":
+                    return CmdType.kInfo;
                 default:
                     return CmdType.kNone;
             }

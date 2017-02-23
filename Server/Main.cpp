@@ -91,6 +91,12 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 	Timer timeout(kTimeoutPeriod);
 	CmdMessage cmd_message;
 
+	SendData(user, Command::StatusToPacket(Status::kSuccess).Generate());
+	
+	auto cmd_info = CommandPacket("INFO");
+	cmd_info.add_param("Please specify a username using the UNAME command (e.g UNAME john)");
+	SendData(user, cmd_info.Generate());
+
 	while (true)
 	{
 		char recv_buffer[kBufferLength] = { 0 };
@@ -243,9 +249,7 @@ int main()
 		}
 
 		std::cout << "User #" << std::to_string(temp_id) << " connected." << std::endl;
-		
-		SendData(clientSock, Command::StatusToPacket(Status::kSuccess).Generate());
-
+	
 		threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 	}
 

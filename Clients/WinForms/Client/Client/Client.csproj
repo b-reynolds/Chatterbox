@@ -50,6 +50,10 @@
     <Compile Include="CmdChange.cs" />
     <Compile Include="CmdDisconnect.cs" />
     <Compile Include="CmdConnect.cs" />
+    <Compile Include="CmdEnterRoom.cs" />
+    <Compile Include="CmdError.cs" />
+    <Compile Include="CmdExitRoom.cs" />
+    <Compile Include="CmdInfo.cs" />
     <Compile Include="CmdMessage.cs" />
     <Compile Include="CmdPM.cs" />
     <Compile Include="CmdRoom.cs" />

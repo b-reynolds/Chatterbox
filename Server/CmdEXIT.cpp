@@ -9,6 +9,17 @@ void CmdEXIT::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		return;
 	}
 
+
+	auto cmd_exit_room = CommandPacket("EXITROOM");
+	cmd_exit_room.add_param(user.name());
+
+	std::string packet_exit_room = cmd_exit_room.Generate();
+
+	for (auto & u : user.room()->users())
+	{
+		SendData(*u, packet_exit_room);
+	}
+
 	user.room()->remove_user(&user);
 	user.set_room(nullptr);
 

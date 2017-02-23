@@ -44,10 +44,10 @@
             this.btnSend.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSend.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSend.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSend.Location = new System.Drawing.Point(676, 375);
+            this.btnSend.Location = new System.Drawing.Point(691, 309);
             this.btnSend.Margin = new System.Windows.Forms.Padding(2);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(164, 23);
+            this.btnSend.Size = new System.Drawing.Size(168, 23);
             this.btnSend.TabIndex = 0;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -61,10 +61,10 @@
             this.txtMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtMessage.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtMessage.ForeColor = System.Drawing.Color.Black;
-            this.txtMessage.Location = new System.Drawing.Point(2, 375);
+            this.txtMessage.Location = new System.Drawing.Point(2, 309);
             this.txtMessage.Margin = new System.Windows.Forms.Padding(2);
             this.txtMessage.Name = "txtMessage";
-            this.txtMessage.Size = new System.Drawing.Size(670, 22);
+            this.txtMessage.Size = new System.Drawing.Size(685, 22);
             this.txtMessage.TabIndex = 1;
             this.txtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtMessage_KeyDown);
             // 
@@ -75,10 +75,10 @@
             this.RTxtFeed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RTxtFeed.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RTxtFeed.ForeColor = System.Drawing.Color.Black;
-            this.RTxtFeed.Location = new System.Drawing.Point(170, 24);
+            this.RTxtFeed.Location = new System.Drawing.Point(174, 20);
             this.RTxtFeed.Margin = new System.Windows.Forms.Padding(2);
             this.RTxtFeed.Name = "RTxtFeed";
-            this.RTxtFeed.Size = new System.Drawing.Size(502, 347);
+            this.RTxtFeed.Size = new System.Drawing.Size(513, 285);
             this.RTxtFeed.TabIndex = 3;
             this.RTxtFeed.Text = "";
             this.RTxtFeed.TextChanged += new System.EventHandler(this.RTxtFeed_TextChanged);
@@ -93,10 +93,10 @@
             this.LstUsers.FormattingEnabled = true;
             this.LstUsers.IntegralHeight = false;
             this.LstUsers.ItemHeight = 14;
-            this.LstUsers.Location = new System.Drawing.Point(2, 24);
+            this.LstUsers.Location = new System.Drawing.Point(2, 20);
             this.LstUsers.Margin = new System.Windows.Forms.Padding(2);
             this.LstUsers.Name = "LstUsers";
-            this.LstUsers.Size = new System.Drawing.Size(164, 347);
+            this.LstUsers.Size = new System.Drawing.Size(168, 285);
             this.LstUsers.TabIndex = 4;
             // 
             // TblLayout
@@ -116,6 +116,7 @@
             this.TblLayout.Controls.Add(this.LstCommands, 3, 1);
             this.TblLayout.Controls.Add(this.lblCommands, 3, 0);
             this.TblLayout.Controls.Add(this.btnSend, 2, 2);
+            this.TblLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TblLayout.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TblLayout.Location = new System.Drawing.Point(0, 0);
             this.TblLayout.Margin = new System.Windows.Forms.Padding(2);
@@ -125,7 +126,7 @@
             this.TblLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 94.07895F));
             this.TblLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.TblLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TblLayout.Size = new System.Drawing.Size(1125, 400);
+            this.TblLayout.Size = new System.Drawing.Size(1151, 334);
             this.TblLayout.TabIndex = 5;
             // 
             // llbUsers
@@ -133,7 +134,7 @@
             this.llbUsers.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.llbUsers.AutoSize = true;
             this.llbUsers.ForeColor = System.Drawing.Color.Black;
-            this.llbUsers.Location = new System.Drawing.Point(3, 4);
+            this.llbUsers.Location = new System.Drawing.Point(3, 2);
             this.llbUsers.Name = "llbUsers";
             this.llbUsers.Size = new System.Drawing.Size(43, 14);
             this.llbUsers.TabIndex = 8;
@@ -144,7 +145,7 @@
             this.lblMessages.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblMessages.AutoSize = true;
             this.lblMessages.ForeColor = System.Drawing.Color.Black;
-            this.lblMessages.Location = new System.Drawing.Point(171, 4);
+            this.lblMessages.Location = new System.Drawing.Point(175, 2);
             this.lblMessages.Name = "lblMessages";
             this.lblMessages.Size = new System.Drawing.Size(70, 14);
             this.lblMessages.TabIndex = 7;
@@ -155,7 +156,7 @@
             this.lblRooms.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblRooms.AutoSize = true;
             this.lblRooms.ForeColor = System.Drawing.Color.Black;
-            this.lblRooms.Location = new System.Drawing.Point(677, 4);
+            this.lblRooms.Location = new System.Drawing.Point(692, 2);
             this.lblRooms.Name = "lblRooms";
             this.lblRooms.Size = new System.Drawing.Size(49, 14);
             this.lblRooms.TabIndex = 9;
@@ -171,10 +172,10 @@
             this.lstRooms.FormattingEnabled = true;
             this.lstRooms.IntegralHeight = false;
             this.lstRooms.ItemHeight = 14;
-            this.lstRooms.Location = new System.Drawing.Point(676, 24);
+            this.lstRooms.Location = new System.Drawing.Point(691, 20);
             this.lstRooms.Margin = new System.Windows.Forms.Padding(2);
             this.lstRooms.Name = "lstRooms";
-            this.lstRooms.Size = new System.Drawing.Size(164, 347);
+            this.lstRooms.Size = new System.Drawing.Size(168, 285);
             this.lstRooms.TabIndex = 6;
             // 
             // LstCommands
@@ -187,11 +188,11 @@
             this.LstCommands.FormattingEnabled = true;
             this.LstCommands.IntegralHeight = false;
             this.LstCommands.ItemHeight = 14;
-            this.LstCommands.Location = new System.Drawing.Point(844, 24);
+            this.LstCommands.Location = new System.Drawing.Point(863, 20);
             this.LstCommands.Margin = new System.Windows.Forms.Padding(2);
             this.LstCommands.Name = "LstCommands";
             this.TblLayout.SetRowSpan(this.LstCommands, 2);
-            this.LstCommands.Size = new System.Drawing.Size(279, 374);
+            this.LstCommands.Size = new System.Drawing.Size(286, 312);
             this.LstCommands.TabIndex = 5;
             // 
             // lblCommands
@@ -199,7 +200,7 @@
             this.lblCommands.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCommands.AutoSize = true;
             this.lblCommands.ForeColor = System.Drawing.Color.Black;
-            this.lblCommands.Location = new System.Drawing.Point(845, 4);
+            this.lblCommands.Location = new System.Drawing.Point(864, 2);
             this.lblCommands.Name = "lblCommands";
             this.lblCommands.Size = new System.Drawing.Size(137, 14);
             this.lblCommands.TabIndex = 10;
@@ -210,7 +211,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1125, 400);
+            this.ClientSize = new System.Drawing.Size(1151, 334);
             this.Controls.Add(this.TblLayout);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

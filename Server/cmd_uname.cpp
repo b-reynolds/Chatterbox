@@ -16,7 +16,9 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 	if(parameters.size() == 0)
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Invalid command or parameters specified");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -27,13 +29,17 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 	if (nameLen < kNameLengthMin)
 	{
-		SendData(user, StatusToPacket(Status::kShort).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("The username you entered is too short.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
 	if (nameLen > kNameLengthMax)
 	{
-		SendData(user, StatusToPacket(Status::kLong).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("The username you entered is too long.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -43,7 +49,9 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		if (!isalnum(static_cast<unsigned char>(name[i])))
 		{
-			SendData(user, StatusToPacket(Status::kIllegal).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("The username you entered contains illegal characters.");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 	}
@@ -55,7 +63,9 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		if(usr.Connected() && ToLower(usr.name()) == nameL)
 		{
-			SendData(user, StatusToPacket(Status::kExists).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("A user with that name already exists.");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 	}

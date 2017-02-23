@@ -68,6 +68,16 @@ void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		packet_rooms.push_back(cmd_room.Generate());
 	}
 
+	auto cmd_enter_room = CommandPacket("ENTERROOM");
+	cmd_enter_room.add_param(user.name());
+
+	std::string packet_enter_room = cmd_enter_room.Generate();
+
+	for (auto & u : room->users())
+	{
+		SendData(*u, packet_enter_room);
+	}
+
 	for (auto & u : users)
 	{
 		if (u.Connected() && u.HasName())

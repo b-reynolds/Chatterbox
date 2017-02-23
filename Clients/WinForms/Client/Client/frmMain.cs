@@ -108,6 +108,18 @@ namespace Client
                     case Command.CmdType.kRoom:
                         command = new CmdRoom();
                         break;
+                    case Command.CmdType.kEnterRoom:
+                        command = new CmdEnterRoom();
+                        break;
+                    case Command.CmdType.kExitRoom:
+                        command = new CmdExitRoom();
+                        break;
+                    case Command.CmdType.kError:
+                        command = new CmdError();
+                        break;
+                    case Command.CmdType.kInfo:
+                        command = new CmdInfo();
+                        break;
                     default:
                         command = null;
                         break;
