@@ -16,7 +16,7 @@ class CommandPacket
  private:
 
 	const char kCommandWrapper = '$';
-	const char kParameterWrapper = ':';
+	const char kParameterWrapper = '@';
 
 	std::vector<std::string> parameters_;
 	std::string command_;

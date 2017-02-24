@@ -110,8 +110,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CmdENTER.cpp" />
-    <ClCompile Include="CmdEXIT.cpp" />
+    <ClCompile Include="cmd_enter.cpp" />
+    <ClCompile Include="cmd_exit.cpp" />
     <ClCompile Include="cmd_message.cpp" />
     <ClCompile Include="cmd_mkroom.cpp" />
     <ClCompile Include="cmd_pm.cpp" />
@@ -124,8 +124,8 @@
     <ClCompile Include="user.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CmdENTER.h" />
-    <ClInclude Include="CmdEXIT.h" />
+    <ClInclude Include="cmd_enter" />
+    <ClInclude Include="cmd_exit.h" />
     <ClInclude Include="cmd_message.h" />
     <ClInclude Include="cmd_mkroom.h" />
     <ClInclude Include="cmd_pm.h" />

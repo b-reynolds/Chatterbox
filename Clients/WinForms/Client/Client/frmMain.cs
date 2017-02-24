@@ -79,7 +79,7 @@ namespace Client
 
         private string ProcessData(string data)
         {
-            string[] dataParts = data.Split(':');
+            string[] dataParts = data.Split('@');
 
             var cmdType = Command.StringToCmdType(dataParts[0]);
             if (cmdType != Command.CmdType.kNone)

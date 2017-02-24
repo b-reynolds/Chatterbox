@@ -1,14 +1,15 @@
-#include "CmdEXIT.h"
+#include "cmd_exit.h"
 #include <string>
 
 void CmdEXIT::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	if(user.room() == nullptr)
 	{
-		SendData(user, StatusToString(Status::kInvalid));
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("You are not in a room.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
-
 
 	auto cmd_exit_room = CommandPacket("EXITROOM");
 	cmd_exit_room.add_param(user.name());

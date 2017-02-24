@@ -1,11 +1,13 @@
-#include "CmdENTER.h"
+#include "cmd_enter"
 #include <string>
 
 void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	if(!user.HasName())
 	{
-		SendData(user, StatusToString(Status::kInvalid));
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("You must register a username before performing this command.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -13,7 +15,9 @@ void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 
 	if(paramSize == 0)
 	{
-		SendData(user, StatusToString(Status::kInvalid));
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Invalid parameters specified. (Command: ENTER <Room> [Password])");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -30,7 +34,9 @@ void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 
 	if(room == nullptr)
 	{
-		SendData(user, StatusToString(Status::kExists));
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Room does not exist.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -38,15 +44,19 @@ void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		if(paramSize < 2 || parameters[1] != room->password())
 		{
-			SendData(user, StatusToString(Status::kBadPass));
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Invalid password.");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 	}
 
 	if(room->full())
 	{
-		SendData(user, StatusToString(Status::kFull));
-		return;
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Room full.");
+		SendData(user, cmd_error.Generate());
+		return;		return;
 	}
 
 	if(user.room() != nullptr)
@@ -88,10 +98,4 @@ void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 			}
 		}
 	}
-
-	SendData(user, StatusToString(Status::kSuccess));
-}
-
-CmdENTER::~CmdENTER()
-{
 }

@@ -13,8 +13,8 @@
 #include "cmd_pm.h"
 #include "Room.h"
 #include "cmd_mkroom.h"
-#include "CmdENTER.h"
-#include "CmdEXIT.h"
+#include "cmd_enter"
+#include "cmd_exit.h"
 #include "command_packet.h"
 #pragma comment(lib, "Ws2_32.lib")
 

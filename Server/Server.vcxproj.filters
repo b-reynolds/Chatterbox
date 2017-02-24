@@ -36,12 +36,6 @@
     <ClCompile Include="cmd_pm.cpp">
       <Filter>Commands\Messaging</Filter>
     </ClCompile>
-    <ClCompile Include="CmdEXIT.cpp">
-      <Filter>Commands\Rooms</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdENTER.cpp">
-      <Filter>Commands\Rooms</Filter>
-    </ClCompile>
     <ClCompile Include="cmd_uname.cpp">
       <Filter>Commands\General</Filter>
     </ClCompile>
@@ -66,6 +60,12 @@
     <ClCompile Include="cmd_mkroom.cpp">
       <Filter>Commands\Rooms</Filter>
     </ClCompile>
+    <ClCompile Include="cmd_enter.cpp">
+      <Filter>Commands\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd_exit.cpp">
+      <Filter>Commands\Rooms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -73,12 +73,6 @@
     </ClInclude>
     <ClInclude Include="cmd_pm.h">
       <Filter>Commands\Messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdEXIT.h">
-      <Filter>Commands\Rooms</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdENTER.h">
-      <Filter>Commands\Rooms</Filter>
     </ClInclude>
     <ClInclude Include="cmd_uname.h">
       <Filter>Commands\General</Filter>
@@ -99,6 +93,12 @@
       <Filter>Data Types</Filter>
     </ClInclude>
     <ClInclude Include="cmd_mkroom.h">
+      <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_enter">
+      <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_exit.h">
       <Filter>Commands\Rooms</Filter>
     </ClInclude>
   </ItemGroup>

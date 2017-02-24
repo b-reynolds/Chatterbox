@@ -1,4 +1,5 @@
 #include "cmd_pm.h"
+#include <string>
 
 /*
 * \brief Execute the command
@@ -13,7 +14,9 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	if (!user.HasName())
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("You must register a username before performing this command.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -21,7 +24,9 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	if(parameters.size() < 2)
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Invalid parameters specified. (Command: PM <Recipient> <Message>)");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -45,7 +50,9 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	if(recipient == nullptr)
 	{
-		SendData(user, StatusToPacket(Status::kNoUsr).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("User does not exist.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -56,13 +63,17 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	if (msgLen < kMsgLengthMin)
 	{
-		SendData(user, StatusToString(Status::kShort));
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Message too short (Min: " + std::to_string(kMsgLengthMin) + ").");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
 	if (msgLen > kMsgLengthMax)
 	{
-		SendData(user, StatusToString(Status::kLong));
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Message too long (Max: " + std::to_string(kMsgLengthMax) + ").");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -72,6 +83,4 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 	packet_pm.add_params(std::vector<std::string>({ user.name(), message }));
 	
 	user.SendData(*recipient, packet_pm.Generate());
-
-	SendData(user, StatusToPacket(Status::kSuccess).Generate());
 }

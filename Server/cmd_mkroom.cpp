@@ -8,7 +8,9 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 	if(!user.HasName())
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("You must register a username before performing this command.");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -18,7 +20,9 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 	if(paramSize == 0)
 	{
-		SendData(user, StatusToPacket(Status::kInvalid).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Invalid parameters specified. (Command: MKROOM <Name> [Capacity] [Password])");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -29,13 +33,17 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 	if (roomNameLength < kRoomNameLengthMin)
 	{
-		SendData(user, StatusToPacket(Status::kShort).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Room name too short (Min: " + std::to_string(kRoomNameLengthMin) + ").");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
 	if (roomNameLength > kRoomNameLengthMax)
 	{
-		SendData(user, StatusToPacket(Status::kLong).Generate());
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Room name too long (Max: " + std::to_string(kRoomNameLengthMax) + ").");
+		SendData(user, cmd_error.Generate());
 		return;
 	}
 
@@ -45,7 +53,9 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 	{
 		if(!isalpha(roomName[i]) && roomName[i] != '-')
 		{
-			SendData(user, StatusToPacket(Status::kIllegal).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Room name contains illegal characters.");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 	}
@@ -57,14 +67,18 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 		if(rooms[i].owner()->name() == user.name()) // TODO: Pass room ownership on disconnects etc
 		{
-			SendData(user, StatusToPacket(Status::kInvalid).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("You already own a room.");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 		// Ensure the room name is unique
 
 		if(ToLower(rooms[i].name()) == roomNameL)
 		{
-			SendData(user, StatusToPacket(Status::kInvalid).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Room name already in use.");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 	}
@@ -80,7 +94,9 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 		std::string strCapacity = parameters[1];
 		if(strCapacity.find_first_not_of("0123456789") != std::string::npos)
 		{
-			SendData(user, StatusToPacket(Status::kInvalid).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Invalid capacity specified.");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 
@@ -89,12 +105,16 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 		unsigned int capacity = stoi(strCapacity);
 		if(capacity < kRoomSizeMin)
 		{
-			SendData(user, StatusToPacket(Status::kShort).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Capacity too small (Min: " + std::to_string(kRoomSizeMin) + ").");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 		if (capacity > kRoomSizeMax)
 		{
-			SendData(user, StatusToPacket(Status::kLong).Generate());
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Capacity too large (Max: " + std::to_string(kRoomSizeMax) + ").");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 		room.set_capacity(capacity);
@@ -111,12 +131,16 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 		if(passLen < kRoomPassLengthMin)
 		{
-			SendData(user, StatusToString(Status::kShort));
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Password too short (Min: " + std::to_string(kRoomPassLengthMin) + ").");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 		if (passLen > kRoomPassLengthMax)
 		{
-			SendData(user, StatusToString(Status::kLong));
+			auto cmd_error = CommandPacket("ERROR");
+			cmd_error.add_param("Password too long (Max: " + std::to_string(kRoomPassLengthMax) + ").");
+			SendData(user, cmd_error.Generate());
 			return;
 		}
 		room.set_password(pass);
@@ -148,5 +172,7 @@ void CmdMKROOM::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 		}
 	}
 
-	SendData(user, StatusToString(Status::kSuccess));
+	auto cmd_info = CommandPacket("INFO");
+	cmd_info.add_param("Room created.");
+	SendData(user, cmd_info.Generate());
 }
