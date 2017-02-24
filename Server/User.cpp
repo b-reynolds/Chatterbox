@@ -57,19 +57,64 @@ Room* User::room() const
 	return room_;
 }
 
-void User::SendData(const User& user, const std::string& message) const
+void User::Block(User* user)
 {
-	if (user.Connected() && user.HasName())
+	blocked_.push_back(user);
+}
+
+void User::Unblock(User* user)
+{
+	for(unsigned int i = 0; i < blocked_.size(); ++i)
+	{
+		if(blocked_[i]->name() == user->name())
+		{
+			blocked_.erase(blocked_.begin() + i);
+		}
+	}
+}
+
+std::vector<User*> User::blocked() const
+{
+	return blocked_;
+}
+
+bool User::IsBlocked(User* user)
+{
+	for(auto & u : blocked_)
+	{
+		if(user->name() == u->name())
+		{
+			return true;
+		}
+	}
+
+	for(auto & u : user->blocked())
+	{
+		if(name_ == u->name())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void User::SendData(User& user, const std::string& message)
+{
+	if (user.Connected() && user.HasName() && !IsBlocked(&user))
 	{
 		send(user.socket(), message.c_str(), message.length(), 0);
 	}
 }
 
-void User::SendData(const std::vector<User>& users, const std::string& message) const
+void User::SendData(std::vector<User>& users, const std::string& message)
 {
 	for(auto & user : users)
 	{
-		SendData(users, message);
+		if (!IsBlocked(&user))
+		{
+			SendData(users, message);
+		}
 	}
 }
 
@@ -77,7 +122,10 @@ void User::SendData(Room* room, const std::string& message)
 {
 	for(auto & user : room->users())
 	{
-		SendData(*user, message);
+		if (!IsBlocked(user))
+		{
+			SendData(*user, message);
+		}
 	}
 }
 

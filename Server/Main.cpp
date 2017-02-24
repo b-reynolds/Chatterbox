@@ -13,9 +13,11 @@
 #include "cmd_pm.h"
 #include "Room.h"
 #include "cmd_mkroom.h"
-#include "cmd_enter"
+#include "cmd_enter.h"
 #include "cmd_exit.h"
 #include "command_packet.h"
+#include "cmd_unblock.h"
+#include "cmd_block.h"
 #pragma comment(lib, "Ws2_32.lib")
 
 const int kPort = 47861;
@@ -216,7 +218,7 @@ int main()
 	std::thread threads[kClientsMax];
 
 
-	std::vector<Command*> commands{ new CmdUname(), new CmdPM(), new CmdMKROOM(), new CmdENTER(), new CmdEXIT() };
+	std::vector<Command*> commands{ new CmdUname(), new CmdPm(), new CmdMkRoom(), new CmdEnter(), new CmdExit(), new CmdBlock(), new CmdUnblock() };
 
 	std::vector<Room> rooms;
 

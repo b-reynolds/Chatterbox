@@ -1,7 +1,7 @@
 #include "cmd_exit.h"
 #include <string>
 
-void CmdEXIT::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	if(user.room() == nullptr)
 	{

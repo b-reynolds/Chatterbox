@@ -26,8 +26,15 @@ class User
 	void set_room(Room* room);
 	Room* room() const;
 
-	void SendData(const User& user, const std::string& message) const;
-	void SendData(const std::vector<User>& users, const std::string& message) const;
+	void Block(User* user);
+	void Unblock(User* user);
+
+	std::vector<User*> blocked() const;
+
+	bool IsBlocked(User* user);
+
+	void SendData(User& user, const std::string& message);
+	void SendData(std::vector<User>& users, const std::string& message);
 	void SendData(Room* room, const std::string& message);
 
 	void Reset();
@@ -42,6 +49,7 @@ class User
 	SOCKET socket_;
 	std::string name_;
 	Room* room_;
+	std::vector<User*> blocked_;
 
 };
 

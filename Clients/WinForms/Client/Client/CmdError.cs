@@ -13,7 +13,7 @@ namespace Client
                 return string.Empty;
             }
 
-            return kRtfStart + @"\cf2 \i \b Error:\b0 \cf1 " + data_parts[1] + @" \i0" + kRtfEnd;
+            return kRtfStart + @"\cf2 \i \b Error: \b0 \cf1 " + data_parts[1] + @" \i0" + kRtfEnd;
         }
     }
 }

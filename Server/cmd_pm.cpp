@@ -8,7 +8,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+void CmdPm::Execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -52,6 +52,14 @@ void CmdPM::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("User does not exist.");
+		SendData(user, cmd_error.Generate());
+		return;
+	}
+
+	if(user.IsBlocked(recipient))
+	{
+		auto cmd_error = CommandPacket("ERROR");
+		cmd_error.add_param("Communication blocked.");
 		SendData(user, cmd_error.Generate());
 		return;
 	}

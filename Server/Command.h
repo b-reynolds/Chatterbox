@@ -27,7 +27,9 @@ enum class Type
 	kPm,
 	kMkRoom,
 	kEnter,
-	kExit
+	kExit,
+	kBlock,
+	kUnblock,
 };
 
 /**

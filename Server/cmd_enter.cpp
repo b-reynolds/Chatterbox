@@ -1,7 +1,7 @@
-#include "cmd_enter"
+#include "cmd_enter.h"
 #include <string>
 
-void CmdENTER::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	if(!user.HasName())
 	{

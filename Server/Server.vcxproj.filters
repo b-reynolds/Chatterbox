@@ -66,6 +66,12 @@
     <ClCompile Include="cmd_exit.cpp">
       <Filter>Commands\Rooms</Filter>
     </ClCompile>
+    <ClCompile Include="cmd_block.cpp">
+      <Filter>Commands\Messaging</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd_unblock.cpp">
+      <Filter>Commands\Messaging</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -95,11 +101,17 @@
     <ClInclude Include="cmd_mkroom.h">
       <Filter>Commands\Rooms</Filter>
     </ClInclude>
-    <ClInclude Include="cmd_enter">
-      <Filter>Commands\Rooms</Filter>
-    </ClInclude>
     <ClInclude Include="cmd_exit.h">
       <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_block.h">
+      <Filter>Commands\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_enter.h">
+      <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_unblock.h">
+      <Filter>Commands\Messaging</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

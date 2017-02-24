@@ -1,13 +1,12 @@
 #pragma once
 #include "command.h"
 
-
-class CmdMKROOM : public Command
+class CmdMkRoom : public Command
 {
 
  public:
 
-	CmdMKROOM() : Command(Type::kMkRoom) {};
+	CmdMkRoom() : Command(Type::kMkRoom) {};
 
 	void Execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 

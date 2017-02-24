@@ -20,6 +20,10 @@ Type Command::StringToType(const std::string& string)
 		return Type::kEnter;
 	if (string == "EXIT")
 		return Type::kExit;
+	if (string == "BLOCK")
+		return Type::kBlock;
+	if (string == "UNBLOCK")
+		return Type::kUnblock;
 	return Type::kNone;
 }
 

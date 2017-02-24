@@ -6,12 +6,12 @@
 * Message is sent to the specified recipient.
 * Messages must be between 1 and 128 characters long.
 */
-class CmdPM : public Command
+class CmdPm : public Command
 {
 
  public:
 
-	CmdPM() : Command(Type::kPm) {};
+	CmdPm() : Command(Type::kPm) {};
 
 	void Execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 
