@@ -1,34 +1,33 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <string>
 #include <WinSock2.h>
+#include <sstream>
 #include "timer.h"
-#include <numeric>
 #include "string_util.h"
-
 #include "user.h"
 #include "room.h"
 #include "commands.h"
 
-#pragma comment(lib, "Ws2_32.lib")
+const unsigned int kBufferLength = 1024;
+const unsigned int kPortDefault = 47861;
+const unsigned int kPortMin = 0;
+const unsigned int kPortMax = 65535;
+const unsigned long kThreadSleepTime = 100;
+const unsigned int kTimeoutPeriod = 1800;
+const unsigned int kUsersMax = 25;
 
-const int kPort = 47861;
-const int kClientsMax = 25;
-const int kBufferLength = 1024;
-const int kTimeoutPeriod = 1800;
-
-void SendData(SOCKET socket, const std::string& data)
+void send_data(SOCKET socket, const std::string& data)
 {
 	send(socket, data.c_str(), data.length(), 0);
 }
 
-void SendData(User& user, const std::string& data)
+void send_data(User& user, const std::string& data)
 {
 	send(user.socket(), data.c_str(), data.length(), 0);
 }
 
-void Disconnect(User &user, std::vector<User> &users, std::thread &thread)
+void disconnect_user(User &user, std::vector<User> &users, std::thread &thread)
 {
 	std::cout << "User #" + std::to_string(user.id()) + " (" + user.name() + ") disconnected." << std::endl;
 
@@ -42,11 +41,11 @@ void Disconnect(User &user, std::vector<User> &users, std::thread &thread)
 
 	int user_id = user.id();
 
-	for (auto & u : users)
+	for (auto & usr : users)
 	{
-		if (u.id() != user_id)
+		if (usr.id() != user_id)
 		{
-			SendData(u, cmd_disconnect.Generate());
+			send_data(usr, cmd_disconnect.Generate());
 		}
 	}
 
@@ -54,14 +53,14 @@ void Disconnect(User &user, std::vector<User> &users, std::thread &thread)
 	thread.detach();
 }
 
-int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<Command*> &commands, std::thread &thread)
+int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<Command*> &commands, std::thread &thread)
 {
 	Timer timeout(kTimeoutPeriod);
 	CmdMessage cmd_message;
 	
 	auto cmd_info = CommandPacket("INFO");
 	cmd_info.add_param("Please specify a username using the UNAME command (e.g UNAME john)");
-	SendData(user, cmd_info.Generate());
+	send_data(user, cmd_info.Generate());
 
 	while (true)
 	{
@@ -70,7 +69,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 
 		if(timeout.expired() || result == NULL || result == INVALID_SOCKET && WSAGetLastError() != WSAEWOULDBLOCK)
 		{
-			Disconnect(user, users, thread);
+			disconnect_user(user, users, thread);
 			break;
 		}
 
@@ -103,7 +102,7 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 
 		timeout.Reset();
 
-		Sleep(100);
+		Sleep(kThreadSleepTime);
 	}
 
 	return 0;
@@ -111,14 +110,34 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 
 int main()
 {
-	std::cout << "============================================" << std::endl;
-	std::cout << "Chat Server" << std::endl;
-	std::cout << "============================================" << std::endl;
+	std::cout << "========================================================================" << std::endl;
+	std::cout << "  #####                                                                 " << std::endl;
+	std::cout << "  #     # #    #   ##   ##### ##### ###### #####  #####   ####  #    # " << std::endl;
+	std::cout << "  #       #    #  #  #    #     #   #      #    # #    # #    #  #  #  " << std::endl;
+	std::cout << "  #       ###### #    #   #     #   #####  #    # #####  #    #   ##   " << std::endl;
+	std::cout << "  #       #    # ######   #     #   #      #####  #    # #    #   ##   " << std::endl;
+	std::cout << "  #     # #    # #    #   #     #   #      #   #  #    # #    #  #  #  " << std::endl;
+	std::cout << "   #####  #    # #    #   #     #   ###### #    # #####   ####  #    # " << std::endl;
+	std::cout << "========================================================================" << std::endl;
+
+	int port;
+	std::string input;
+
+	std::cout << " [!] Enter port number to listen on: ";
+		
+	getline(std::cin, input);
+	std::stringstream string_stream(input);
+	
+	if(!(string_stream >> port) || port >= kPortMin || port <= kPortMax)
+	{
+		std::cout << " [x] Invalid port specified, reverting to default." << std::endl;
+		port = kPortDefault;
+	}
 
 	WORD w_version_requested = MAKEWORD(2, 2);
 	WSADATA wsa_data;
 
-	std::cout << "Initializing Winsock... ";
+	std::cout << " [*] Initializing Winsock... ";
 	if(WSAStartup(w_version_requested, &wsa_data) != NULL)
 	{
 		std::cout << "Failed to initialize Winsock: " << WSAGetLastError() << std::endl;
@@ -128,7 +147,7 @@ int main()
 	}
 	std::cout << "OK." << std::endl;
 
-	std::cout << "Creating socket... ";
+	std::cout << " [*] Creating socket... ";
 	SOCKET client_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(client_socket == INVALID_SOCKET)
 	{
@@ -139,17 +158,18 @@ int main()
 	}
 	std::cout << "OK." << std::endl;
 
-	unsigned long mode = 1;
-	ioctlsocket(client_socket, FIONBIO, &mode);
+	// TODO: Experiment with blocking/non-blocking sockets...
+	//unsigned long mode = 1;
+	//ioctlsocket(client_socket, FIONBIO, &mode);
 
 	struct sockaddr_in socketAddress, client;
 	int client_size = sizeof(client);
 
 	socketAddress.sin_family = AF_INET;
 	socketAddress.sin_addr.s_addr = ADDR_ANY;
-	socketAddress.sin_port = htons(kPort);
+	socketAddress.sin_port = htons(port);
 
-	std::cout << "Binding socket... ";
+	std::cout << " [*] Binding socket... ";
 	if(bind(client_socket, reinterpret_cast<struct sockaddr*>(&socketAddress), sizeof(socketAddress)) == SOCKET_ERROR)
 	{
 		std::cout << "Failed to bind socket: " << WSAGetLastError() << std::endl;
@@ -160,7 +180,7 @@ int main()
 	}
 	std::cout << "OK." << std::endl;
 
-	std::cout << "Listening... ";
+	std::cout << " [*] Listening... ";
 	if(listen(client_socket, 256) == SOCKET_ERROR)
 	{
 		std::cout << "Failed to start listening: " << WSAGetLastError() << std::endl;
@@ -169,25 +189,47 @@ int main()
 		getchar();
 		return 0;
 	}
-	std::cout << " OK (" + std::to_string(kPort) + ")." << std::endl;
-	
-	std::cout << "============================================" << std::endl;
+	std::cout << "OK (Port: " + std::to_string(port) + ")." << std::endl;	
+	std::cout << " [*] Server running... Press ESC to shutdown" << std::endl;
+	std::cout << "========================================================================" << std::endl;
 
-	std::vector<User> users(kClientsMax);
-	for(int i = 0; i < kClientsMax; ++i)
+	std::vector<User> users(kUsersMax);
+	for(int i = 0; i < kUsersMax; ++i)
 	{
 		users.push_back(User());
 	}
 
-	std::thread threads[kClientsMax];
+	std::thread threads[kUsersMax];
 
+	CmdUname cmd_uname;
+	CmdPm cmd_pm;
+	CmdMkRoom cmd_mkroom;
+	CmdEnter cmd_enter;
+	CmdExit cmd_exit;
+	CmdBlock cmd_block;
+	CmdUnblock cmd_unblock;
 
-	std::vector<Command*> commands{ new CmdUname(), new CmdPm(), new CmdMkRoom(), new CmdEnter(), new CmdExit(), new CmdBlock(), new CmdUnblock() };
+	std::vector<Command*> commands{ &cmd_uname, &cmd_pm, &cmd_mkroom, &cmd_enter, &cmd_exit, &cmd_block, &cmd_unblock };
 
 	std::vector<Room> rooms;
 
 	while(true)
 	{
+		if(GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+		{
+			for(unsigned int i = 0; i < kUsersMax; ++i)
+			{
+				if(users[i].connected())
+				{
+					disconnect_user(users[i], users, threads[i]);
+				}
+			}
+
+			WSACleanup();
+
+			break;
+		}
+
 		SOCKET clientSock = accept(client_socket, reinterpret_cast<sockaddr*>(&client), &client_size);
 
 		if (clientSock == INVALID_SOCKET)
@@ -197,7 +239,7 @@ int main()
 
 		int temp_id = User::kIdNone;
 
-		for(int i = 0; i < kClientsMax; ++i)
+		for(int i = 0; i < kUsersMax; ++i)
 		{
 			if(!users[i].connected() && !users[i].has_name())
 			{
@@ -209,26 +251,15 @@ int main()
 
 		if (temp_id == User::kIdNone)
 		{
-			SendData(client_socket, CommandPacket("FULL").Generate());
+			send_data(client_socket, CommandPacket("FULL").Generate());
 			closesocket(clientSock);
 			continue;
 		}
 
 		std::cout << "User #" << std::to_string(temp_id) << " connected." << std::endl;
 	
-		threads[temp_id] = std::thread(processClient, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
+		threads[temp_id] = std::thread(process_user, std::ref(users[temp_id]), std::ref(users), std::ref(rooms), std::ref(commands), std::ref(threads[temp_id]));
 	}
-
-	for(int i = 0; i < kClientsMax; ++i)
-	{
-		if(users[i].connected())
-		{
-			users[i].reset();
-			threads[i].detach();
-		}
-	}
-
-	WSACleanup();
 
 	return 0;
 }

@@ -11,7 +11,5 @@ public:
 	static std::string purge(const std::string& string, const std::vector<char>& characters);
 	static std::string upper(const std::string& string);
 	static std::string lower(const std::string& string);
-
-private:
 	
 };

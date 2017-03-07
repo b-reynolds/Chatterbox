@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
+using Client;
 
-namespace Client
+namespace Chatterbox
 {
     public partial class FrmConnect : Form
     {
-        private const string kDefaultHostname = "127.0.0.1";
-        private const int kDefaultPort = 47861;
+        private const string kIPDefault = "127.0.0.1";
+        private const string kStatusDefault = "Waiting...";
+        private const int kPortDefault = 47861;
 
         public FrmConnect()
         {
@@ -15,35 +17,50 @@ namespace Client
 
         private void FrmConnect_Load(object sender, EventArgs e)
         {
-            txtHostname.Text = kDefaultHostname;
-            nudPort.Value = kDefaultPort;
+            TxtIP.Text = kIPDefault;
+            NudPort.Value = kPortDefault;
+            set_status(kStatusDefault);
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private void set_status(string status)
         {
-            Enabled = false;
+            StsLabel.Text = status;
+            Refresh();
+        }
 
-            string hostName = txtHostname.Text;
-            int port = Convert.ToInt32(nudPort.Value);
+        private void set_controls_enabled(bool state)
+        {
+            TxtIP.Enabled = state;
+            NudPort.Enabled = state;
+            BtnConnect.Enabled = state;
+        }
 
-            var client = new Client(hostName, port);
+        public void reset()
+        {
+            set_controls_enabled(true);
+            set_status(kStatusDefault);
+        }
+
+        private void BtnConnect_Click(object sender, EventArgs e)
+        {
+            set_controls_enabled(false);
+            set_status("Connecting...");
+
+            var client = new Client.Client(TxtIP.Text, Convert.ToInt32(NudPort.Value));
 
             if (!client.Connect())
             {
-                MessageBox.Show(@"Connection failed!", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Enabled = true;
+                set_controls_enabled(true);
+                set_status("Connection Failed");
                 return;
             }
 
-            MessageBox.Show(@"Connected.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            set_status("Connected");
 
-            var frmMain = new FrmMain(ref client, this);
-            frmMain.Show();
+            var frm_main = new FrmMain(ref client, this);
+            frm_main.Show();
 
             Hide();
-            Enabled = true;
-
         }
-
     }
 }
