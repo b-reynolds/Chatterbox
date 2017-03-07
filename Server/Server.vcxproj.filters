@@ -5,14 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{67730fcf-187f-4b3a-9b37-6e984f952df8}</UniqueIdentifier>
     </Filter>
@@ -27,6 +19,9 @@
     </Filter>
     <Filter Include="Data Types">
       <UniqueIdentifier>{780c320c-ff51-487c-bd6f-55151fc0fe34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{1f2cb818-85b4-4f8c-a0da-79691a29b628}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,9 +39,6 @@
     </ClCompile>
     <ClCompile Include="command_packet.cpp">
       <Filter>Commands\General</Filter>
-    </ClCompile>
-    <ClCompile Include="Room.cpp">
-      <Filter>Data Types</Filter>
     </ClCompile>
     <ClCompile Include="user.cpp">
       <Filter>Data Types</Filter>
@@ -72,6 +64,12 @@
     <ClCompile Include="cmd_unblock.cpp">
       <Filter>Commands\Messaging</Filter>
     </ClCompile>
+    <ClCompile Include="room.cpp">
+      <Filter>Data Types</Filter>
+    </ClCompile>
+    <ClCompile Include="string_util.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -88,9 +86,6 @@
     </ClInclude>
     <ClInclude Include="command.h">
       <Filter>Commands\General</Filter>
-    </ClInclude>
-    <ClInclude Include="Room.h">
-      <Filter>Data Types</Filter>
     </ClInclude>
     <ClInclude Include="user.h">
       <Filter>Data Types</Filter>
@@ -112,6 +107,15 @@
     </ClInclude>
     <ClInclude Include="cmd_unblock.h">
       <Filter>Commands\Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="room.h">
+      <Filter>Data Types</Filter>
+    </ClInclude>
+    <ClInclude Include="string_util.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="commands.h">
+      <Filter>Commands\General</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

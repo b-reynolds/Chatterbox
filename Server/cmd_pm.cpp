@@ -1,4 +1,5 @@
 #include "cmd_pm.h"
+#include "string_util.h"
 #include <string>
 
 /*
@@ -12,7 +13,7 @@ void CmdPm::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 {
 	// Ensure the user has a name
 
-	if (!user.HasName())
+	if (!user.has_name())
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
@@ -35,13 +36,13 @@ void CmdPm::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 	std::string recipient_name = parameters[0];
 	parameters.erase(parameters.begin());
 
-	std::string recipient_name_l = ToLower(recipient_name);
+	std::string recipient_name_l = StringUtil::lower(recipient_name);
 
 	User* recipient = nullptr;
 	for(auto & u : users)
 	{
-		std::string u_name_l = ToLower(u.name());
-		if(u_name_l == recipient_name_l && u_name_l != ToLower(user.name()))
+		std::string u_name_l = StringUtil::lower(u.name());
+		if(u_name_l == recipient_name_l && u_name_l != StringUtil::lower(user.name()))
 		{
 			recipient = &u;
 			break;
@@ -56,7 +57,7 @@ void CmdPm::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 		return;
 	}
 
-	if(user.IsBlocked(recipient))
+	if(user.blocked(recipient))
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Communication blocked.");
@@ -90,5 +91,6 @@ void CmdPm::Execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 	auto packet_pm = CommandPacket("PM");
 	packet_pm.add_params(std::vector<std::string>({ user.name(), message }));
 	
-	user.SendData(*recipient, packet_pm.Generate());
+	user.send_data(user, packet_pm.Generate());
+	user.send_data(*recipient, packet_pm.Generate());
 }

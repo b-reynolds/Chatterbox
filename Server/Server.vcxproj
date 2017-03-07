@@ -121,7 +121,8 @@
     <ClCompile Include="command.cpp" />
     <ClCompile Include="command_packet.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="room.cpp" />
+    <ClCompile Include="string_util.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="user.cpp" />
   </ItemGroup>
@@ -135,8 +136,10 @@
     <ClInclude Include="cmd_uname.h" />
     <ClInclude Include="cmd_unblock.h" />
     <ClInclude Include="command.h" />
+    <ClInclude Include="commands.h" />
     <ClInclude Include="command_packet.h" />
-    <ClInclude Include="Room.h" />
+    <ClInclude Include="room.h" />
+    <ClInclude Include="string_util.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>

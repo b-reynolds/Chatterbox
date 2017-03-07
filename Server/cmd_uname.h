@@ -19,7 +19,7 @@ class CmdUname : public Command
 
 	// Accepted username length range
 
-	const int kNameLengthMin = 3;
-	const int kNameLengthMax = 12;
+	const unsigned int kNameLengthMin = 3;
+	const unsigned int kNameLengthMax = 12;
 
 };

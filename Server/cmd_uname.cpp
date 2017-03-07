@@ -1,5 +1,6 @@
 #include "cmd_uname.h"
 #include "command_packet.h"
+#include "string_util.h"
 #include <iostream>
 #include <string>
 
@@ -45,7 +46,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 	// Ensure name consists of alphanumeric characters
 
-	for (int i = 0; i < nameLen; ++i)
+	for (unsigned int i = 0; i < nameLen; ++i)
 	{
 		if (!isalnum(static_cast<unsigned char>(name[i])))
 		{
@@ -58,10 +59,10 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 	// Ensure the name is unique
 
-	std::string nameL = ToLower(name);
+	std::string nameL = StringUtil::lower(name);
 	for(auto & usr : users)
 	{
-		if(usr.Connected() && ToLower(usr.name()) == nameL)
+		if(usr.connected() && StringUtil::lower(usr.name()) == nameL)
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("A user with that name already exists.");
@@ -72,7 +73,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 	// Inform users of the name change / user joining
 
-	if(user.HasName())
+	if(user.has_name())
 	{
 		auto cmd_change = CommandPacket("CHANGE");
 		cmd_change.add_params(std::vector<std::string>({user.name(), name}));
@@ -86,13 +87,13 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 			{
 				if(u.room() == nullptr)
 				{
-					user.SendData(u, packet_change);
+					user.send_data(u, packet_change);
 				}
 			}
 		}
 		else
 		{
-			user.SendData(user_room, packet_change);
+			user.send_data(user_room, packet_change);
 		}
 
 		std::cout << "User #" << std::to_string(user.id()) << " changed their name from " << user.name() << " to " << name << std::endl;
@@ -108,7 +109,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 		for(auto & u : users)
 		{
-			if(u.HasName())
+			if(u.has_name())
 			{
 				cmd_users.add_param(u.name());
 			}
@@ -130,7 +131,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 		for(auto & u : users)
 		{
-			if (u.Connected() && u.HasName() || u.id() == user.id())
+			if (u.connected() && u.has_name() || u.id() == user.id())
 			{
 				SendData(u, packet_users);
 				for (auto & p : packet_rooms)
@@ -144,7 +145,5 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	}
 
 	user.set_name(name);
-
-	SendData(user, StatusToPacket(Status::kSuccess).Generate());
 }
 

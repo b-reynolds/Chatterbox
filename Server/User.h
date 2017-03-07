@@ -26,20 +26,20 @@ class User
 	void set_room(Room* room);
 	Room* room() const;
 
-	void Block(User* user);
-	void Unblock(User* user);
+	void block(User* user);
+	void unblock(User* user);
 
 	std::vector<User*> blocked() const;
 
-	bool IsBlocked(User* user);
+	bool blocked(User* user);
 
-	void SendData(User& user, const std::string& message);
-	void SendData(std::vector<User>& users, const std::string& message);
-	void SendData(Room* room, const std::string& message);
+	void send_data(User& user, const std::string& message);
+	void send_data(std::vector<User>& users, const std::string& message);
+	void send_data(Room* room, const std::string& message);
 
-	void Reset();
-	bool Connected() const;
-	bool HasName() const;
+	void reset();
+	bool connected() const;
+	bool has_name() const;
 
  private:
 

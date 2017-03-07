@@ -1,9 +1,10 @@
 #include "cmd_enter.h"
+#include "string_util.h"
 #include <string>
 
 void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
-	if(!user.HasName())
+	if(!user.has_name())
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
@@ -21,12 +22,12 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		return;
 	}
 
-	std::string roomNameL = ToLower(parameters[0]);
+	std::string roomNameL = StringUtil::lower(parameters[0]);
 
 	Room* room = nullptr;
-	for(int i = 0; i < rooms.size(); ++i)
+	for(unsigned int i = 0; i < rooms.size(); ++i)
 	{
-		if (ToLower(rooms[i].name()) == roomNameL)
+		if (StringUtil::lower(rooms[i].name()) == roomNameL)
 		{
 			room = &rooms[i];
 		}
@@ -90,7 +91,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 
 	for (auto & u : users)
 	{
-		if (u.Connected() && u.HasName())
+		if (u.connected() && u.has_name())
 		{
 			for (auto & p : packet_rooms)
 			{

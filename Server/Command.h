@@ -1,22 +1,13 @@
 #pragma once
 #include <vector>
 #include "user.h"
-#include "Room.h"
+#include "room.h"
 #include "command_packet.h"
 
 enum class Status
 {
 	kFail,
 	kSuccess,
-	kInvalid,
-	kExists,
-	kShort,
-	kLong,
-	kIllegal,
-	kRestricted,
-	kNoUsr,
-	kFull,
-	kBadPass
 };
 
 enum class Type
@@ -53,8 +44,6 @@ class Command
 	/* Converts a CmdStatus to its string equivalent */
 	static std::string StatusToString(const Status &status);
 
-	static CommandPacket StatusToPacket(const Status &status);
-
 	Type type() const;
 
  protected:
@@ -63,9 +52,6 @@ class Command
 
 	/* Send data to a User */
 	static void SendData(const User& user, const std::string& message);
-
-	/* Converts a string to lower case */
-	std::string ToLower(std::string string) const;
 
 	/* Builds a string by concatenating a vector of strings. Each string is prefixed with a joint. */
 	static std::string BuildString(const std::vector<std::string>& strings, const char &joint);

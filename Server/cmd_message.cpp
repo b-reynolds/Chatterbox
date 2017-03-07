@@ -13,7 +13,7 @@ void CmdMessage::Execute(User& user, std::vector<User>& users, std::vector<Room>
 {
 	// Ensure the user has a name
 
-	if(!user.HasName())
+	if(!user.has_name())
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
@@ -58,14 +58,14 @@ void CmdMessage::Execute(User& user, std::vector<User>& users, std::vector<Room>
 		{
 			if (u.room() == nullptr)
 			{
-				user.SendData(u, packet_msg);
+				user.send_data(u, packet_msg);
 			}
 		}
 		std::cout << "User #" << std::to_string(user.id()) << " (" << user.name() << ") : " << msg << std::endl;
 	}
 	else
 	{
-		user.SendData(user_room, packet_msg);
+		user.send_data(user_room, packet_msg);
 		std::cout << "User #" << std::to_string(user.id()) << " (" << user.name() << ") > " << user_room->name() << " : " << msg << std::endl;
 	}
 }

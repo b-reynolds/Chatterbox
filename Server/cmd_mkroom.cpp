@@ -1,12 +1,13 @@
 #include "cmd_mkroom.h"
-#include "Room.h"
+#include "room.h"
+#include "string_util.h"
 #include <string>
 
 void CmdMkRoom::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
-	if(!user.HasName())
+	if(!user.has_name())
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
@@ -60,7 +61,7 @@ void CmdMkRoom::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 		}
 	}
 
-	std::string roomNameL = ToLower(roomName);
+	std::string roomNameL = StringUtil::lower(roomName);
 	for(unsigned int i = 0; i < rooms.size(); ++i)
 	{
 		// Ensure the user does not currently own a room
@@ -74,7 +75,7 @@ void CmdMkRoom::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 		}
 		// Ensure the room name is unique
 
-		if(ToLower(rooms[i].name()) == roomNameL)
+		if(StringUtil::lower(rooms[i].name()) == roomNameL)
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Room name already in use.");
@@ -163,7 +164,7 @@ void CmdMkRoom::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 	for(auto & u : users)
 	{
-		if (u.Connected() && u.HasName())
+		if (u.connected() && u.has_name())
 		{
 			for (auto & p : packet_rooms)
 			{

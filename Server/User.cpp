@@ -1,5 +1,5 @@
 #include "user.h"
-#include "Room.h"
+#include "room.h"
 
 User::User()
 {
@@ -57,12 +57,12 @@ Room* User::room() const
 	return room_;
 }
 
-void User::Block(User* user)
+void User::block(User* user)
 {
 	blocked_.push_back(user);
 }
 
-void User::Unblock(User* user)
+void User::unblock(User* user)
 {
 	for(unsigned int i = 0; i < blocked_.size(); ++i)
 	{
@@ -78,7 +78,7 @@ std::vector<User*> User::blocked() const
 	return blocked_;
 }
 
-bool User::IsBlocked(User* user)
+bool User::blocked(User* user)
 {
 	for(auto & u : blocked_)
 	{
@@ -99,37 +99,37 @@ bool User::IsBlocked(User* user)
 	return false;
 }
 
-void User::SendData(User& user, const std::string& message)
+void User::send_data(User& user, const std::string& message)
 {
-	if (user.Connected() && user.HasName() && !IsBlocked(&user))
+	if (user.connected() && user.has_name() && !blocked(&user))
 	{
 		send(user.socket(), message.c_str(), message.length(), 0);
 	}
 }
 
-void User::SendData(std::vector<User>& users, const std::string& message)
+void User::send_data(std::vector<User>& users, const std::string& message)
 {
 	for(auto & user : users)
 	{
-		if (!IsBlocked(&user))
+		if (!blocked(&user))
 		{
-			SendData(users, message);
+			send_data(users, message);
 		}
 	}
 }
 
-void User::SendData(Room* room, const std::string& message)
+void User::send_data(Room* room, const std::string& message)
 {
 	for(auto & user : room->users())
 	{
-		if (!IsBlocked(user))
+		if (!blocked(user))
 		{
-			SendData(*user, message);
+			send_data(*user, message);
 		}
 	}
 }
 
-void User::Reset()
+void User::reset()
 {
 	if (room_ != nullptr)
 	{
@@ -145,12 +145,12 @@ void User::Reset()
 	socket_ = INVALID_SOCKET;
 }
 
-bool User::Connected() const
+bool User::connected() const
 {
 	return id_ != kIdNone && socket_ != INVALID_SOCKET;
 }
 
-bool User::HasName() const
+bool User::has_name() const
 {
 	return name_ != kUsernameNone;
 }

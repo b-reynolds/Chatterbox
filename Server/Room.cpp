@@ -1,4 +1,4 @@
-#include "Room.h"
+#include "room.h"
 
 Room::Room(const std::string& name, User* owner, const int& capacity)
 {

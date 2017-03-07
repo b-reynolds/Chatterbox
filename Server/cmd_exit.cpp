@@ -37,7 +37,7 @@ void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 
 	for (auto & u : users)
 	{
-		if (u.Connected() && u.HasName())
+		if (u.connected() && u.has_name())
 		{
 			for (auto & p : packet_rooms)
 			{
@@ -45,7 +45,6 @@ void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 			}
 		}
 	}
-
 	
 	SendData(user, StatusToString(Status::kSuccess));
 }

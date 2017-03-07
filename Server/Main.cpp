@@ -4,20 +4,13 @@
 #include <string>
 #include <WinSock2.h>
 #include "timer.h"
-#include "user.h"
-#include <algorithm>
-#include <sstream>
 #include <numeric>
-#include "cmd_message.h"
-#include "cmd_uname.h"
-#include "cmd_pm.h"
-#include "Room.h"
-#include "cmd_mkroom.h"
-#include "cmd_enter.h"
-#include "cmd_exit.h"
-#include "command_packet.h"
-#include "cmd_unblock.h"
-#include "cmd_block.h"
+#include "string_util.h"
+
+#include "user.h"
+#include "room.h"
+#include "commands.h"
+
 #pragma comment(lib, "Ws2_32.lib")
 
 const int kPort = 47861;
@@ -33,33 +26,6 @@ void SendData(SOCKET socket, const std::string& data)
 void SendData(User& user, const std::string& data)
 {
 	send(user.socket(), data.c_str(), data.length(), 0);
-}
-
-std::string ToUpper(std::string string)
-{
-	transform(string.begin(), string.end(), string.begin(), toupper);
-	return string;
-}
-
-std::string sanitize(std::string string)
-{
-	string.erase(remove(string.begin(), string.end(), '\n'), string.end());
-	string.erase(remove(string.begin(), string.end(), '\r'), string.end());
-	return string;
-}
-
-std::vector<std::string> split(const std::string& string, char delimiter)
-{
-	std::vector<std::string> parts;
-	std::stringstream ss(string);
-	std::string current;
-
-	while (getline(ss, current, delimiter))
-	{ 
-		parts.push_back(current);
-	}
-
-	return parts;
 }
 
 void Disconnect(User &user, std::vector<User> &users, std::thread &thread)
@@ -84,7 +50,7 @@ void Disconnect(User &user, std::vector<User> &users, std::thread &thread)
 		}
 	}
 
-	user.Reset();
+	user.reset();
 	thread.detach();
 }
 
@@ -92,8 +58,6 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 {
 	Timer timeout(kTimeoutPeriod);
 	CmdMessage cmd_message;
-
-	SendData(user, Command::StatusToPacket(Status::kSuccess).Generate());
 	
 	auto cmd_info = CommandPacket("INFO");
 	cmd_info.add_param("Please specify a username using the UNAME command (e.g UNAME john)");
@@ -110,16 +74,16 @@ int processClient(User &user, std::vector<User> &users, std::vector<Room> &rooms
 			break;
 		}
 
-		std::string input = sanitize(std::string(recv_buffer));
+		std::string input = StringUtil::purge(std::string(recv_buffer), std::vector<char>('\n', '\r'));
 
 		if(input.empty())
 		{
 			continue;
 		}
 
-		std::vector<std::string> parameters = split(input, ' ');
+		std::vector<std::string> parameters = StringUtil::split(input, ' ');
 
-		Type command = Command::StringToType(ToUpper(parameters[0]));
+		Type command = Command::StringToType(StringUtil::upper(parameters[0]));
 
 		bool valid_command = false;
 		for(auto & c : commands)
@@ -235,7 +199,7 @@ int main()
 
 		for(int i = 0; i < kClientsMax; ++i)
 		{
-			if(!users[i].Connected() && !users[i].HasName())
+			if(!users[i].connected() && !users[i].has_name())
 			{
 				users[i] = User(i, clientSock);
 				temp_id = i;
@@ -257,9 +221,9 @@ int main()
 
 	for(int i = 0; i < kClientsMax; ++i)
 	{
-		if(users[i].Connected())
+		if(users[i].connected())
 		{
-			users[i].Reset();
+			users[i].reset();
 			threads[i].detach();
 		}
 	}
