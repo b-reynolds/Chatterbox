@@ -34,8 +34,15 @@ void CmdBlock::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	for (auto & u : users)
 	{
 		std::string u_name_l = StringUtil::lower(u.name());
-		if (u_name_l == name_to_block_l && u_name_l != StringUtil::lower(user.name()))
+		if (u_name_l == name_to_block_l)
 		{
+			if(u_name_l == StringUtil::lower(user.name()))
+			{
+				auto cmd_error = CommandPacket("ERROR");
+				cmd_error.add_param("You cannot block yourself");
+				SendData(user, cmd_error.Generate());
+				return;
+			}
 			user_to_block = &u;
 			break;
 		}

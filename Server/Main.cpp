@@ -39,6 +39,7 @@ void disconnect_user(User &user, std::vector<User> &users, std::thread &thread)
 	auto cmd_disconnect = CommandPacket("DISCONNECT");
 	cmd_disconnect.add_param(user.name());
 
+
 	int user_id = user.id();
 
 	for (auto & usr : users)
@@ -57,9 +58,34 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 {
 	Timer timeout(kTimeoutPeriod);
 	CmdMessage cmd_message;
+
+	auto cmd_users = CommandPacket("USERS");
+
+	for (auto & u : users)
+	{
+		if (u.has_name())
+		{
+			cmd_users.add_param(u.name());
+		}
+	}
+
+	send_data(user, cmd_users.Generate());
+
+	std::string packet_users = cmd_users.Generate();
+
+	for (auto & r : rooms)
+	{
+		auto cmd_room = CommandPacket("ROOM");
+		cmd_room.add_param(r.name());
+		cmd_room.add_param(std::to_string(r.users().size()));
+		cmd_room.add_param(std::to_string(r.capacity()));
+		cmd_room.add_param(r.locked() ? "yes" : "no");
+		send_data(user, cmd_room.Generate());
+	}
+
 	
 	auto cmd_info = CommandPacket("INFO");
-	cmd_info.add_param("Please specify a username using the UNAME command (e.g UNAME john)");
+	cmd_info.add_param("Please register a username using the UNAME command (e.g UNAME john)");
 	send_data(user, cmd_info.Generate());
 
 	while (true)
@@ -157,7 +183,7 @@ int main()
 		return 0;
 	}
 	std::cout << "OK." << std::endl;
-
+		
 	// TODO: Experiment with blocking/non-blocking sockets...
 	//unsigned long mode = 1;
 	//ioctlsocket(client_socket, FIONBIO, &mode);

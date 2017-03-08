@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>chatterbox.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\chatterbox.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -64,39 +64,49 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
-    <Compile Include="CmdChange.cs" />
-    <Compile Include="CmdDisconnect.cs" />
-    <Compile Include="CmdConnect.cs" />
-    <Compile Include="CmdEnterRoom.cs" />
-    <Compile Include="CmdError.cs" />
-    <Compile Include="CmdExitRoom.cs" />
-    <Compile Include="CmdInfo.cs" />
-    <Compile Include="CmdMessage.cs" />
-    <Compile Include="CmdPM.cs" />
-    <Compile Include="CmdRoom.cs" />
-    <Compile Include="CmdUsers.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="frmConnect.cs">
+    <Compile Include="Commands\CmdUtil.cs" />
+    <Compile Include="Data Types\Client.cs" />
+    <Compile Include="Commands\CmdChange.cs" />
+    <Compile Include="Commands\CmdDisconnect.cs" />
+    <Compile Include="Commands\CmdConnect.cs" />
+    <Compile Include="Commands\CmdEnterRoom.cs" />
+    <Compile Include="Commands\CmdError.cs" />
+    <Compile Include="Commands\CmdExitRoom.cs" />
+    <Compile Include="Commands\CmdInfo.cs" />
+    <Compile Include="Commands\CmdMessage.cs" />
+    <Compile Include="Commands\CmdPM.cs" />
+    <Compile Include="Commands\CmdRoom.cs" />
+    <Compile Include="Commands\CmdUsers.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Forms\FrmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmConnect.Designer.cs">
-      <DependentUpon>frmConnect.cs</DependentUpon>
+    <Compile Include="Forms\FrmAbout.Designer.cs">
+      <DependentUpon>FrmAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMain.cs">
+    <Compile Include="Forms\FrmConnect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
+    <Compile Include="Forms\FrmConnect.Designer.cs">
+      <DependentUpon>FrmConnect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmChat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChat.Designer.cs">
+      <DependentUpon>FrmChat.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Room.cs" />
-    <EmbeddedResource Include="frmConnect.resx">
-      <DependentUpon>frmConnect.cs</DependentUpon>
+    <Compile Include="Data Types\Room.cs" />
+    <EmbeddedResource Include="Forms\FrmAbout.resx">
+      <DependentUpon>FrmAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
-      <DependentUpon>frmMain.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FrmConnect.resx">
+      <DependentUpon>FrmConnect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmChat.resx">
+      <DependentUpon>FrmChat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -122,9 +132,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="banner.png" />
-    <Content Include="chatterbox.ico" />
-    <None Include="chatterbox.png" />
+    <None Include="Resources\interface.png" />
+    <None Include="Resources\close.ico" />
+    <None Include="Resources\banner.png" />
+    <None Include="Resources\about.ico" />
+    <Content Include="Resources\chatterbox.ico" />
+    <None Include="Resources\chatterbox.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -138,6 +151,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

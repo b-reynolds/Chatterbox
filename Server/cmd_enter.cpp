@@ -60,6 +60,11 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		return;		return;
 	}
 
+	if(user.room() == room)
+	{
+		return;
+	}
+
 	if(user.room() != nullptr)
 	{
 		user.room()->remove_user(&user);
