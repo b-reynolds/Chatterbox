@@ -101,7 +101,7 @@ bool User::blocked(User* user)
 
 void User::send_data(User& user, const std::string& message)
 {
-	if (user.connected() && user.has_name() && !blocked(&user))
+	if (user.connected() && !blocked(&user))
 	{
 		send(user.socket(), message.c_str(), message.length(), 0);
 	}

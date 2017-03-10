@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Chatterbox
+namespace Chatterbox.Data_Types
 {
     public class Client
     {
@@ -83,9 +83,13 @@ namespace Chatterbox
                 int bytesRead = networkStream.Read(bytes, 0, bytes.Length); // System.IO.IO.Exception
                 return Encoding.ASCII.GetString(bytes, 0, bytesRead);
             }
-            catch (System.IO.IOException)
+            catch (IOException)
             {
                 Disconnect();
+            }
+            catch (ObjectDisposedException)
+            {
+                Disconnect();;
             }
 
             return string.Empty;

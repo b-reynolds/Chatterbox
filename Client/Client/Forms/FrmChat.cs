@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 using Chatterbox.Commands;
+using Chatterbox.Data_Types;
 
 namespace Chatterbox.Forms
 {
@@ -90,6 +91,8 @@ namespace Chatterbox.Forms
             {
                 client.SendData(TxtMessage.Text);
                 TxtMessage.Clear();
+
+                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
         }
@@ -115,8 +118,30 @@ namespace Chatterbox.Forms
 
         private void EnterRoom(object sender, EventArgs e)
         {
-            string room = LstRooms.Items[LstRooms.SelectedIndex].ToString();
-            client.SendData("enter " + room);
+            string selected_room = LstRooms.Items[LstRooms.SelectedIndex].ToString();
+            string room_name = selected_room.Split(' ')[0];
+
+            foreach (var room in rooms)
+            {
+                if (room.name() == room_name)
+                {
+                    if (room.locked())
+                    {
+                        var frmPassword = new FrmPassword(this, room_name);
+                        frmPassword.ShowDialog();
+                    }
+                    else
+                    {
+                        client.SendData("enter " + room_name);
+                    }
+                }
+            }
+
+          }
+
+        public void EnterRoom(string room, string password)
+        {
+            client.SendData("enter " + room + " " + password);
         }
 
         private void ExitRoom(object sender, EventArgs e)
@@ -154,6 +179,23 @@ namespace Chatterbox.Forms
                 LstRooms.SelectedIndex = item;
                 menuRoom.Show(LstRooms, e.Location);
             }
+        }
+
+        private void MnuAbout_Click(object sender, EventArgs e)
+        {
+            var frmAbout = new FrmAbout();
+            frmAbout.ShowDialog();
+        }
+
+        private void MnuCommands_Click(object sender, EventArgs e)
+        {
+            var frmCommands = new FrmCommands();
+            frmCommands.ShowDialog();
+        }
+
+        private void MnuExit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 

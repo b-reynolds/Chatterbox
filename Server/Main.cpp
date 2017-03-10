@@ -10,12 +10,17 @@
 #include "commands.h"
 
 const unsigned int kBufferLength = 1024;
-const unsigned int kPortDefault = 47861;
+
 const unsigned int kPortMin = 0;
 const unsigned int kPortMax = 65535;
+const unsigned int kPortDefault = 47861;
+
 const unsigned long kThreadSleepTime = 100;
 const unsigned int kTimeoutPeriod = 1800;
-const unsigned int kUsersMax = 25;
+
+const unsigned int kCapacityMin = 0;
+const unsigned int kCapacityMax = 100;
+const unsigned int kCapacityDefault = 50;
 
 void send_data(SOCKET socket, const std::string& data)
 {
@@ -82,7 +87,6 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 		cmd_room.add_param(r.locked() ? "yes" : "no");
 		send_data(user, cmd_room.Generate());
 	}
-
 	
 	auto cmd_info = CommandPacket("INFO");
 	cmd_info.add_param("Please register a username using the UNAME command (e.g UNAME john)");
@@ -146,7 +150,7 @@ int main()
 	std::cout << "   #####  #    # #    #   #     #   ###### #    # #####   ####  #    # " << std::endl;
 	std::cout << "========================================================================" << std::endl;
 
-	int port;
+	int port = kPortDefault;
 	std::string input;
 
 	std::cout << " [!] Enter port number to listen on: ";
@@ -154,10 +158,23 @@ int main()
 	getline(std::cin, input);
 	std::stringstream string_stream(input);
 	
-	if(!(string_stream >> port) || port >= kPortMin || port <= kPortMax)
+	if(!(string_stream >> port) || port < kPortMin || port > kPortMax)
 	{
 		std::cout << " [x] Invalid port specified, reverting to default." << std::endl;
 		port = kPortDefault;
+	}
+
+	unsigned int capacity = kCapacityDefault;
+
+	std::cout << " [!] Enter server capacity: ";
+
+	getline(std::cin, input);
+	string_stream = std::stringstream(input);
+
+	if (!(string_stream >> capacity) || capacity < kCapacityMin || capacity > kCapacityMax)
+	{
+		std::cout << " [x] Invalid capacity specified, reverting to default." << std::endl;
+		capacity = kCapacityDefault;
 	}
 
 	WORD w_version_requested = MAKEWORD(2, 2);
@@ -185,8 +202,8 @@ int main()
 	std::cout << "OK." << std::endl;
 		
 	// TODO: Experiment with blocking/non-blocking sockets...
-	//unsigned long mode = 1;
-	//ioctlsocket(client_socket, FIONBIO, &mode);
+	unsigned long mode = 1;
+	ioctlsocket(client_socket, FIONBIO, &mode);
 
 	struct sockaddr_in socketAddress, client;
 	int client_size = sizeof(client);
@@ -219,13 +236,13 @@ int main()
 	std::cout << " [*] Server running... Press ESC to shutdown" << std::endl;
 	std::cout << "========================================================================" << std::endl;
 
-	std::vector<User> users(kUsersMax);
-	for(int i = 0; i < kUsersMax; ++i)
+	std::vector<User> users(capacity);
+	for(int i = 0; i < capacity; ++i)
 	{
 		users.push_back(User());
 	}
 
-	std::thread threads[kUsersMax];
+	std::thread threads[kCapacityMax];
 
 	CmdUname cmd_uname;
 	CmdPm cmd_pm;
@@ -241,9 +258,9 @@ int main()
 
 	while(true)
 	{
-		if(GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+		if(GetAsyncKeyState(VK_ESCAPE))
 		{
-			for(unsigned int i = 0; i < kUsersMax; ++i)
+			for(unsigned int i = 0; i < capacity; ++i)
 			{
 				if(users[i].connected())
 				{
@@ -265,7 +282,7 @@ int main()
 
 		int temp_id = User::kIdNone;
 
-		for(int i = 0; i < kUsersMax; ++i)
+		for(int i = 0; i < capacity; ++i)
 		{
 			if(!users[i].connected() && !users[i].has_name())
 			{

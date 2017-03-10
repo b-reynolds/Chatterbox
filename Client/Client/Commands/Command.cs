@@ -22,9 +22,6 @@ namespace Chatterbox.Commands
             kInfo
         };
 
-        public static char kCommandSeperator = '$';
-        public static char kParameterSeperator = '@';
-
         protected const string kRtfStart = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033\uc1 {\colortbl;\red0\green0\blue0;\red255\green0\blue0;}";
         protected const string kRtfEnd = @"\line}";
 

@@ -12,7 +12,7 @@ namespace Chatterbox.Commands
                 return string.Empty;
             }
 
-            return kRtfStart + @"\i \b Server:\b0  " + data_parts[1] + @" \i0" + kRtfEnd;
+            return kRtfStart + @"\i \b [Server]:\b0  " + data_parts[1] + @" \i0" + kRtfEnd;
         }
     }
 }

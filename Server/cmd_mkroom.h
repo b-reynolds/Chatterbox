@@ -17,7 +17,7 @@ class CmdMkRoom : public Command
 	const unsigned int kRoomSizeDefault = 32;
 
 	const unsigned int kRoomNameLengthMin = 3;
-	const unsigned int kRoomNameLengthMax = 24;
+	const unsigned int kRoomNameLengthMax = 12;
 
 	const unsigned int kRoomPassLengthMin = 8;
 	const unsigned int kRoomPassLengthMax = 32;

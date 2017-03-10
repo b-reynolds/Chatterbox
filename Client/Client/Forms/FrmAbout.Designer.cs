@@ -1,4 +1,4 @@
-﻿namespace Chatterbox
+﻿namespace Chatterbox.Forms
 {
     partial class FrmAbout
     {

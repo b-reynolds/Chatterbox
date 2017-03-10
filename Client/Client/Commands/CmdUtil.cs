@@ -1,27 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chatterbox.Commands
 {
     internal class CmdUtil
     {
+        private const char kCommandSeperator = '$';
+        private const char kParameterSeperator = '@';
+
         public static List<List<string>> SplitCommands(string input)
         {
-            var command_list = new List<List<string>>();
-            string[] commands = input.Split(Command.kCommandSeperator);
-            for (int i = 0; i < commands.Length; i++)
+            var split_commands = new List<List<string>>();
+            var commands = input.Split(kCommandSeperator);
+
+            foreach (string cmd in commands)
             {
-                var command_parts = commands[i].Split(Command.kParameterSeperator);
-                var command = command_parts.Where(t => t != string.Empty).ToList();
+                var cmd_parts = cmd.Split(kParameterSeperator);
+                var command = cmd_parts.Where(part => part.Length != 0).ToList();
                 if (command.Count > 0)
                 {
-                    command_list.Add(command);
+                    split_commands.Add(command);
                 }
             }
-            return command_list;
+
+            return split_commands;
         }
 
         public static Command.CmdType StringToCmdType(string input)

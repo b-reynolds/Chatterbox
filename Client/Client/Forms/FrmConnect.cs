@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using Chatterbox.Commands;
+using Chatterbox.Data_Types;
 using Chatterbox.Forms;
 
 namespace Chatterbox
@@ -49,7 +51,7 @@ namespace Chatterbox
             SetControlsEnabled(false);
             SetStatus(kStatusWorking);
 
-            var client = new Chatterbox.Client(TxtIP.Text, Convert.ToInt32(NudPort.Value));
+            var client = new Client(TxtIP.Text, Convert.ToInt32(NudPort.Value));
 
             if (!client.Connect())
             {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Chatterbox
+namespace Chatterbox.Forms
 {
-    public partial class FrmAbout : Form
+    public partial class FrmCommands : Form
     {
-        public FrmAbout()
+        public FrmCommands()
         {
             InitializeComponent();
         }
@@ -15,9 +15,9 @@ namespace Chatterbox
             Close();
         }
 
-        private void LblGitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void FrmCommands_Load(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(LblGitHub.Text);
+
         }
     }
 }
