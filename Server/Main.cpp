@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <thread>
 #include <WinSock2.h>
@@ -141,13 +141,13 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 int main()
 {
 	std::cout << "========================================================================" << std::endl;
-	std::cout << "  #####                                                                 " << std::endl;
-	std::cout << "  #     # #    #   ##   ##### ##### ###### #####  #####   ####  #    # " << std::endl;
-	std::cout << "  #       #    #  #  #    #     #   #      #    # #    # #    #  #  #  " << std::endl;
-	std::cout << "  #       ###### #    #   #     #   #####  #    # #####  #    #   ##   " << std::endl;
-	std::cout << "  #       #    # ######   #     #   #      #####  #    # #    #   ##   " << std::endl;
-	std::cout << "  #     # #    # #    #   #     #   #      #   #  #    # #    #  #  #  " << std::endl;
-	std::cout << "   #####  #    # #    #   #     #   ###### #    # #####   ####  #    # " << std::endl;
+	std::cout << "  00000                                                                 " << std::endl;
+	std::cout << "  1     1 1    1   11   11111 11111 111111 11111  11111   1111  1    1 " << std::endl;
+	std::cout << "  0       0    0  0  0    0     0   0      0    0 0    0 0    0  0  0  " << std::endl;
+	std::cout << "  1       111111 1    1   1     1   11111  1    1 11111  1    1   11   " << std::endl;
+	std::cout << "  0       0    0 000000   0     0   0      00000  0    0 0    0   00   " << std::endl;
+	std::cout << "  1     1 1    1 1    1   1     1   1      1   1  1    1 1    1  1  1  " << std::endl;
+	std::cout << "   00000  0    0 0    0   0     0   000000 0    0 00000   0000  0    0 " << std::endl;
 	std::cout << "========================================================================" << std::endl;
 
 	int port = kPortDefault;
