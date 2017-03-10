@@ -118,6 +118,11 @@ namespace Chatterbox.Forms
 
         private void EnterRoom(object sender, EventArgs e)
         {
+            if (LstRooms.SelectedIndex < 0)
+            {
+                return;
+            }
+
             string selected_room = LstRooms.Items[LstRooms.SelectedIndex].ToString();
             string room_name = selected_room.Split(' ')[0];
 
@@ -167,18 +172,26 @@ namespace Chatterbox.Forms
 
         private void LstRooms_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
-                return;
+                var item = LstRooms.IndexFromPoint(e.Location);
+
+                if (item >= 0)
+                {
+                    LstRooms.SelectedIndex = item;
+                    menuRoom.Show(LstRooms, e.Location);
+                }
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
+                var item = LstRooms.IndexFromPoint(e.Location);
+
+                if (item >= 0)
+                {
+                    EnterRoom(sender, e);
+                }
             }
 
-            var item = LstRooms.IndexFromPoint(e.Location);
-
-            if (item >= 0)
-            {
-                LstRooms.SelectedIndex = item;
-                menuRoom.Show(LstRooms, e.Location);
-            }
         }
 
         private void MnuAbout_Click(object sender, EventArgs e)
