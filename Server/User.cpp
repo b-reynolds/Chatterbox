@@ -122,6 +122,7 @@ void User::send_data(Room* room, const std::string& message)
 {
 	for(auto & user : room->users())
 	{
+		// TODO: Uname doesn't matter if blocked! handle that.
 		if (!blocked(user))
 		{
 			send_data(*user, message);

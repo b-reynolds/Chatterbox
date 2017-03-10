@@ -81,19 +81,9 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 
 		Room* user_room = user.room();
 
-		if(user_room == nullptr)
+		for(auto & u : users)
 		{
-			for(auto & u : users)
-			{
-				if(u.room() == nullptr)
-				{
-					user.send_data(u, packet_change);
-				}
-			}
-		}
-		else
-		{
-			user.send_data(user_room, packet_change);
+			user.send_data(u, packet_change);
 		}
 
 		std::cout << "User #" << std::to_string(user.id()) << " changed their name from " << user.name() << " to " << name << std::endl;
