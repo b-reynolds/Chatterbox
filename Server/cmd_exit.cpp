@@ -1,8 +1,11 @@
 #include "cmd_exit.h"
 #include <string>
+#include "command_packet.h"
 
 void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
+	// Ensure the user is in a room
+
 	if(user.room() == nullptr)
 	{
 		auto cmd_error = CommandPacket("ERROR");
@@ -11,18 +14,18 @@ void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		return;
 	}
 
-	auto cmd_exit_room = CommandPacket("EXITROOM");
-	cmd_exit_room.add_param(user.name());
+	// Alert others users in the room of the user leaving
 
-	std::string packet_exit_room = cmd_exit_room.Generate();
+	auto cmd_leave_room = CommandPacket("INFO");
+	cmd_leave_room.add_param(user.name() + " left the room.");
+	user.send_data(user.room(), cmd_leave_room.Generate());
 
-	for (auto & u : user.room()->users())
-	{
-		SendData(*u, packet_exit_room);
-	}
+	// Remove the user from the room
 
 	user.room()->remove_user(&user);
 	user.set_room(nullptr);
+
+	// Update room list of all users
 
 	std::vector<std::string> packet_rooms;
 	for (auto & r : rooms)
@@ -37,7 +40,7 @@ void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 
 	for (auto & u : users)
 	{
-		if (u.connected() && u.has_name())
+		if (u.connected())
 		{
 			for (auto & p : packet_rooms)
 			{
@@ -45,6 +48,4 @@ void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 			}
 		}
 	}
-	
-	SendData(user, StatusToString(Status::kSuccess));
 }

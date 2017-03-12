@@ -1,6 +1,9 @@
 #pragma once
 #include "command.h"
 
+/*
+* \brief Exits the current room (if any) and return the user to the lobby.(E.g EXIT).
+*/
 class CmdExit : public Command
 {
 

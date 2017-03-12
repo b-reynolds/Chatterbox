@@ -1,3 +1,5 @@
+/* Includes all command related header files */
+#pragma once
 #include "cmd_message.h"
 #include "cmd_uname.h"
 #include "cmd_pm.h"

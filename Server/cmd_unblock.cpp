@@ -1,5 +1,6 @@
 #include "cmd_unblock.h"
 #include "string_util.h"
+#include "command_packet.h"
 
 void CmdUnblock::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {

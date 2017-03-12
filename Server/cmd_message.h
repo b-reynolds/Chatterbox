@@ -17,7 +17,7 @@ class CmdMessage : public Command
 	
  private:
 
-	// Accepted message length range
+	/* Accepted message length range */
 
 	const unsigned int kMsgLengthMin = 1;
 	const unsigned int kMsgLengthMax = 128;

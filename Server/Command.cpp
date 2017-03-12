@@ -1,6 +1,4 @@
 #include "command.h"
-#include <algorithm>
-#include <assert.h>
 
 /**
  * \brief Converts a string to its CmdType equivalent
@@ -28,8 +26,8 @@ Type Command::StringToType(const std::string& string)
 }
 
 /**
- * \brief Converts a CmdStatus to its string equivalent
- * \param cmdStatus cmdStatus
+ * \brief Converts a Status to its string equivalent
+ * \param status status to convert
  */
 std::string Command::StatusToString(const Status& status)
 {
@@ -43,7 +41,7 @@ std::string Command::StatusToString(const Status& status)
 }
 
 /**
- * \brief Returns the Command's CmdType
+ * \brief Returns the Command's type
  */
 Type Command::type() const
 {

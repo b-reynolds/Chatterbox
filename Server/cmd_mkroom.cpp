@@ -2,6 +2,7 @@
 #include "room.h"
 #include "string_util.h"
 #include <string>
+#include "command_packet.h"
 
 void CmdMkRoom::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
@@ -66,13 +67,14 @@ void CmdMkRoom::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 	{
 		// Ensure the user does not currently own a room
 
-		if(rooms[i].owner()->name() == user.name()) // TODO: Pass room ownership on disconnects etc
+		if(rooms[i].owner()->name() == user.name())
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("You already own a room.");
 			SendData(user, cmd_error.Generate());
 			return;
 		}
+
 		// Ensure the room name is unique
 
 		if(StringUtil::lower(rooms[i].name()) == roomNameL)
@@ -164,7 +166,7 @@ void CmdMkRoom::Execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 	for(auto & u : users)
 	{
-		if (u.connected() && u.has_name())
+		if (u.connected())
 		{
 			for (auto & p : packet_rooms)
 			{

@@ -2,14 +2,15 @@
 #include <vector>
 #include "user.h"
 #include "room.h"
-#include "command_packet.h"
 
+/* Enumeration of Statuses */
 enum class Status
 {
 	kFail,
 	kSuccess,
 };
 
+/* Emumeration of command types */
 enum class Type
 {
 	kNone,
@@ -24,16 +25,18 @@ enum class Type
 };
 
 /**
- * \brief Command Base Class
+ * \brief Abstract command base class
  */
 class Command
 {
 
  public:
 
+	/* Consructor sets the command type */
 	explicit Command(const Type &commandType) : type_(commandType) {}
 
-	virtual ~Command() {}
+	/* Virtual deconstructor */
+	virtual ~Command() = default;
 
 	/* Pure virtual execute method implemented by all Commands */
 	virtual void Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) = 0;
@@ -44,10 +47,12 @@ class Command
 	/* Converts a CmdStatus to its string equivalent */
 	static std::string StatusToString(const Status &status);
 
+	/* Returns the command type */
 	Type type() const;
 
  protected:
 
+	/* Command type */
 	Type type_;
 
 	/* Send data to a User */

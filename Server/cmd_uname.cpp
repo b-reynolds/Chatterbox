@@ -57,7 +57,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 		}
 	}
 
-	// Ensure the name is unique
+	// Ensure name is unique
 
 	std::string nameL = StringUtil::lower(name);
 	for(auto & usr : users)

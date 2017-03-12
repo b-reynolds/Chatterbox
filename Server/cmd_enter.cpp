@@ -1,9 +1,12 @@
 #include "cmd_enter.h"
 #include "string_util.h"
 #include <string>
+#include "command_packet.h"
 
 void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
+	// Ensure the user has a name
+
 	if(!user.has_name())
 	{
 		auto cmd_error = CommandPacket("ERROR");
@@ -11,6 +14,8 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		SendData(user, cmd_error.Generate());
 		return;
 	}
+
+	// Ensure required parameters are specified
 
 	size_t paramSize = parameters.size();
 
@@ -21,6 +26,8 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		SendData(user, cmd_error.Generate());
 		return;
 	}
+
+	// Ensure room exists
 
 	std::string roomNameL = StringUtil::lower(parameters[0]);
 
@@ -41,6 +48,8 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		return;
 	}
 
+	// If the room is locked ensure a password was specified
+
 	if(room->locked())
 	{
 		if(paramSize < 2 || parameters[1] != room->password())
@@ -52,6 +61,8 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		}
 	}
 
+	// Ensure the room is not full
+
 	if(room->full())
 	{
 		auto cmd_error = CommandPacket("ERROR");
@@ -60,18 +71,39 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		return;		return;
 	}
 
+	// If the user is already in the room then return
+
 	if(user.room() == room)
 	{
 		return;
 	}
 
+	// If the user is in a different room already, leave that room and alert other users.
+
 	if(user.room() != nullptr)
 	{
+		auto cmd_leave_room = CommandPacket("INFO");
+		cmd_leave_room.add_param(user.name() + " left the room.");
+		user.send_data(room, cmd_leave_room.Generate());
 		user.room()->remove_user(&user);
 	}
 
+	// Add the user to the room and alert the room of their entrance 
+
 	room->add_user(&user);
 	user.set_room(room);
+
+	auto cmd_enter_room = CommandPacket("INFO");
+	cmd_enter_room.add_param(user.name() + " entered the room");
+
+	std::string packet_enter_room = cmd_enter_room.Generate();
+
+	for (auto & u : room->users())
+	{
+		SendData(*u, packet_enter_room);
+	}
+
+	// Update the room list of all users
 
 	std::vector<std::string> packet_rooms;
 	for (auto & r : rooms)
@@ -84,19 +116,9 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		packet_rooms.push_back(cmd_room.Generate());
 	}
 
-	auto cmd_enter_room = CommandPacket("ENTERROOM");
-	cmd_enter_room.add_param(user.name());
-
-	std::string packet_enter_room = cmd_enter_room.Generate();
-
-	for (auto & u : room->users())
-	{
-		SendData(*u, packet_enter_room);
-	}
-
 	for (auto & u : users)
 	{
-		if (u.connected() && u.has_name())
+		if (u.connected())
 		{
 			for (auto & p : packet_rooms)
 			{

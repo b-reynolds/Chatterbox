@@ -1,6 +1,7 @@
 #include "cmd_message.h"
 #include <iostream>
 #include <string>
+#include "command_packet.h"
 
 /*
 * \brief Execute the command
