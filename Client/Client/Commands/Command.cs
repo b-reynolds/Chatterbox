@@ -19,7 +19,6 @@ namespace Chatterbox.Commands
             kExitRoom,
             kError,
             kInfo,
-            kClearRooms,
             kRemoveRoom
         };
 

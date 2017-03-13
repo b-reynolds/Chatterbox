@@ -56,16 +56,16 @@ void disconnect_user(User &user, std::vector<User> &users, std::vector<Room> &ro
 
 	// If the user is in a room (and does not own it) then leave it and inform the room's users
 
-	Room* users_room = user.room();
+	Room* room_user_in = user.room();
 
-	if (users_room != nullptr && users_room->owner()->id() != user.id())
+	if (room_user_in != nullptr && room_user_in->owner()->id() != user.id())
 	{
-		users_room->remove_user(&user);
+		room_user_in->remove_user(&user);
 
 		auto cmd_leave_room = CommandPacket("INFO");
 		cmd_leave_room.add_param(user.name() + " left the room.");
 
-		auto room_users = users_room->users();
+		auto room_users = room_user_in->users();
 		std::string packet_leave_room = cmd_leave_room.generate();
 
 		for(unsigned int i = 0; i < room_users.size(); ++i)
@@ -125,12 +125,6 @@ void disconnect_user(User &user, std::vector<User> &users, std::vector<Room> &ro
 		cmd_room.add_param(rooms[i].locked() ? "yes" : "no");
 		packet_rooms.push_back(cmd_room.generate());
 	}
-
-	//if(packet_rooms.empty())
-	//{
-	//	auto cmd_clear_rooms = CommandPacket("CLEARROOMS");
-	//	packet_rooms.push_back(cmd_clear_rooms.generate());
-	//}
 
 	if(!packet_rooms.empty())
 	{
