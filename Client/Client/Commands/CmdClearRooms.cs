@@ -3,16 +3,16 @@ using System.Windows.Forms;
 
 namespace Chatterbox.Commands
 {
-    internal class CmdEnterRoom : Command
+    internal class CmdClearRooms : Command
     {
         public override string execute(List<string> data_parts, RichTextBox rtxt_feed, ListBox lst_users, List<Room> rooms, ListBox lst_rooms)
         {
-            if (data_parts.Count != 2)
+            lst_rooms.BeginInvoke((MethodInvoker)delegate ()
             {
-                return string.Empty;
-            }
+                lst_rooms.Items.Clear();
+            });
 
-            return kRtfStart + @"\i \b " + data_parts[1] + @"\b0  joined the room. \i0" + kRtfEnd;
+            return string.Empty;
         }
     }
 }

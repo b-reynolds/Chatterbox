@@ -16,10 +16,10 @@ namespace Chatterbox.Commands
             kUsers,
             kDisconnect,
             kRoom,
-            kEnterRoom,
             kExitRoom,
             kError,
-            kInfo
+            kInfo,
+            kClearRooms
         };
 
         protected const string kRtfStart = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1033\uc1 {\colortbl;\red0\green0\blue0;\red255\green0\blue0;}";

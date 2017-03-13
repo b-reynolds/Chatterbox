@@ -30,7 +30,7 @@ public:
 
 private:
 
-	const std::string kPasswordNone = "";
+	static const std::string kPasswordNone;
 
 	User* owner_;
 	std::vector<User*> users_;

@@ -85,18 +85,6 @@ namespace Chatterbox.Forms
             return cmd == null ? string.Empty : cmd.execute(command, RTxtFeed, LstUsers, rooms, LstRooms);
         }
 
-        private void TxtMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                client.SendData(TxtMessage.Text);
-                TxtMessage.Clear();
-
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-        }
-
         private void RTxtFeed_TextChanged(object sender, EventArgs e)
         {
             RTxtFeed.SelectionStart = RTxtFeed.Text.Length;
@@ -209,6 +197,17 @@ namespace Chatterbox.Forms
         private void MnuExit_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void TxtMessage_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+
+                client.SendData(TxtMessage.Text);
+                TxtMessage.Clear();
+            }
         }
     }
 

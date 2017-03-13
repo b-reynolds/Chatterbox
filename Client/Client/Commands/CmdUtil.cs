@@ -44,10 +44,8 @@ namespace Chatterbox.Commands
                     return Command.CmdType.kDisconnect;
                 case "ROOM":
                     return Command.CmdType.kRoom;
-                case "ENTERROOM":
-                    return Command.CmdType.kEnterRoom;
-                case "EXITROOM":
-                    return Command.CmdType.kExitRoom;
+                case "CLEARROOMS":
+                    return Command.CmdType.kClearRooms;
                 case "ERROR":
                     return Command.CmdType.kError;
                 case "INFO":
@@ -75,14 +73,12 @@ namespace Chatterbox.Commands
                     return new CmdDisconnect();
                 case Command.CmdType.kRoom:
                     return new CmdRoom();
-                case Command.CmdType.kEnterRoom:
-                    return new CmdEnterRoom();
-                case Command.CmdType.kExitRoom:
-                    return new CmdExitRoom();
                 case Command.CmdType.kError:
                     return new CmdError();
                 case Command.CmdType.kInfo:
                     return new CmdInfo();
+                case Command.CmdType.kClearRooms:
+                    return new CmdClearRooms();
                 default:
                     return null;
             }

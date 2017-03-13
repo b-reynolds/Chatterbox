@@ -32,18 +32,12 @@ void send_data(User& user, const std::string& data)
 	send(user.socket(), data.c_str(), data.length(), 0);
 }
 
-void disconnect_user(User &user, std::vector<User> &users, std::thread &thread)
+void disconnect_user(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::thread &thread)
 {
 	std::cout << "User #" + std::to_string(user.id()) + " (" + user.name() + ") disconnected." << std::endl;
 
-	if(user.room() != nullptr)
-	{
-		user.room()->remove_user(&user);
-	}
-
 	auto cmd_disconnect = CommandPacket("DISCONNECT");
 	cmd_disconnect.add_param(user.name());
-
 
 	int user_id = user.id();
 
@@ -55,6 +49,74 @@ void disconnect_user(User &user, std::vector<User> &users, std::thread &thread)
 		}
 	}
 
+	Room* users_room = user.room();
+
+	if(users_room != nullptr)
+	{
+		if(users_room->owner()->name() != user.name())
+		{
+			users_room->remove_user(&user);
+		}
+		else
+		{
+			CommandPacket cmd_room_deleted("INFO");
+			cmd_room_deleted.add_param("You were removed from the room (Room owner disconnected).");
+			std::string packet_room_deleted = cmd_room_deleted.Generate();
+
+			std::string room_name = users_room->name();
+
+			for (unsigned int i = 0; i < rooms.size(); ++i)
+			{
+				if (rooms[i].name() != room_name)
+				{
+					continue;
+				}
+
+				auto room_users = rooms[i].users();
+
+				for (unsigned int j = 0; j < room_users.size(); ++j)
+				{
+					send_data(*room_users[j], packet_room_deleted);
+					users_room->remove_user(room_users[j]);
+				}
+
+				rooms.erase(rooms.begin() + i);
+
+				break;
+			}
+		}
+
+		// Update the room list of all users
+
+		std::vector<std::string> packet_rooms;
+		for(unsigned int i = 0; i < rooms.size(); ++i)
+		{
+			auto cmd_room = CommandPacket("ROOM");
+			cmd_room.add_param(rooms[i].name());
+			cmd_room.add_param(std::to_string(rooms[i].users().size()));
+			cmd_room.add_param(std::to_string(rooms[i].capacity()));
+			cmd_room.add_param(rooms[i].locked() ? "yes" : "no");
+			packet_rooms.push_back(cmd_room.Generate());
+		}
+
+		if(packet_rooms.empty())
+		{
+			auto cmd_clear_rooms = CommandPacket("CLEARROOMS");
+			packet_rooms.push_back(cmd_clear_rooms.Generate());
+		}
+
+		for(unsigned int i = 0; i < users.size(); ++i)
+		{
+			if(users[i].connected())
+			{
+				for(unsigned int j = 0; j < packet_rooms.size(); ++j)
+				{
+					send_data(users[i], packet_rooms[j]);
+				}
+			}
+		}
+	}
+	
 	user.reset();
 	thread.detach();
 }
@@ -99,7 +161,7 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 
 		if(timeout.expired() || result == NULL || result == INVALID_SOCKET && WSAGetLastError() != WSAEWOULDBLOCK)
 		{
-			disconnect_user(user, users, thread);
+			disconnect_user(user, users, rooms, thread);
 			break;
 		}
 
@@ -237,7 +299,7 @@ int main()
 	std::cout << "========================================================================" << std::endl;
 
 	std::vector<User> users(capacity);
-	for(int i = 0; i < capacity; ++i)
+	for(unsigned int i = 0; i < capacity; ++i)
 	{
 		users.push_back(User());
 	}
@@ -264,7 +326,7 @@ int main()
 			{
 				if(users[i].connected())
 				{
-					disconnect_user(users[i], users, threads[i]);
+					disconnect_user(users[i], users, rooms, threads[i]);
 				}
 			}
 
@@ -282,7 +344,7 @@ int main()
 
 		int temp_id = User::kIdNone;
 
-		for(int i = 0; i < capacity; ++i)
+		for(unsigned int i = 0; i < capacity; ++i)
 		{
 			if(!users[i].connected() && !users[i].has_name())
 			{

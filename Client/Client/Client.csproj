@@ -64,14 +64,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CmdClearRooms.cs" />
     <Compile Include="Commands\CmdUtil.cs" />
     <Compile Include="Data Types\Client.cs" />
     <Compile Include="Commands\CmdChange.cs" />
     <Compile Include="Commands\CmdDisconnect.cs" />
     <Compile Include="Commands\CmdConnect.cs" />
-    <Compile Include="Commands\CmdEnterRoom.cs" />
     <Compile Include="Commands\CmdError.cs" />
-    <Compile Include="Commands\CmdExitRoom.cs" />
     <Compile Include="Commands\CmdInfo.cs" />
     <Compile Include="Commands\CmdMessage.cs" />
     <Compile Include="Commands\CmdPM.cs" />

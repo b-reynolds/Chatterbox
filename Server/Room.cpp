@@ -1,5 +1,7 @@
 #include "room.h"
 
+const std::string Room::kPasswordNone = "";
+
 Room::Room(const std::string& name, User* owner, const int& capacity)
 {
 	name_ = name;
@@ -19,6 +21,7 @@ void Room::remove_user(User* user)
 	{
 		if(users_[i]->id() == user->id())
 		{
+			users_[i]->set_room(nullptr);
 			users_.erase(users_.begin() + i);
 			break;
 		}

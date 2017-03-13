@@ -51,7 +51,7 @@
             this.TxtMessage.Name = "TxtMessage";
             this.TxtMessage.Size = new System.Drawing.Size(900, 13);
             this.TxtMessage.TabIndex = 1;
-            this.TxtMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtMessage_KeyDown);
+            this.TxtMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtMessage_KeyPress);
             // 
             // RTxtFeed
             // 
