@@ -2,7 +2,7 @@
 #include <string>
 #include "command_packet.h"
 
-void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdExit::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user is in a room
 
@@ -10,7 +10,7 @@ void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You are not in a room.");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -44,7 +44,7 @@ void CmdExit::Execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		{
 			for (auto & p : packet_rooms)
 			{
-				SendData(u, p);
+				send_data(u, p);
 			}
 		}
 	}

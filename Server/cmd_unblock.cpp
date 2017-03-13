@@ -2,7 +2,7 @@
 #include "string_util.h"
 #include "command_packet.h"
 
-void CmdUnblock::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdUnblock::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -10,7 +10,7 @@ void CmdUnblock::Execute(User& user, std::vector<User>& users, std::vector<Room>
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -20,7 +20,7 @@ void CmdUnblock::Execute(User& user, std::vector<User>& users, std::vector<Room>
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: UNBLOCK <User>)");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -46,7 +46,7 @@ void CmdUnblock::Execute(User& user, std::vector<User>& users, std::vector<Room>
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("User does not exist.");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -54,12 +54,12 @@ void CmdUnblock::Execute(User& user, std::vector<User>& users, std::vector<Room>
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("User is not blocked");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 	}
 
 	user.unblock(user_to_unblock);
 	auto cmd_info = CommandPacket("INFO");
 	cmd_info.add_param("User unblocked.");
-	SendData(user, cmd_info.Generate());
+	send_data(user, cmd_info.Generate());
 
 }

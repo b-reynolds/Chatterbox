@@ -4,7 +4,7 @@
  * \brief Converts a string to its CmdType equivalent
  * \param string string
  */
-Type Command::StringToType(const std::string& string)
+Type Command::string_to_type(const std::string& string)
 {
 	if (string == "UNAME")
 		return Type::kUName;
@@ -29,7 +29,7 @@ Type Command::StringToType(const std::string& string)
  * \brief Converts a Status to its string equivalent
  * \param status status to convert
  */
-std::string Command::StatusToString(const Status& status)
+std::string Command::status_to_string(const Status& status)
 {
 	switch (status)
 	{
@@ -53,7 +53,7 @@ Type Command::type() const
 * \param user recipient
 * \param message message
 */
-void Command::SendData(const User& user, const std::string& message)
+void Command::send_data(const User& user, const std::string& message)
 {
 	send(user.socket(), message.c_str(), static_cast<int>(message.length()), 0);
 }
@@ -63,7 +63,7 @@ void Command::SendData(const User& user, const std::string& message)
 * \param strings strings to concatenate
 * \param joint character to use as a joint
 */
-std::string Command::BuildString(const std::vector<std::string>& strings, const char& joint)
+std::string Command::build_string(const std::vector<std::string>& strings, const char& joint)
 {
 	std::string string;
 	for (unsigned int i = 0; i < strings.size(); ++i)

@@ -70,6 +70,9 @@
     <ClCompile Include="string_util.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="cmd_promote.cpp">
+      <Filter>Commands\Rooms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -116,6 +119,9 @@
     </ClInclude>
     <ClInclude Include="commands.h">
       <Filter>Commands\General</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_promote.h">
+      <Filter>Commands\Rooms</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

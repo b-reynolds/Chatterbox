@@ -39,13 +39,13 @@ class Command
 	virtual ~Command() = default;
 
 	/* Pure virtual execute method implemented by all Commands */
-	virtual void Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) = 0;
+	virtual void execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) = 0;
 
 	/* Converts a string to its CmdType equivalent */
-	static Type StringToType(const std::string &string);
+	static Type string_to_type(const std::string &string);
 
 	/* Converts a CmdStatus to its string equivalent */
-	static std::string StatusToString(const Status &status);
+	static std::string status_to_string(const Status &status);
 
 	/* Returns the command type */
 	Type type() const;
@@ -56,10 +56,10 @@ class Command
 	Type type_;
 
 	/* Send data to a User */
-	static void SendData(const User& user, const std::string& message);
+	static void send_data(const User& user, const std::string& message);
 
 	/* Builds a string by concatenating a vector of strings. Each string is prefixed with a joint. */
-	static std::string BuildString(const std::vector<std::string>& strings, const char &joint);
+	static std::string build_string(const std::vector<std::string>& strings, const char &joint);
 
 };
 

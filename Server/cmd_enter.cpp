@@ -3,7 +3,7 @@
 #include <string>
 #include "command_packet.h"
 
-void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -11,7 +11,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -23,7 +23,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: ENTER <Room> [Password])");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -44,7 +44,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room does not exist.");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -56,7 +56,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Invalid password.");
-			SendData(user, cmd_error.Generate());
+			send_data(user, cmd_error.Generate());
 			return;
 		}
 	}
@@ -67,7 +67,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room full.");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;		return;
 	}
 
@@ -100,7 +100,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 
 	for (auto & u : room->users())
 	{
-		SendData(*u, packet_enter_room);
+		send_data(*u, packet_enter_room);
 	}
 
 	// Update the room list of all users
@@ -122,7 +122,7 @@ void CmdEnter::Execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		{
 			for (auto & p : packet_rooms)
 			{
-				SendData(u, p);
+				send_data(u, p);
 			}
 		}
 	}

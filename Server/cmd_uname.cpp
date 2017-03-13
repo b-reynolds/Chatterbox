@@ -11,7 +11,7 @@
  * \param rooms server rooms
  * \param parameters command parameters
  */
-void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
 {
 	// Ensure required parameters were specified
 
@@ -19,7 +19,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: UNAME <Name>)");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -32,7 +32,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Username too short (Min " + std::to_string(kNameLengthMin) + ").");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -40,7 +40,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Username too long (Max " + std::to_string(kNameLengthMax) + ").");
-		SendData(user, cmd_error.Generate());
+		send_data(user, cmd_error.Generate());
 		return;
 	}
 
@@ -52,7 +52,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Username contains illegal characters.");
-			SendData(user, cmd_error.Generate());
+			send_data(user, cmd_error.Generate());
 			return;
 		}
 	}
@@ -66,7 +66,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("A user with that name already exists.");
-			SendData(user, cmd_error.Generate());
+			send_data(user, cmd_error.Generate());
 			return;
 		}
 	}
@@ -103,7 +103,7 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 			{
 				cmd_users.add_param(u.name());
 			}
-			SendData(u, packet_connect);
+			send_data(u, packet_connect);
 		}
 
 		std::string packet_users = cmd_users.Generate();
@@ -123,10 +123,10 @@ void CmdUname::Execute(User& user, std::vector<User>& users, std::vector<Room> &
 		{
 			if (u.connected() && u.has_name() || u.id() == user.id())
 			{
-				SendData(u, packet_users);
+				send_data(u, packet_users);
 				for (auto & p : packet_rooms)
 				{
-					SendData(u, p);
+					send_data(u, p);
 				}
 			}	
 		}

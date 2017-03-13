@@ -11,7 +11,7 @@ class CmdExit : public Command
 
 	CmdExit() : Command(Type::kExit) { ; }
 
-	void Execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	void execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 
 };
 

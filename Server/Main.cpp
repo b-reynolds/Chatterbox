@@ -174,7 +174,7 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 
 		std::vector<std::string> parameters = StringUtil::split(input, ' ');
 
-		Type command = Command::StringToType(StringUtil::upper(parameters[0]));
+		Type command = Command::string_to_type(StringUtil::upper(parameters[0]));
 
 		bool valid_command = false;
 		for(auto & c : commands)
@@ -182,14 +182,14 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 			if(command == c->type())
 			{
 				parameters.erase(parameters.begin());
-				c->Execute(user, users, rooms, parameters);
+				c->execute(user, users, rooms, parameters);
 				valid_command = true;
 			}
 		}
 
 		if(!valid_command)
 		{
-			cmd_message.Execute(user, users, rooms, parameters);
+			cmd_message.execute(user, users, rooms, parameters);
 		}
 
 		timeout.Reset();

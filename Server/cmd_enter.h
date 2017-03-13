@@ -12,7 +12,7 @@ class CmdEnter : public Command
 
 	CmdEnter() : Command(Type::kEnter) {}
 
-	void Execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	void execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
 
 };
 
