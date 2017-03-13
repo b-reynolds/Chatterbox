@@ -33,7 +33,7 @@ void CommandPacket::add_params(const std::vector<std::string> parameters)
 /**
  * \brief Generates the command packet in the following format $Command:Parameter:Parameter
  */
-std::string CommandPacket::Generate()
+std::string CommandPacket::generate()
 {
 	std::string packet = kCommandWrapper + command_;
 	for(auto & parameter : parameters_)

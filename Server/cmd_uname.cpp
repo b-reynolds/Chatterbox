@@ -19,7 +19,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: UNAME <Name>)");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -32,7 +32,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Username too short (Min " + std::to_string(kNameLengthMin) + ").");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -40,7 +40,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Username too long (Max " + std::to_string(kNameLengthMax) + ").");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -52,7 +52,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Username contains illegal characters.");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 	}
@@ -66,7 +66,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("A user with that name already exists.");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 	}
@@ -77,7 +77,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_change = CommandPacket("CHANGE");
 		cmd_change.add_params(std::vector<std::string>({user.name(), name}));
-		std::string packet_change = cmd_change.Generate();
+		std::string packet_change = cmd_change.generate();
 
 		Room* user_room = user.room();
 
@@ -92,7 +92,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 	{
 		auto cmd_connect = CommandPacket("CONNECT");
 		cmd_connect.add_param(name);
-		std::string packet_connect = cmd_connect.Generate();
+		std::string packet_connect = cmd_connect.generate();
 
 		auto cmd_users = CommandPacket("USERS");
 		cmd_users.add_param(name);
@@ -106,7 +106,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 			send_data(u, packet_connect);
 		}
 
-		std::string packet_users = cmd_users.Generate();
+		std::string packet_users = cmd_users.generate();
 
 		std::vector<std::string> packet_rooms;
 		for (auto & r : rooms)
@@ -116,7 +116,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 			cmd_room.add_param(std::to_string(r.users().size()));
 			cmd_room.add_param(std::to_string(r.capacity()));
 			cmd_room.add_param(r.locked() ? "yes" : "no");
-			packet_rooms.push_back(cmd_room.Generate());
+			packet_rooms.push_back(cmd_room.generate());
 		}
 
 		for(auto & u : users)

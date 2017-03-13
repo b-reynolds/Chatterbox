@@ -36,87 +36,118 @@ void disconnect_user(User &user, std::vector<User> &users, std::vector<Room> &ro
 {
 	std::cout << "User #" + std::to_string(user.id()) + " (" + user.name() + ") disconnected." << std::endl;
 
+	// Send a message to all connected users informing them that the user has disconnected.
+
 	auto cmd_disconnect = CommandPacket("DISCONNECT");
 	cmd_disconnect.add_param(user.name());
 
 	int user_id = user.id();
+	std::string packet_disconnect = cmd_disconnect.generate();
 
-	for (auto & usr : users)
+	for(unsigned int i = 0; i < users.size(); ++i)
 	{
-		if (usr.id() != user_id)
+		if(!users[i].connected() || users[i].id() == user.id())
 		{
-			send_data(usr, cmd_disconnect.Generate());
+			continue;
 		}
+
+		send_data(users[i], packet_disconnect);
 	}
+
+	// If the user is in a room (and does not own it) then leave it and inform the room's users
 
 	Room* users_room = user.room();
 
-	if(users_room != nullptr)
+	if (users_room != nullptr && users_room->owner()->id() != user.id())
 	{
-		if(users_room->owner()->name() != user.name())
+		users_room->remove_user(&user);
+
+		auto cmd_leave_room = CommandPacket("INFO");
+		cmd_leave_room.add_param(user.name() + " left the room.");
+
+		auto room_users = users_room->users();
+		std::string packet_leave_room = cmd_leave_room.generate();
+
+		for(unsigned int i = 0; i < room_users.size(); ++i)
 		{
-			users_room->remove_user(&user);
-		}
-		else
-		{
-			CommandPacket cmd_room_deleted("INFO");
-			cmd_room_deleted.add_param("You were removed from the room (Room owner disconnected).");
-			std::string packet_room_deleted = cmd_room_deleted.Generate();
-
-			std::string room_name = users_room->name();
-
-			for (unsigned int i = 0; i < rooms.size(); ++i)
-			{
-				if (rooms[i].name() != room_name)
-				{
-					continue;
-				}
-
-				auto room_users = rooms[i].users();
-
-				for (unsigned int j = 0; j < room_users.size(); ++j)
-				{
-					send_data(*room_users[j], packet_room_deleted);
-					users_room->remove_user(room_users[j]);
-				}
-
-				rooms.erase(rooms.begin() + i);
-
-				break;
-			}
-		}
-
-		// Update the room list of all users
-
-		std::vector<std::string> packet_rooms;
-		for(unsigned int i = 0; i < rooms.size(); ++i)
-		{
-			auto cmd_room = CommandPacket("ROOM");
-			cmd_room.add_param(rooms[i].name());
-			cmd_room.add_param(std::to_string(rooms[i].users().size()));
-			cmd_room.add_param(std::to_string(rooms[i].capacity()));
-			cmd_room.add_param(rooms[i].locked() ? "yes" : "no");
-			packet_rooms.push_back(cmd_room.Generate());
-		}
-
-		if(packet_rooms.empty())
-		{
-			auto cmd_clear_rooms = CommandPacket("CLEARROOMS");
-			packet_rooms.push_back(cmd_clear_rooms.Generate());
-		}
-
-		for(unsigned int i = 0; i < users.size(); ++i)
-		{
-			if(users[i].connected())
-			{
-				for(unsigned int j = 0; j < packet_rooms.size(); ++j)
-				{
-					send_data(users[i], packet_rooms[j]);
-				}
-			}
+			send_data(*room_users[i], packet_leave_room);
 		}
 	}
+
+	// If the user owns a room then kick all users, delete it and inform them
 	
+	for (unsigned int i = 0; i < rooms.size(); ++i)
+	{
+		if(rooms[i].owner()->id() != user.id())
+		{
+			continue;
+		}
+
+		CommandPacket cmd_room_deleted("INFO");
+		cmd_room_deleted.add_param("You were removed from the room (Room owner disconnected).");
+
+		CommandPacket cmd_delete_room("REMOVEROOM");
+		cmd_delete_room.add_param(rooms[i].name());
+
+		std::string packet_room_deleted = cmd_room_deleted.generate();
+		std::string packet_delete_room = cmd_delete_room.generate();
+
+		for(unsigned int j = 0; j < users.size(); ++j)
+		{
+			if(!users[j].connected())
+			{
+				continue;
+			}
+
+			// Removes the room from the client's room list
+			send_data(users[j], packet_delete_room);
+
+			if(users[j].room() != nullptr && users[j].room()->name() == rooms[i].name())
+			{
+				send_data(users[j], packet_room_deleted);
+				users[j].set_room(nullptr);
+			}
+		}
+
+		rooms.erase(rooms.begin() + i);
+		break;	
+	}
+
+	// Update the room list of all users
+
+	std::vector<std::string> packet_rooms;
+	for(unsigned int i = 0; i < rooms.size(); ++i)
+	{
+		auto cmd_room = CommandPacket("ROOM");
+		cmd_room.add_param(rooms[i].name());
+		cmd_room.add_param(std::to_string(rooms[i].users().size()));
+		cmd_room.add_param(std::to_string(rooms[i].capacity()));
+		cmd_room.add_param(rooms[i].locked() ? "yes" : "no");
+		packet_rooms.push_back(cmd_room.generate());
+	}
+
+	//if(packet_rooms.empty())
+	//{
+	//	auto cmd_clear_rooms = CommandPacket("CLEARROOMS");
+	//	packet_rooms.push_back(cmd_clear_rooms.generate());
+	//}
+
+	if(!packet_rooms.empty())
+	{
+		for (unsigned int i = 0; i < users.size(); ++i)
+		{
+			if (!users[i].connected())
+			{
+				continue;
+			}
+
+			for (unsigned int j = 0; j < packet_rooms.size(); ++j)
+			{
+				send_data(users[i], packet_rooms[j]);
+			}		
+		}
+	}
+
 	user.reset();
 	thread.detach();
 }
@@ -136,9 +167,9 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 		}
 	}
 
-	send_data(user, cmd_users.Generate());
+	send_data(user, cmd_users.generate());
 
-	std::string packet_users = cmd_users.Generate();
+	std::string packet_users = cmd_users.generate();
 
 	for (auto & r : rooms)
 	{
@@ -147,12 +178,12 @@ int process_user(User &user, std::vector<User> &users, std::vector<Room> &rooms,
 		cmd_room.add_param(std::to_string(r.users().size()));
 		cmd_room.add_param(std::to_string(r.capacity()));
 		cmd_room.add_param(r.locked() ? "yes" : "no");
-		send_data(user, cmd_room.Generate());
+		send_data(user, cmd_room.generate());
 	}
 	
 	auto cmd_info = CommandPacket("INFO");
 	cmd_info.add_param("Please register a username using the UNAME command (e.g UNAME john)");
-	send_data(user, cmd_info.Generate());
+	send_data(user, cmd_info.generate());
 
 	while (true)
 	{
@@ -313,8 +344,9 @@ int main()
 	CmdExit cmd_exit;
 	CmdBlock cmd_block;
 	CmdUnblock cmd_unblock;
+	CmdPromote cmd_promote;
 
-	std::vector<Command*> commands{ &cmd_uname, &cmd_pm, &cmd_mkroom, &cmd_enter, &cmd_exit, &cmd_block, &cmd_unblock };
+	std::vector<Command*> commands{ &cmd_uname, &cmd_pm, &cmd_mkroom, &cmd_enter, &cmd_exit, &cmd_block, &cmd_unblock, &cmd_promote };
 
 	std::vector<Room> rooms;
 
@@ -356,7 +388,7 @@ int main()
 
 		if (temp_id == User::kIdNone)
 		{
-			send_data(client_socket, CommandPacket("FULL").Generate());
+			send_data(client_socket, CommandPacket("FULL").generate());
 			closesocket(clientSock);
 			continue;
 		}

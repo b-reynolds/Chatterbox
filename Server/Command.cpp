@@ -22,23 +22,11 @@ Type Command::string_to_type(const std::string& string)
 		return Type::kBlock;
 	if (string == "UNBLOCK")
 		return Type::kUnblock;
+	if (string == "PROMOTE")
+		return Type::kPromote;
 	return Type::kNone;
 }
 
-/**
- * \brief Converts a Status to its string equivalent
- * \param status status to convert
- */
-std::string Command::status_to_string(const Status& status)
-{
-	switch (status)
-	{
-		case Status::kSuccess:
-			return "$SUCCESS$";
-		default:
-			return "FAIL";
-	}
-}
 
 /**
  * \brief Returns the Command's type

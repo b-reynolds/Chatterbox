@@ -50,6 +50,8 @@ namespace Chatterbox.Commands
                     return Command.CmdType.kError;
                 case "INFO":
                     return Command.CmdType.kInfo;
+                case "REMOVEROOM":
+                    return Command.CmdType.kRemoveRoom;
                 default:
                     return Command.CmdType.kNone;
             }
@@ -79,6 +81,8 @@ namespace Chatterbox.Commands
                     return new CmdInfo();
                 case Command.CmdType.kClearRooms:
                     return new CmdClearRooms();
+                case Command.CmdType.kRemoveRoom:
+                    return new CmdRemoveRoom();
                 default:
                     return null;
             }

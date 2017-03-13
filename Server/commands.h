@@ -8,4 +8,5 @@
 #include "cmd_exit.h"
 #include "cmd_unblock.h"
 #include "cmd_block.h"
+#include "cmd_promote.h"
 #include "command_packet.h"

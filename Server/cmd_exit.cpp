@@ -10,7 +10,7 @@ void CmdExit::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You are not in a room.");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -18,7 +18,7 @@ void CmdExit::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 
 	auto cmd_leave_room = CommandPacket("INFO");
 	cmd_leave_room.add_param(user.name() + " left the room.");
-	user.send_data(user.room(), cmd_leave_room.Generate());
+	user.send_data(user.room(), cmd_leave_room.generate());
 
 	// Remove the user from the room
 
@@ -35,7 +35,7 @@ void CmdExit::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		cmd_room.add_param(std::to_string(r.users().size()));
 		cmd_room.add_param(std::to_string(r.capacity()));
 		cmd_room.add_param(r.locked() ? "yes" : "no");
-		packet_rooms.push_back(cmd_room.Generate());
+		packet_rooms.push_back(cmd_room.generate());
 	}
 
 	for (auto & u : users)

@@ -12,7 +12,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -24,7 +24,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: MKROOM <Name> [Capacity] [Password])");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -37,7 +37,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room name too short (Min: " + std::to_string(kRoomNameLengthMin) + ").");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -45,7 +45,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room name too long (Max: " + std::to_string(kRoomNameLengthMax) + ").");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -57,7 +57,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Room name contains illegal characters.");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 	}
@@ -71,7 +71,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("You already own a room.");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 
@@ -81,7 +81,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Room name already in use.");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 	}
@@ -99,7 +99,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Invalid capacity specified.");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 
@@ -110,14 +110,14 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Capacity too small (Min: " + std::to_string(kRoomSizeMin) + ").");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 		if (capacity > kRoomSizeMax)
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Capacity too large (Max: " + std::to_string(kRoomSizeMax) + ").");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 		room.set_capacity(capacity);
@@ -136,14 +136,14 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Password too short (Min: " + std::to_string(kRoomPassLengthMin) + ").");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 		if (passLen > kRoomPassLengthMax)
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Password too long (Max: " + std::to_string(kRoomPassLengthMax) + ").");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 		room.set_password(pass);
@@ -161,7 +161,7 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 		cmd_room.add_param(std::to_string(r.users().size()));
 		cmd_room.add_param(std::to_string(r.capacity()));
 		cmd_room.add_param(r.locked() ? "yes" : "no");
-		packet_rooms.push_back(cmd_room.Generate());
+		packet_rooms.push_back(cmd_room.generate());
 	}
 
 	for(auto & u : users)
@@ -177,5 +177,5 @@ void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>&
 
 	auto cmd_info = CommandPacket("INFO");
 	cmd_info.add_param("Room created.");
-	send_data(user, cmd_info.Generate());
+	send_data(user, cmd_info.generate());
 }

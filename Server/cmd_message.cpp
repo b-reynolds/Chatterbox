@@ -18,7 +18,7 @@ void CmdMessage::execute(User& user, std::vector<User>& users, std::vector<Room>
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -31,7 +31,7 @@ void CmdMessage::execute(User& user, std::vector<User>& users, std::vector<Room>
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Message too short (Min: " + std::to_string(kMsgLengthMin) + ").");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -39,7 +39,7 @@ void CmdMessage::execute(User& user, std::vector<User>& users, std::vector<Room>
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Message too long (Max: " + std::to_string(kMsgLengthMax) + ").");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -49,7 +49,7 @@ void CmdMessage::execute(User& user, std::vector<User>& users, std::vector<Room>
 	cmd_msg.add_param(user.name());
 	cmd_msg.add_param(msg);
 
-	std::string packet_msg = cmd_msg.Generate();
+	std::string packet_msg = cmd_msg.generate();
 
 	Room* user_room = user.room();
 

@@ -22,6 +22,7 @@ enum class Type
 	kExit,
 	kBlock,
 	kUnblock,
+	kPromote
 };
 
 /**
@@ -43,9 +44,6 @@ class Command
 
 	/* Converts a string to its CmdType equivalent */
 	static Type string_to_type(const std::string &string);
-
-	/* Converts a CmdStatus to its string equivalent */
-	static std::string status_to_string(const Status &status);
 
 	/* Returns the command type */
 	Type type() const;

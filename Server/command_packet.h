@@ -19,7 +19,7 @@ class CommandPacket
 	void add_params(const std::vector<std::string> parameters);
 
 	/* Generates the command packet in the following format: $Command:Parameter:Parameter */
-	std::string Generate();
+	std::string generate();
 
  private:
 

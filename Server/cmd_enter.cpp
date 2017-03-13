@@ -11,7 +11,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -23,7 +23,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: ENTER <Room> [Password])");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -44,7 +44,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room does not exist.");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;
 	}
 
@@ -56,7 +56,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		{
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Invalid password.");
-			send_data(user, cmd_error.Generate());
+			send_data(user, cmd_error.generate());
 			return;
 		}
 	}
@@ -67,7 +67,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room full.");
-		send_data(user, cmd_error.Generate());
+		send_data(user, cmd_error.generate());
 		return;		return;
 	}
 
@@ -84,7 +84,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	{
 		auto cmd_leave_room = CommandPacket("INFO");
 		cmd_leave_room.add_param(user.name() + " left the room.");
-		user.send_data(room, cmd_leave_room.Generate());
+		user.send_data(room, cmd_leave_room.generate());
 		user.room()->remove_user(&user);
 	}
 
@@ -96,7 +96,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	auto cmd_enter_room = CommandPacket("INFO");
 	cmd_enter_room.add_param(user.name() + " entered the room");
 
-	std::string packet_enter_room = cmd_enter_room.Generate();
+	std::string packet_enter_room = cmd_enter_room.generate();
 
 	for (auto & u : room->users())
 	{
@@ -113,7 +113,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		cmd_room.add_param(std::to_string(r.users().size()));
 		cmd_room.add_param(std::to_string(r.capacity()));
 		cmd_room.add_param(r.locked() ? "yes" : "no");
-		packet_rooms.push_back(cmd_room.Generate());
+		packet_rooms.push_back(cmd_room.generate());
 	}
 
 	for (auto & u : users)
