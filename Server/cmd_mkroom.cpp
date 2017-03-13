@@ -4,6 +4,13 @@
 #include <string>
 #include "command_packet.h"
 
+/*
+* \brief Execute the command
+* \param user calling user
+* \param users connected users
+* \param rooms server rooms
+* \param parameters command parameters
+*/
 void CmdMkRoom::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name

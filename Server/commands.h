@@ -10,4 +10,6 @@
 #include "cmd_block.h"
 #include "cmd_promote.h"
 #include "cmd_kick.h"
+#include "cmd_ban.h"
+#include "cmd_unban.h"
 #include "command_packet.h"

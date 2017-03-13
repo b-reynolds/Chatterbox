@@ -64,6 +64,42 @@ void Room::set_password(const std::string& password)
 	locked_ = password == kPasswordNone ? false : true;
 }
 
+void Room::unban(User& user)
+{
+	for(unsigned int i = 0; i < banned_.size(); ++i)
+	{
+		if (banned_[i]->id() == user.id())
+		{
+			banned_.erase(banned_.begin() + i);
+			return;
+		}
+	}
+}
+
+void Room::ban(User& user)
+{
+	for(unsigned int i = 0; i < banned_.size(); ++i)
+	{
+		if(banned_[i]->id() == user.id())
+		{
+			return;
+		}
+	}
+	banned_.push_back(&user);
+}
+
+bool Room::banned(const User& user)
+{
+	for(unsigned int i = 0; i < banned_.size(); ++i)
+	{
+		if(banned_[i]->id() == user.id())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 unsigned Room::capacity() const
 {
 	return capacity_;

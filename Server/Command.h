@@ -23,7 +23,9 @@ enum class Type
 	kBlock,
 	kUnblock,
 	kPromote,
-	kKick
+	kKick,
+	kBan,
+	kUnban
 };
 
 /**

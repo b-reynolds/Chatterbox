@@ -113,11 +113,16 @@ void disconnect_user(User &user, std::vector<User> &users, std::vector<Room> &ro
 		break;	
 	}
 
-	// Update the room list of all users
+	// Update the room list of all users / unban user from any rooms
 
 	std::vector<std::string> packet_rooms;
 	for(unsigned int i = 0; i < rooms.size(); ++i)
 	{
+		if(rooms[i].banned(user))
+		{
+			rooms[i].unban(user);
+		}
+
 		auto cmd_room = CommandPacket("ROOM");
 		cmd_room.add_param(rooms[i].name());
 		cmd_room.add_param(std::to_string(rooms[i].users().size()));
@@ -340,8 +345,10 @@ int main()
 	CmdUnblock cmd_unblock;
 	CmdPromote cmd_promote;
 	CmdKick cmd_kick;
+	CmdBan cmd_ban;
+	CmdUnban cmd_unban;
 
-	std::vector<Command*> commands{ &cmd_uname, &cmd_pm, &cmd_mkroom, &cmd_enter, &cmd_exit, &cmd_block, &cmd_unblock, &cmd_promote, &cmd_kick };
+	std::vector<Command*> commands{ &cmd_uname, &cmd_pm, &cmd_mkroom, &cmd_enter, &cmd_exit, &cmd_block, &cmd_unblock, &cmd_promote, &cmd_kick, &cmd_ban, &cmd_unban };
 
 	std::vector<Room> rooms;
 

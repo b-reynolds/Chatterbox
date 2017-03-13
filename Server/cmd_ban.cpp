@@ -1,7 +1,7 @@
-#include "cmd_kick.h"
+#include "cmd_ban.h"
 #include "command_packet.h"
-#include <string>
 #include "string_util.h"
+#include <string>
 
 /*
 * \brief Execute the command
@@ -10,7 +10,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -29,7 +29,7 @@ void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 	if (paramSize == 0)
 	{
 		auto cmd_error = CommandPacket("ERROR");
-		cmd_error.add_param("Invalid parameters specified. (Command: KICK <User> [Message])");
+		cmd_error.add_param("Invalid parameters specified. (Command: BAN <User> [Message])");
 		send_data(user, cmd_error.generate());
 		return;
 	}
@@ -38,7 +38,7 @@ void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 
 	Room* room_user_in = user.room();
 
-	if(room_user_in == nullptr)
+	if (room_user_in == nullptr)
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You are not in a room");
@@ -48,7 +48,7 @@ void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 
 	// Ensure the user owns the room
 
-	if(room_user_in->owner()->id() != user.id())
+	if (room_user_in->owner()->id() != user.id())
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You do not own this room.");
@@ -62,9 +62,9 @@ void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 	User* recipient = nullptr;
 
 	auto room_users = room_user_in->users();
-	for(unsigned int i = 0; i < room_users.size(); ++i)
+	for (unsigned int i = 0; i < room_users.size(); ++i)
 	{
-		if(StringUtil::lower(room_users[i]->name()) != recipient_name_l)
+		if (StringUtil::lower(room_users[i]->name()) != recipient_name_l)
 		{
 			continue;
 		}
@@ -72,7 +72,7 @@ void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		recipient = room_users[i];
 	}
 
-	if(recipient == nullptr)
+	if (recipient == nullptr)
 	{
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("The specified user does not exist / is not in the room.");
@@ -108,18 +108,19 @@ void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		}
 	}
 
-	// Kick the user
+	// Ban and kick the user
 
-	auto cmd_kicked = CommandPacket("INFO");
-	cmd_kicked.add_param("You were kicked from the room" + (!message.empty() ? " \"" + message + "\"" : ""));
+	auto cmd_banned = CommandPacket("INFO");
+	cmd_banned.add_param("You were banned from the room" + (!message.empty() ? " \"" + message + "\"" : ""));
 
+	room_user_in->ban(*recipient);
 	room_user_in->remove_user(recipient);
 	recipient->set_room(nullptr);
 
-	send_data(*recipient, cmd_kicked.generate());
+	send_data(*recipient, cmd_banned.generate());
 
 	auto cmd_success = CommandPacket("INFO");
-	cmd_success.add_param("User was kicked from the room");
+	cmd_success.add_param("User was banned from the room");
 
 	send_data(user, cmd_success.generate());
 
@@ -136,17 +137,16 @@ void CmdKick::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		packet_rooms.push_back(cmd_room.generate());
 	}
 
-	for(unsigned int i = 0; i < users.size(); ++i)
+	for (unsigned int i = 0; i < users.size(); ++i)
 	{
-		if(!users[i].connected())
+		if (!users[i].connected())
 		{
 			continue;
 		}
 
-		for(unsigned int j = 0; j < packet_rooms.size(); ++j)
+		for (unsigned int j = 0; j < packet_rooms.size(); ++j)
 		{
 			send_data(users[i], packet_rooms[j]);
 		}
 	}
-
 }

@@ -3,6 +3,13 @@
 #include <string>
 #include "command_packet.h"
 
+/*
+* \brief Execute the command
+* \param user calling user
+* \param users connected users
+* \param rooms server rooms
+* \param parameters command parameters
+*/
 void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
@@ -75,6 +82,16 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 
 	if(user.room() == room)
 	{
+		return;
+	}
+
+	// If the user is banned alert them and return
+	
+	if(room->banned(user))
+	{
+		auto cmd_banned = CommandPacket("ERROR");
+		cmd_banned.add_param("You are currently banned from that room.");
+		send_data(user, cmd_banned.generate());
 		return;
 	}
 

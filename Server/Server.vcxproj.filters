@@ -76,6 +76,12 @@
     <ClCompile Include="cmd_kick.cpp">
       <Filter>Commands\Rooms</Filter>
     </ClCompile>
+    <ClCompile Include="cmd_ban.cpp">
+      <Filter>Commands\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd_unban.cpp">
+      <Filter>Commands\Rooms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -127,6 +133,12 @@
       <Filter>Commands\Rooms</Filter>
     </ClInclude>
     <ClInclude Include="cmd_kick.h">
+      <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_ban.h">
+      <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_unban.h">
       <Filter>Commands\Rooms</Filter>
     </ClInclude>
   </ItemGroup>

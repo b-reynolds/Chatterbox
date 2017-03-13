@@ -64,7 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CmdClearRooms.cs" />
     <Compile Include="Commands\CmdRemoveRoom.cs" />
     <Compile Include="Commands\CmdUtil.cs" />
     <Compile Include="Data Types\Client.cs" />

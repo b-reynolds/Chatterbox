@@ -114,6 +114,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cmd_ban.cpp" />
     <ClCompile Include="cmd_block.cpp" />
     <ClCompile Include="cmd_enter.cpp" />
     <ClCompile Include="cmd_exit.cpp" />
@@ -123,6 +124,7 @@
     <ClCompile Include="cmd_pm.cpp" />
     <ClCompile Include="cmd_promote.cpp" />
     <ClCompile Include="cmd_uname.cpp" />
+    <ClCompile Include="cmd_unban.cpp" />
     <ClCompile Include="cmd_unblock.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="command_packet.cpp" />
@@ -133,6 +135,7 @@
     <ClCompile Include="user.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cmd_ban.h" />
     <ClInclude Include="cmd_block.h" />
     <ClInclude Include="cmd_enter.h" />
     <ClInclude Include="cmd_exit.h" />
@@ -142,6 +145,7 @@
     <ClInclude Include="cmd_pm.h" />
     <ClInclude Include="cmd_promote.h" />
     <ClInclude Include="cmd_uname.h" />
+    <ClInclude Include="cmd_unban.h" />
     <ClInclude Include="cmd_unblock.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="commands.h" />

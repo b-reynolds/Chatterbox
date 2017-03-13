@@ -26,6 +26,10 @@ Type Command::string_to_type(const std::string& string)
 		return Type::kPromote;
 	if (string == "KICK")
 		return Type::kKick;
+	if (string == "BAN")
+		return Type::kBan;
+	if (string == "UNBAN")
+		return Type::kUnban;
 	return Type::kNone;
 }
 

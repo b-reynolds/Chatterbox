@@ -22,6 +22,10 @@ public:
 
 	std::string password() const;
 	void set_password(const std::string &password);
+	
+	void unban(User& user);
+	void ban(User& user);
+	bool banned(const User& user);
 
 	unsigned int capacity() const;
 
@@ -33,7 +37,9 @@ private:
 	static const std::string kPasswordNone;
 
 	User* owner_;
+
 	std::vector<User*> users_;
+	std::vector<User*> banned_;
 
 	bool locked_;
 	std::string password_;
