@@ -339,8 +339,9 @@ int main()
 	CmdBlock cmd_block;
 	CmdUnblock cmd_unblock;
 	CmdPromote cmd_promote;
+	CmdKick cmd_kick;
 
-	std::vector<Command*> commands{ &cmd_uname, &cmd_pm, &cmd_mkroom, &cmd_enter, &cmd_exit, &cmd_block, &cmd_unblock, &cmd_promote };
+	std::vector<Command*> commands{ &cmd_uname, &cmd_pm, &cmd_mkroom, &cmd_enter, &cmd_exit, &cmd_block, &cmd_unblock, &cmd_promote, &cmd_kick };
 
 	std::vector<Room> rooms;
 

@@ -9,4 +9,5 @@
 #include "cmd_unblock.h"
 #include "cmd_block.h"
 #include "cmd_promote.h"
+#include "cmd_kick.h"
 #include "command_packet.h"

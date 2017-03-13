@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include "command_packet.h"
+#include "string_util.h"
 
 /*
 * \brief Execute the command
@@ -24,7 +25,7 @@ void CmdMessage::execute(User& user, std::vector<User>& users, std::vector<Room>
 
 	// Ensure message is within the character limit
 
-	std::string msg = build_string(parameters, ' ');
+	std::string msg = StringUtil::build(parameters, ' ');
 	unsigned int msgLen = msg.size();
 	
 	if(msgLen < kMsgLengthMin)

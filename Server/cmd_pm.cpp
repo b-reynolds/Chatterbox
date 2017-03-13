@@ -68,7 +68,7 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 
 	// Ensure message is within the character limit
 
-	std::string message = build_string(parameters, ' ');
+	std::string message = StringUtil::build(parameters, ' ');
 	size_t msgLen = message.length();
 
 	if (msgLen < kMsgLengthMin)

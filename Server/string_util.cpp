@@ -2,6 +2,25 @@
 #include <sstream>
 #include <algorithm>
 
+/**
+* \brief Builds a string by concatenating a vector of strings. Each string is prefixed with a joint.
+* \param strings strings to concatenate
+* \param joint character to use as a joint
+*/
+std::string StringUtil::build(const std::vector<std::string>& strings, const char& joint)
+{
+	std::string string;
+	for (unsigned int i = 0; i < strings.size(); ++i)
+	{
+		if (i != 0)
+		{
+			string += joint;
+		}
+		string += strings[i];
+	}
+	return string;
+}
+
 std::vector<std::string> StringUtil::split(const std::string& string, const char& delimiter)
 {
 	std::vector<std::string> parts;

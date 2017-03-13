@@ -22,7 +22,8 @@ enum class Type
 	kExit,
 	kBlock,
 	kUnblock,
-	kPromote
+	kPromote,
+	kKick
 };
 
 /**
@@ -55,9 +56,6 @@ class Command
 
 	/* Send data to a User */
 	static void send_data(const User& user, const std::string& message);
-
-	/* Builds a string by concatenating a vector of strings. Each string is prefixed with a joint. */
-	static std::string build_string(const std::vector<std::string>& strings, const char &joint);
 
 };
 

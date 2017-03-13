@@ -73,6 +73,9 @@
     <ClCompile Include="cmd_promote.cpp">
       <Filter>Commands\Rooms</Filter>
     </ClCompile>
+    <ClCompile Include="cmd_kick.cpp">
+      <Filter>Commands\Rooms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -121,6 +124,9 @@
       <Filter>Commands\General</Filter>
     </ClInclude>
     <ClInclude Include="cmd_promote.h">
+      <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd_kick.h">
       <Filter>Commands\Rooms</Filter>
     </ClInclude>
   </ItemGroup>

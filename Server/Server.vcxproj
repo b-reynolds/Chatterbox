@@ -117,6 +117,7 @@
     <ClCompile Include="cmd_block.cpp" />
     <ClCompile Include="cmd_enter.cpp" />
     <ClCompile Include="cmd_exit.cpp" />
+    <ClCompile Include="cmd_kick.cpp" />
     <ClCompile Include="cmd_message.cpp" />
     <ClCompile Include="cmd_mkroom.cpp" />
     <ClCompile Include="cmd_pm.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="cmd_block.h" />
     <ClInclude Include="cmd_enter.h" />
     <ClInclude Include="cmd_exit.h" />
+    <ClInclude Include="cmd_kick.h" />
     <ClInclude Include="cmd_message.h" />
     <ClInclude Include="cmd_mkroom.h" />
     <ClInclude Include="cmd_pm.h" />
