@@ -1,6 +1,4 @@
-﻿#define TESTING 1
-
-#ifndef TESTING
+﻿#ifndef TESTING
 
 #include <iostream>
 #include <vector>

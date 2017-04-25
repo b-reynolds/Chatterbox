@@ -2,6 +2,10 @@
 #include "catch.hpp"
 #include "commands.h"
 
+#define TESTING 0
+
+#ifndef TESTING
+
 /* Test Scenario -------------------------------------------------------------- */
 
 struct DefaultScenario
@@ -243,3 +247,5 @@ TEST_CASE_METHOD(DefaultScenario, "[ENTER] Password must be specified for locked
 }
 
 /* ---------------------------------------------------------------------------- */
+
+#endif
