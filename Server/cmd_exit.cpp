@@ -9,7 +9,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdExit::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+bool CmdExit::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user is in a room
 
@@ -18,7 +18,7 @@ void CmdExit::execute(User& user, std::vector<User>& users, std::vector<Room>& r
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You are not in a room.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Alert others users in the room of the user leaving

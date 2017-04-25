@@ -10,7 +10,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+bool CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -19,7 +19,7 @@ void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& ro
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure required parameters are specified
@@ -31,7 +31,7 @@ void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& ro
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: BAN <User> [Message])");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure the user is in a room
@@ -43,7 +43,7 @@ void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& ro
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You are not in a room");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure the user owns the room
@@ -53,7 +53,7 @@ void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& ro
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You do not own this room.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure the specified user is in the room
@@ -77,7 +77,7 @@ void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& ro
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("The specified user does not exist / is not in the room.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Check if optional message was specified / and is within character limit
@@ -96,7 +96,7 @@ void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& ro
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Message name too short (Min: " + std::to_string(kMsgLengthMin) + ").");
 			send_data(user, cmd_error.generate());
-			return;
+			return false;
 		}
 
 		if (message_length > kMsgLengthMax)
@@ -104,7 +104,7 @@ void CmdBan::execute(User& user, std::vector<User>& users, std::vector<Room>& ro
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Message name too long (Max: " + std::to_string(kMsgLengthMax) + ").");
 			send_data(user, cmd_error.generate());
-			return;
+			return false;
 		}
 	}
 

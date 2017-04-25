@@ -11,7 +11,7 @@
  * \param rooms server rooms
  * \param parameters command parameters
  */
-void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+bool CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure required parameters were specified
 
@@ -20,7 +20,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: UNAME <Name>)");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure name is within character limit
@@ -33,7 +33,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Username too short (Min " + std::to_string(kNameLengthMin) + ").");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	if (nameLen > kNameLengthMax)
@@ -41,7 +41,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Username too long (Max " + std::to_string(kNameLengthMax) + ").");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure name consists of alphanumeric characters
@@ -53,7 +53,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Username contains illegal characters.");
 			send_data(user, cmd_error.generate());
-			return;
+			return false;
 		}
 	}
 
@@ -67,7 +67,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("A user with that name already exists.");
 			send_data(user, cmd_error.generate());
-			return;
+			return false;
 		}
 	}
 
@@ -135,5 +135,7 @@ void CmdUname::execute(User& user, std::vector<User>& users, std::vector<Room> &
 	}
 
 	user.set_name(name);
+
+	return true;
 }
 

@@ -12,7 +12,7 @@ public:
 
 	CmdBan() : Command(Type::kBan) {}
 
-	void execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	bool execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) override;
 
 private:
 

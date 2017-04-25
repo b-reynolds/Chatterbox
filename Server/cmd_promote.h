@@ -8,7 +8,7 @@ public:
 
 	CmdPromote() : Command(Type::kPromote) {};
 
-	void execute(User &user, std::vector<User> &users, std::vector<Room> &rooms, std::vector<std::string> &parameters) override;
+	bool execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters) override;
 
 };
 

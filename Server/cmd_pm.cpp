@@ -10,7 +10,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &rooms, std::vector<std::string>& parameters)
+bool CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -19,7 +19,7 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure required parameters were specified
@@ -29,7 +29,7 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: PM <Recipient> <Message>)");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure recipient exists (and is not calling user)
@@ -55,7 +55,7 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("User does not exist.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	if(user.blocked(recipient))
@@ -63,7 +63,7 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Communication blocked.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure message is within the character limit
@@ -76,7 +76,7 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Message too short (Min: " + std::to_string(kMsgLengthMin) + ").");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	if (msgLen > kMsgLengthMax)
@@ -84,7 +84,7 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Message too long (Max: " + std::to_string(kMsgLengthMax) + ").");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Send the message
@@ -94,4 +94,6 @@ void CmdPm::execute(User& user, std::vector<User>& users, std::vector<Room> &roo
 	
 	user.send_data(user, packet_pm.generate());
 	user.send_data(*recipient, packet_pm.generate());
+
+	return true;
 }

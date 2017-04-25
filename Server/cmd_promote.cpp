@@ -9,7 +9,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+bool CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -18,7 +18,7 @@ void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure required parameters are specified
@@ -30,7 +30,7 @@ void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: PROMOTE <User>)");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure the user owns a room
@@ -40,7 +40,7 @@ void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You do not own a room.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure the recipient exists
@@ -64,7 +64,7 @@ void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("User does not exist.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	if (user.blocked(recipient))
@@ -72,7 +72,7 @@ void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Communication blocked.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	for(unsigned int i = 0; i < rooms.size(); ++i)
@@ -82,7 +82,7 @@ void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("That user already owns a room.");
 			send_data(user, cmd_error.generate());
-			return;
+			return false;
 		}
 	}
 
@@ -102,4 +102,5 @@ void CmdPromote::execute(User& user, std::vector<User>& users, std::vector<Room>
 
 	send_data(user, cmd_old_owner.generate());
 
+	return true;
 }

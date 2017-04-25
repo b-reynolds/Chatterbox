@@ -9,7 +9,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdBlock::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+bool CmdBlock::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -18,7 +18,7 @@ void CmdBlock::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure required parameters were specified
@@ -28,7 +28,7 @@ void CmdBlock::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: BLOCK <User>)");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure user exists (and is not calling user)
@@ -49,7 +49,7 @@ void CmdBlock::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 				auto cmd_error = CommandPacket("ERROR");
 				cmd_error.add_param("You cannot block yourself");
 				send_data(user, cmd_error.generate());
-				return;
+				return false;
 			}
 			user_to_block = &u;
 			break;
@@ -61,7 +61,7 @@ void CmdBlock::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("User does not exist.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Block user
@@ -71,4 +71,6 @@ void CmdBlock::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 	auto cmd_info = CommandPacket("INFO");
 	cmd_info.add_param("User blocked.");
 	send_data(user, cmd_info.generate());
+
+	return true;
 }

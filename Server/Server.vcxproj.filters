@@ -23,6 +23,9 @@
     <Filter Include="Utility">
       <UniqueIdentifier>{1f2cb818-85b4-4f8c-a0da-79691a29b628}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{4b83b0c9-d054-40e8-8d9e-b8053d06193f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cmd_message.cpp">
@@ -82,6 +85,9 @@
     <ClCompile Include="cmd_unban.cpp">
       <Filter>Commands\Rooms</Filter>
     </ClCompile>
+    <ClCompile Include="tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_message.h">
@@ -140,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="cmd_unban.h">
       <Filter>Commands\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="catch.hpp">
+      <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

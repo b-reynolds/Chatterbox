@@ -10,7 +10,7 @@
 * \param rooms server rooms
 * \param parameters command parameters
 */
-void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
+bool CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& rooms, std::vector<std::string>& parameters)
 {
 	// Ensure the user has a name
 
@@ -19,7 +19,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("You must register a username before performing this command.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure required parameters are specified
@@ -31,7 +31,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Invalid parameters specified. (Command: ENTER <Room> [Password])");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// Ensure room exists
@@ -52,7 +52,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room does not exist.");
 		send_data(user, cmd_error.generate());
-		return;
+		return false;
 	}
 
 	// If the room is locked ensure a password was specified
@@ -64,7 +64,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 			auto cmd_error = CommandPacket("ERROR");
 			cmd_error.add_param("Invalid password.");
 			send_data(user, cmd_error.generate());
-			return;
+			return false;
 		}
 	}
 
@@ -75,14 +75,14 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_error = CommandPacket("ERROR");
 		cmd_error.add_param("Room full.");
 		send_data(user, cmd_error.generate());
-		return;		return;
+		return false;
 	}
 
 	// If the user is already in the room then return
 
 	if(user.room() == room)
 	{
-		return;
+		return false;
 	}
 
 	// If the user is banned alert them and return
@@ -92,7 +92,7 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 		auto cmd_banned = CommandPacket("ERROR");
 		cmd_banned.add_param("You are currently banned from that room.");
 		send_data(user, cmd_banned.generate());
-		return;
+		return false;
 	}
 
 	// If the user is in a different room already, leave that room and alert other users.
@@ -143,4 +143,6 @@ void CmdEnter::execute(User& user, std::vector<User>& users, std::vector<Room>& 
 			}
 		}
 	}
+
+	return true;
 }

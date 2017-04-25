@@ -1,4 +1,8 @@
-﻿#include <iostream>
+﻿#define TESTING 1
+
+#ifndef TESTING
+
+#include <iostream>
 #include <vector>
 #include <thread>
 #include <WinSock2.h>
@@ -402,3 +406,10 @@ int main()
 
 	return 0;
 }
+
+#else
+
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
+
+#endif
