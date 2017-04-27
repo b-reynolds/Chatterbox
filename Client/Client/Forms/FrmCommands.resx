@@ -117,6 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="txtCommands.Text" xml:space="preserve">
+    <value>Name: PM 
+Parameters: &lt;username&gt; &lt;message&gt;
+Example Usage: PM johnsmith “hello john”
+
+Command: BLOCK
+Parameters: &lt;username&gt;
+Example Usage: BLOCK johnsmith
+
+Command: UNBLOCK
+Parameters: &lt;username&gt;
+Example Usage: UNBLOCK johnsmith
+
+Command: MKROOM
+Parameters: &lt;room name&gt; [&lt;capacity&gt;] [&lt;password&gt;]
+Example Usage: MKROOM johns-room
+
+Command: ENTER
+Parameters: &lt;room name&gt; [&lt;password&gt;]
+Example Usage: ENTER johns-room secretpassword
+
+Command: EXIT
+
+Command: BAN
+Parameters: &lt;username&gt; [&lt;message&gt;]
+Example Usage: KICK johnsmith
+
+Command: BAN
+Parameters: &lt;username&gt; &lt;minutes&gt; [&lt;message&gt;]
+Example Usage: BAN johnsmith 60 “offensive language” 
+
+Command: PROMOTE
+Parameters: &lt;username&gt;
+Example Usage: PROMOTE johnsmith 
+
+Command: UNAME
+Parameters: &lt;username&gt;
+Example Usage: UNAME johnsmith
+</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

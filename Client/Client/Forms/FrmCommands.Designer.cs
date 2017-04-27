@@ -51,7 +51,7 @@
             this.txtCommands.Name = "txtCommands";
             this.txtCommands.Size = new System.Drawing.Size(431, 298);
             this.txtCommands.TabIndex = 10;
-            this.txtCommands.Text = "";
+            this.txtCommands.Text = resources.GetString("txtCommands.Text");
             // 
             // FrmCommands
             // 

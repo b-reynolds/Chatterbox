@@ -43,13 +43,13 @@
             // 
             this.TxtMessage.BackColor = System.Drawing.Color.White;
             this.TxtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TxtMessage.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtMessage.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtMessage.ForeColor = System.Drawing.Color.Black;
             this.TxtMessage.Location = new System.Drawing.Point(26, 335);
             this.TxtMessage.Margin = new System.Windows.Forms.Padding(2);
             this.TxtMessage.MaxLength = 128;
             this.TxtMessage.Name = "TxtMessage";
-            this.TxtMessage.Size = new System.Drawing.Size(900, 13);
+            this.TxtMessage.Size = new System.Drawing.Size(900, 15);
             this.TxtMessage.TabIndex = 1;
             this.TxtMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtMessage_KeyPress);
             // 
@@ -57,7 +57,7 @@
             // 
             this.RTxtFeed.BackColor = System.Drawing.Color.White;
             this.RTxtFeed.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RTxtFeed.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RTxtFeed.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RTxtFeed.ForeColor = System.Drawing.Color.Black;
             this.RTxtFeed.Location = new System.Drawing.Point(166, 61);
             this.RTxtFeed.Margin = new System.Windows.Forms.Padding(2);
@@ -72,11 +72,11 @@
             // 
             this.LstUsers.BackColor = System.Drawing.Color.White;
             this.LstUsers.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LstUsers.Font = new System.Drawing.Font("Lucida Console", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LstUsers.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LstUsers.ForeColor = System.Drawing.Color.Black;
             this.LstUsers.FormattingEnabled = true;
             this.LstUsers.IntegralHeight = false;
-            this.LstUsers.ItemHeight = 16;
+            this.LstUsers.ItemHeight = 14;
             this.LstUsers.Location = new System.Drawing.Point(19, 62);
             this.LstUsers.Margin = new System.Windows.Forms.Padding(2);
             this.LstUsers.Name = "LstUsers";
@@ -88,10 +88,11 @@
             // 
             this.LstRooms.BackColor = System.Drawing.Color.White;
             this.LstRooms.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LstRooms.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LstRooms.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LstRooms.ForeColor = System.Drawing.Color.Black;
             this.LstRooms.FormattingEnabled = true;
             this.LstRooms.IntegralHeight = false;
+            this.LstRooms.ItemHeight = 14;
             this.LstRooms.Location = new System.Drawing.Point(757, 61);
             this.LstRooms.Margin = new System.Windows.Forms.Padding(2);
             this.LstRooms.Name = "LstRooms";
